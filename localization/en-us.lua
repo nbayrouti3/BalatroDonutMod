@@ -1448,6 +1448,13 @@
                     "{C:attention}consumable{} with a {C:spectral}Spectral{} card",
                     "{C:inactive}(Must have consumables)",
                 }
+            },
+            j_singularity = {
+                name = "The Singularity",
+                text = {
+                    "{C:red}+#1#{} Retriggers if",
+                    "played hand is {C:attention}Singular{}",
+                }
             }
         },
         Voucher = {

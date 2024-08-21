@@ -917,6 +917,7 @@ function Card:generate_UIBox_ability_table()
         elseif self.ability.name == 'Chicot' then
         elseif self.ability.name == 'Perkeo' then loc_vars = {self.ability.extra}
         elseif self.ability.name == 'Haunted Joker' then loc_vars = {''..(G.GAME and G.GAME.probabilities.normal or 1),self.ability.extra}
+        elseif self.ability.name == 'The Singularity' then loc_vars = {self.ability.extra}
         end
     end
     local badges = {}
@@ -3125,40 +3126,41 @@ function Card:calculate_joker(context)
                         }
                     end
                 end
-                    if self.ability.name == 'Haunted Joker' and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
-                        if context.scoring_hand[1]
-                            and #G.consumeables.cards > 0
-                            and (pseudorandom('Haunted') < G.GAME.probabilities.normal/self.ability.extra) then
-                            local destroyed_cards = {}
-                                destroyed_cards[#destroyed_cards+1] = pseudorandom_element(G.consumeables.cards, pseudoseed('Haunted'))
+                if self.ability.name == 'Haunted Joker' and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+                     if context.scoring_hand[1]
+                        and #G.consumeables.cards > 0
+                        and (pseudorandom('Haunted') < G.GAME.probabilities.normal/self.ability.extra) then
+                        local destroyed_cards = {}
+                            destroyed_cards[#destroyed_cards+1] = pseudorandom_element(G.consumeables.cards, pseudoseed('Haunted'))
+                            G.E_MANAGER:add_event(Event({
+                                trigger = 'after',
+                                delay = 0.4,
+                                func = function() 
+                                    for i=#destroyed_cards, 1, -1 do
+                                        local card = destroyed_cards[i]
+                                        if card:start_dissolve(nil, i ~= #destroyed_cards) then
+                                        end
+                                    end
+                     return true end }))
+                            G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+                        return {
+                            extra = {focus = self, message = localize('k_plus_spectral'), func = function()
                                 G.E_MANAGER:add_event(Event({
                                     trigger = 'after',
-                                    delay = 0.4,
-                                    func = function() 
-                                        for i=#destroyed_cards, 1, -1 do
-                                            local card = destroyed_cards[i]
-                                            if card:start_dissolve(nil, i ~= #destroyed_cards) then
-                                            end
-                                        end
-                        return true end }))
-                                G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
-                            return {
-                                extra = {focus = self, message = localize('k_plus_spectral'), func = function()
-                                    G.E_MANAGER:add_event(Event({
-                                        trigger = 'after',
-                                        delay = 0.7,
-                                        func = (function()
-                                                local card = create_card('Spectral',G.consumeables, nil, nil, nil, nil, nil, 'sixth')
-                                                card:add_to_deck()
-                                                G.consumeables:emplace(card)
-                                                G.GAME.consumeable_buffer = 0
-                                            return true
-                                        end)}))
-                                end},
-                                colour = G.C.SECONDARY_SET.Spectral,
-                                card = self
-                        }
-                        end
+                                    delay = 0.7,
+                                    func = (function()
+                                            local card = create_card('Spectral',G.consumeables, nil, nil, nil, nil, nil, 'sixth')
+                                            card:add_to_deck()
+                                            G.consumeables:emplace(card)
+                                            G.GAME.consumeable_buffer = 0
+                                            play_sound('negative', 1, 0.4)
+                                        return true
+                                    end)}))
+                            end},
+                            colour = G.C.SECONDARY_SET.Spectral,
+                            card = self
+                    }
+                    end
                 end
                 if self.ability.name == 'The Idol' and
                     context.other_card:get_id() == G.GAME.current_round.idol_card.id and 
@@ -3418,7 +3420,15 @@ function Card:calculate_joker(context)
                         card = self
                     }
                 end
-            end
+                if self.ability.name == 'The Singularity' then
+                    if #context.full_hand == 1 then
+                        return {
+                            message = localize('k_again_ex'),
+                            repetitions = self.ability.extra,
+                            card = self
+                        }
+                    end
+                end
             if context.cardarea == G.hand then
                 if self.ability.name == 'Mime' and
                 (next(context.card_effects[1]) or #context.card_effects > 1) then
@@ -3429,6 +3439,7 @@ function Card:calculate_joker(context)
                     }
                 end
             end
+        end
         elseif context.other_joker then
             if self.ability.name == 'Baseball Card' and context.other_joker.config.center.rarity == 2 and self ~= context.other_joker then
                 G.E_MANAGER:add_event(Event({
