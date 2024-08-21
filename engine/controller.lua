@@ -803,7 +803,7 @@ function Controller:key_press_update(key, dt)
     self.held_key_times[key] = 0
 
 
-    if not _RELEASE_MODE then
+    if _RELEASE_MODE then
         if key == 'tab' and not G.debug_tools then
             G.debug_tools = UIBox{
                 definition = create_UIBox_debug_tools(),
