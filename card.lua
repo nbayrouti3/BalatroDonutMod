@@ -916,15 +916,7 @@ function Card:generate_UIBox_ability_table()
         elseif self.ability.name == 'Yorick' then loc_vars = {self.ability.extra.xmult, self.ability.extra.discards, self.ability.yorick_discards, self.ability.x_mult}
         elseif self.ability.name == 'Chicot' then
         elseif self.ability.name == 'Perkeo' then loc_vars = {self.ability.extra}
-        elseif self.ability.name == 'Camou' then
-            self.ability.blueprint_compat_ui = self.ability.blueprint_compat_ui or ''; self.ability.blueprint_compat_check = nil
-            main_end = (self.area and self.area == G.jokers) and {
-                {n=G.UIT.C, config={align = "bm", minh = 0.4}, nodes={
-                    {n=G.UIT.C, config={ref_table = self, align = "m", colour = G.C.JOKER_GREY, r = 0.05, padding = 0.06, func = 'blueprint_compat'}, nodes={
-                        {n=G.UIT.T, config={ref_table = self.ability, ref_value = 'blueprint_compat_ui',colour = G.C.UI.TEXT_LIGHT, scale = 0.32*0.8}},
-                    }}
-                }}
-            } or nil
+        elseif self.ability.name == 'Haunted Joker' then loc_vars = {''..(G.GAME and G.GAME.probabilities.normal or 1),self.ability.extra}
         end
     end
     local badges = {}
@@ -1045,6 +1037,7 @@ function Card:get_end_of_round_effect(context)
         ret.h_dollars = self.ability.h_dollars
         ret.card = self
     end
+    --Check For Blue Seal
     if self.seal == 'Blue' and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
         local card_type = 'Planet'
         G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
@@ -2340,35 +2333,6 @@ function Card:calculate_joker(context)
                 end
             end
         end
-        if self.ability.name == "Camou" then
-            local left_joker = nil
-            local right_joker = nil
-            for i = 1, #G.jokers.cards do
-                if G.jokers.cards[i] == self then left_joker = G.jokers.cards[i-1] end
-                if G.jokers.cards[i] == self then right_joker = G.jokers.cards[i+1] end
-            end
-            if left_joker and left_joker ~= self then
-                context.camou = (context.camou and (context.camou - 1)) or 1
-                context.camou_left_card = context.camou_left_card or self
-                if context.camou < 0 then return end
-                local left_joker_ret = left_joker:calculate_joker(context)
-                if left_joker_ret then 
-                    left_joker_ret.card = context.camou_left_card or self
-                    left_joker_ret.colour = G.C.BLUE
-                end
-            end
-            if right_joker and right_joker ~= self then
-                context.camou = (context.camou and (context.camou + 1)) or 1
-                context.camou_right_card = context.camou_right_card or self
-                if context.camou > #G.jokers.cards + 1 then return end
-                local other_joker_ret = right_joker:calculate_joker(context)
-                if other_joker_ret then 
-                    other_joker_ret.card = context.camou_right_card or self
-                    other_joker_ret.colour = G.C.BLUE
-                    return other_joker_ret
-                end
-            end
-        end
         if context.open_booster then
             if self.ability.name == 'Hallucination' and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
                 if pseudorandom('halu'..G.GAME.round_resets.ante) < G.GAME.probabilities.normal/self.ability.extra then
@@ -3160,6 +3124,41 @@ function Card:calculate_joker(context)
                             card = self
                         }
                     end
+                end
+                    if self.ability.name == 'Haunted Joker' and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+                        if context.scoring_hand[1]
+                            and #G.consumeables.cards > 0
+                            and (pseudorandom('Haunted') < G.GAME.probabilities.normal/self.ability.extra) then
+                            local destroyed_cards = {}
+                                destroyed_cards[#destroyed_cards+1] = pseudorandom_element(G.consumeables.cards, pseudoseed('Haunted'))
+                                G.E_MANAGER:add_event(Event({
+                                    trigger = 'after',
+                                    delay = 0.4,
+                                    func = function() 
+                                        for i=#destroyed_cards, 1, -1 do
+                                            local card = destroyed_cards[i]
+                                            if card:start_dissolve(nil, i ~= #destroyed_cards) then
+                                            end
+                                        end
+                        return true end }))
+                                G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+                            return {
+                                extra = {focus = self, message = localize('k_plus_spectral'), func = function()
+                                    G.E_MANAGER:add_event(Event({
+                                        trigger = 'after',
+                                        delay = 0.7,
+                                        func = (function()
+                                                local card = create_card('Spectral',G.consumeables, nil, nil, nil, nil, nil, 'sixth')
+                                                card:add_to_deck()
+                                                G.consumeables:emplace(card)
+                                                G.GAME.consumeable_buffer = 0
+                                            return true
+                                        end)}))
+                                end},
+                                colour = G.C.SECONDARY_SET.Spectral,
+                                card = self
+                        }
+                        end
                 end
                 if self.ability.name == 'The Idol' and
                     context.other_card:get_id() == G.GAME.current_round.idol_card.id and 

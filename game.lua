@@ -524,9 +524,8 @@ function Game:init_item_prototypes()
         j_yorick=           {order = 148,  unlocked = false, discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Yorick", pos = {x=5,y=8}, soul_pos = {x=5, y=9}, set = "Joker", effect = "", config = {extra = {xmult = 1, discards = 23}}, unlock_condition = {type = '', extra = '', hidden = true}},
         j_chicot=           {order = 149,  unlocked = false, discovered = false, blueprint_compat = false, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Chicot", pos = {x=6,y=8}, soul_pos = {x=6, y=9}, set = "Joker", effect = "", config = {}, unlock_condition = {type = '', extra = '', hidden = true}},
         j_perkeo=           {order = 150,  unlocked = false, discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Perkeo", pos = {x=7,y=8}, soul_pos = {x=7, y=9}, set = "Joker", effect = "", config = {}, unlock_condition = {type = '', extra = '', hidden = true}},
-        
-        -- start friend jokers
-        j_camou=            {order = 151, unlocked = false, discovered = false, blueprint_compat = false, perishable_compat = true, eternal_compat = false, rarity = 4, cost = 20, name = "Camou", pos = {x=8, y=8}, soul_pos = {x = 8, y = 9}, set = "Joker", effect = "Copycat", cost_mult = 1.0, config = {}},
+        j_hauntedjoker=     {order = 151,  unlocked = true,  discovered = true,  blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = "Haunted Joker", pos = {x=0,y=16}, set = "Joker", effect = "Spawn Tarot", cost_mult = 1.0, config = {extra=10}},
+
 
 
         --All Consumeables
@@ -696,7 +695,6 @@ function Game:init_item_prototypes()
         p_buffoon_normal_2 =        {order = 26, discovered = false, name = "Buffoon Pack", weight = 0.6, kind = 'Buffoon', cost = 4, pos = {x=1,y=8}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
         p_buffoon_jumbo_1 =         {order = 27, discovered = false, name = "Jumbo Buffoon Pack", weight = 0.6, kind = 'Buffoon', cost = 6, pos = {x=2,y=8}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 1}},
         p_buffoon_mega_1 =          {order = 28, discovered = false, name = "Mega Buffoon Pack", weight = 0.15, kind = 'Buffoon', cost = 8, pos = {x=3,y=8}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 2}},
-        p_buffoon_friendly =        {order = 29, discovered = false, name = "Friendly Buffon Pack", weight = 1, kind = 'Buffoon', cost = 1, pos = {x=4, y=8}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 1}},
 
         --Extras       
         soul={pos = {x=0,y=1}},
@@ -733,7 +731,7 @@ function Game:init_item_prototypes()
 
 
     -------------------------------------
-    local TESTHELPER_unlocks = true and not _RELEASE_MODE
+    local TESTHELPER_unlocks = false and not _RELEASE_MODE
     -------------------------------------
     if not love.filesystem.getInfo(G.SETTINGS.profile..'') then love.filesystem.createDirectory( G.SETTINGS.profile..'' ) end
     if not love.filesystem.getInfo(G.SETTINGS.profile..'/'..'meta.jkr') then love.filesystem.append( G.SETTINGS.profile..'/'..'meta.jkr', 'return {}') end

@@ -1439,6 +1439,15 @@
                 unlock = {
                     "{E:1,s:1.3}?????"
                 }
+            },
+            j_hauntedjoker = {
+                name = "Haunted Joker",
+                text = {
+                    "When hand is played, has a {C:green}#1# in #2#{}",
+                    "chance to replace a random",
+                    "{C:attention}consumable{} with a {C:spectral}Spectral{} card",
+                    "{C:inactive}(Must have consumables)",
+                }
             }
         },
         Voucher = {
