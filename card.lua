@@ -2341,6 +2341,7 @@ function Card:calculate_joker(context)
             end
         end
         if self.ability.name == "Camou" then
+            -- currently only returns the right card
             local left_joker = nil
             local right_joker = nil
             for i = 1, #G.jokers.cards do
