@@ -1446,7 +1446,7 @@
                     "When hand is played, has a {C:green}#1# in #2#{}",
                     "chance to replace a random",
                     "{C:attention}consumable{} with a {C:spectral}Spectral{} card",
-                    "{C:inactive}(Must have consumables)",
+                    "{C:inactive}(Must have consumable)",
                 }
             },
             j_singularity = {
@@ -1454,6 +1454,13 @@
                 text = {
                     "{C:red}+#1#{} Retriggers if",
                     "played hand is {C:attention}Singular{}",
+                }
+            },
+            j_sacrificial = {
+                name = "Sacrificial Joker",
+                text = {
+                    "Wins current blind when sold",
+                    "{C:inactive}(Does not give money)",
                 }
             }
         },

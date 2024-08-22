@@ -918,6 +918,7 @@ function Card:generate_UIBox_ability_table()
         elseif self.ability.name == 'Perkeo' then loc_vars = {self.ability.extra}
         elseif self.ability.name == 'Haunted Joker' then loc_vars = {''..(G.GAME and G.GAME.probabilities.normal or 1),self.ability.extra}
         elseif self.ability.name == 'The Singularity' then loc_vars = {self.ability.extra}
+        elseif self.ability.name == 'Sacrificial Joker' then 
         end
     end
     local badges = {}
@@ -2359,6 +2360,19 @@ function Card:calculate_joker(context)
                     card_eval_status_text(context.blueprint_card or self, 'extra', nil, nil, nil, {message = localize('ph_boss_disabled')})
                     G.GAME.blind:disable()
                 end
+            end
+            if self.ability.name == 'Sacrificial Joker' then
+                if G.GAME.blind and (not G.GAME.blind.disabled) then 
+                    G.E_MANAGER:add_event(Event({
+                        trigger = 'immediate',
+                        delay = 0,
+                        func = function()
+                            G.GAME.blind:defeat()
+                            return true
+                        end
+                    }))
+                end
+                self.sell_cost = 0
             end
             if self.ability.name == 'Diet Cola' then
                 G.E_MANAGER:add_event(Event({
