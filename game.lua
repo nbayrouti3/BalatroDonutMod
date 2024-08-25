@@ -246,6 +246,8 @@ function Game:init_item_prototypes()
         tag_skip =          {name = 'Skip Tag',         set = 'Tag', discovered = false, min_ante = nil, order = 22, config = {type = 'immediate', skip_bonus = 5}, pos = {x = 0,y = 3}},
         tag_orbital =       {name = 'Orbital Tag',      set = 'Tag', discovered = false, min_ante = 2,   order = 23, config = {type = 'immediate', levels = 3}, pos = {x = 5,y = 2}},
         tag_economy =       {name = 'Economy Tag',      set = 'Tag', discovered = false, min_ante = nil, order = 24, config = {type = 'immediate', max = 40}, pos = {x = 4,y = 3}},
+        --Custom Tags
+        tag_polygonal =     {name = 'Polygonal Tag',    set = 'Tag', discovered = false, min_ante = nil,   order = 25, config = {type = 'new_blind_choice', }, pos = {x = 0,y = 5}},
     }
     self.tag_undiscovered = {name = 'Not Discovered', order = 1, config = {type = ''}, pos = {x=3,y=4}}
 
@@ -357,6 +359,7 @@ function Game:init_item_prototypes()
     self.j_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=9,y=9}, set = "Joker", cost_mult = 1.0,config = {}}
     self.t_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=6,y=2}, set = "Tarot", cost_mult = 1.0,config = {}}
     self.p_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=7,y=2}, set = "Planet", cost_mult = 1.0,config = {}}
+    self.po_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=9,y=5}, set = "planet", cost_mult = 1.0,config = {}}
     self.s_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=5,y=2}, set = "Spectral", cost_mult = 1.0,config = {}}
     self.v_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=8,y=2}, set = "Voucher", cost_mult = 1.0,config = {}}
     self.booster_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=0,y=5}, set = "Booster", cost_mult = 1.0,config = {}}
@@ -525,9 +528,10 @@ function Game:init_item_prototypes()
         j_chicot=           {order = 149,  unlocked = false, discovered = false, blueprint_compat = false, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Chicot", pos = {x=6,y=8}, soul_pos = {x=6, y=9}, set = "Joker", effect = "", config = {}, unlock_condition = {type = '', extra = '', hidden = true}},
         j_perkeo=           {order = 150,  unlocked = false, discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Perkeo", pos = {x=7,y=8}, soul_pos = {x=7, y=9}, set = "Joker", effect = "", config = {}, unlock_condition = {type = '', extra = '', hidden = true}},
 
-        j_hauntedjoker=     {order = 151,  unlocked = true,  discovered = true,  blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = "Haunted Joker", pos = {x=0,y=16}, set = "Joker", effect = "Spawn Spectral", cost_mult = 1.0, config = {extra = 10}},
-        j_singularity=      {order = 152,  unlocked = true,  discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = 'The Singularity', pos = {x = 5, y = 16}, set = 'Joker', effect = "Retrigger", cost_mult = 1.0, config = {extra = 4}},
-        j_sacrificial=      {order = 153,  unlocked = true,  discovered = true, blueprint_compat = false, perishable_compat = true, eternal_compat = false, rarity = 1, cost = 20, name = 'Sacrificial Joker', pos = {x = 2, y = 16}, set = 'Joker', effect = "", cost_mult = 1.0, config = {}},
+        --Custom Jokers
+        j_hauntedjoker=     {order = 151,  unlocked = true,  discovered = false,  blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = "Haunted Joker", pos = {x=0,y=16}, set = "Joker", effect = "Spawn Spectral", cost_mult = 1.0, config = {extra = 10}},
+        j_singularity=      {order = 152,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = 'The Singularity', pos = {x = 5, y = 16}, set = 'Joker', effect = "Retrigger", cost_mult = 1.0, config = {extra = 4}},
+        j_sacrificial=      {order = 153,  unlocked = true,  discovered = false, blueprint_compat = false, perishable_compat = true, eternal_compat = false, rarity = 1, cost = 20, name = 'Sacrificial Joker', pos = {x = 2, y = 16}, set = 'Joker', effect = "", cost_mult = 1.0, config = {}},
 
 
 
@@ -590,6 +594,21 @@ function Game:init_item_prototypes()
         c_cryptid=          {order = 16,   discovered = false, cost = 4, consumeable = true, name = "Cryptid", pos = {x=5,y=5}, set = "Spectral", config = {extra = 2, max_highlighted = 1}},
         c_soul=             {order = 17,   discovered = false, cost = 4, consumeable = true, name = "The Soul", pos = {x=2,y=2}, set = "Spectral", effect = "Unlocker", config = {}, hidden = true},
         c_black_hole=       {order = 18,   discovered = false, cost = 4, consumeable = true, name = "Black Hole", pos = {x=9,y=3}, set = "Spectral", config = {}, hidden = true},
+
+        --Polygonal
+        c_trigon=           {order = 1,    discovered = true,  cost = 4, consumeable = true, name = "Tri-Eyed Cat", pos = {x=6,y=5}, set = "Polygon", config = {extra = {every = 5, remaining = "5 remaining"}}},
+        c_tetragon=         {order = 2,    discovered = true,  cost = 4, consumeable = true, name = "Quadra Beast", pos = {x=7,y=5}, set = "Polygon", config = {}},
+        c_pentagon=         {order = 3,    discovered = true,  cost = 4, consumeable = true, name = "Penta Hand", pos = {x=8,y=5}, set = "Polygon", config = {}},
+        c_hexagon=          {order = 4,    discovered = true,  cost = 4, consumeable = true, name = "Hexwing Angel", pos = {x=9,y=5}, set = "Polygon", config = {}},
+        c_septagon=         {order = 5,    discovered = true,  cost = 4, consumeable = true, name = "Septabug", pos = {x=0,y=6}, set = "Polygon", config = {}},
+        c_octagon=          {order = 6,    discovered = true,  cost = 4, consumeable = true, name = "Octoclops", pos = {x=1,y=6}, set = "Polygon", config = {}},
+        c_nonagon=          {order = 7,    discovered = true,  cost = 4, consumeable = true, name = "Nonagon Lion", pos = {x=2,y=6}, set = "Polygon", config = {}},
+        c_decagon=          {order = 8,    discovered = true,  cost = 4, consumeable = true, name = "Charybdis", pos = {x=3,y=6}, set = "Polygon", config = {}},
+        c_hendecagon=       {order = 9,    discovered = true,  cost = 4, consumeable = true, name = "Echidna", pos = {x=4,y=6}, set = "Polygon", config = {}},
+        c_dodecagon=        {order = 10,   discovered = true,  cost = 4, consumeable = true, name = "Typhon", pos = {x=5,y=6}, set = "Polygon", config = {}},
+        c_hectogon=         {order = 11,   discovered = true,  cost = 4, consumeable = true, name = "Parallax", pos = {x=6,y=6}, set = "Polygon", config = {}, hidden = true},
+        c_myriagon=         {order = 12,   discovered = true,  cost = 4, consumeable = true, name = "Fractal", pos = {x=7,y=6}, set = "Polygon", config = {}, hidden = true},
+        c_apeirogon=        {order = 13,   discovered = true,  cost = 4, consumeable = true, name = "Infinity", pos = {x=8,y=6}, set = "Polygon", config = {}, hidden = true},
 
         --Vouchers
 
@@ -699,6 +718,12 @@ function Game:init_item_prototypes()
         p_buffoon_jumbo_1 =         {order = 27, discovered = false, name = "Jumbo Buffoon Pack", weight = 0.6, kind = 'Buffoon', cost = 6, pos = {x=2,y=8}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 1}},
         p_buffoon_mega_1 =          {order = 28, discovered = false, name = "Mega Buffoon Pack", weight = 0.15, kind = 'Buffoon', cost = 8, pos = {x=3,y=8}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 2}},
 
+        --Custom Boosters
+        p_polygon_normal_1 =        {order = 33, discovered = true,  name = "Polygon Pack", weight = 0.4, kind = 'Polygon', cost = 4, pos = {x=0,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
+        p_polygon_normal_2 =        {order = 34, discovered = true,  name = "Polygon Pack", weight = 0.4, kind = 'Polygon', cost = 4, pos = {x=1,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
+        p_polygon_jumbo_1 =         {order = 35, discovered = true,  name = "Jumbo Polygon Pack", weight = 0.4, kind = 'Polygon', cost = 4, pos = {x=2,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 1}},
+        p_polygon_mega_1 =          {order = 36, discovered = true,  name = "Mega Polygon Pack", weight = 0.1, kind = 'Polygon', cost = 4, pos = {x=3,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 2}},
+
         --Extras       
         soul={pos = {x=0,y=1}},
         undiscovered_joker={pos = {x=5,y=3}},
@@ -715,6 +740,7 @@ function Game:init_item_prototypes()
         Planet = {},
         Tarot_Planet = {},
         Spectral = {},
+        Polygon = {},
         Consumeables = {},
         Voucher = {},
         Back = {},
@@ -832,6 +858,7 @@ function Game:init_item_prototypes()
     table.sort(self.P_CENTER_POOLS["Planet"], function (a, b) return a.order < b.order end)
     table.sort(self.P_CENTER_POOLS["Tarot_Planet"], function (a, b) return a.order < b.order end)
     table.sort(self.P_CENTER_POOLS["Spectral"], function (a, b) return a.order < b.order end)
+    table.sort(self.P_CENTER_POOLS["Polygon"], function (a, b) return a.order < b.order end)
     table.sort(self.P_CENTER_POOLS["Voucher"], function (a, b) return a.order < b.order end)
     table.sort(self.P_CENTER_POOLS["Booster"], function (a, b) return a.order < b.order end)
     table.sort(self.P_CENTER_POOLS["Consumeables"], function (a, b) return a.order < b.order end)
@@ -1069,6 +1096,7 @@ function Game:set_render_settings()
 
     self.ASSET_ATLAS.Planet = self.ASSET_ATLAS.Tarot
     self.ASSET_ATLAS.Spectral = self.ASSET_ATLAS.Tarot
+    self.ASSET_ATLAS.Polygon = self.ASSET_ATLAS.Tarot
 end
 
 function Game:init_window(reset)
@@ -1854,6 +1882,7 @@ function Game:init_game_object()
         tarot_rate = 4,
         planet_rate = 4, 
         spectral_rate = 0,
+        polygon_rate = 1,
         playing_card_rate = 0,
         consumeable_buffer = 0,
         joker_buffer = 0,
@@ -2538,6 +2567,10 @@ function Game:update(dt)
             self:update_spectral_pack(dt)
         end
 
+        if self.STATE == self.STATES.POLYGON_PACK then
+            self:update_polygon_pack(dt)
+        end
+        
         if self.STATE == self.STATES.STANDARD_PACK then
             self:update_standard_pack(dt)
         end
@@ -3360,6 +3393,55 @@ function Game:update_spectral_pack(dt)
                     func = function()
                         G.FUNCS.draw_from_deck_to_hand()
 
+                        G.E_MANAGER:add_event(Event({
+                            trigger = 'after',
+                            delay = 0.5,
+                            func = function()
+                                G.CONTROLLER:recall_cardarea_focus('pack_cards')
+                                return true
+                            end}))
+                        return true
+                    end
+                }))  
+                return true
+            end
+        }))  
+    end
+end
+
+function Game:update_polygon_pack(dt)
+    if self.buttons then self.buttons:remove(); self.buttons = nil end
+    if self.shop then G.shop.alignment.offset.y = G.ROOM.T.y+11 end
+
+    if not G.STATE_COMPLETE then
+        G.STATE_COMPLETE = true
+        G.CONTROLLER.interrupt.focus = true
+        G.E_MANAGER:add_event(Event({
+            trigger = 'immediate',
+            func = function()
+                G.booster_pack_sparkles = Particles(1, 1, 0,0, {
+                    timer = 0.015,
+                    scale = 0.1,
+                    initialize = true,
+                    lifespan = 3,
+                    speed = 0.2,
+                    padding = -1,
+                    attach = G.ROOM_ATTACH,
+                    colours = {G.C.WHITE, lighten(G.C.GOLD, 0.2)},
+                    fill = true
+                })
+                G.booster_pack_sparkles.fade_alpha = 1
+                G.booster_pack_sparkles:fade(1, 0)
+                G.booster_pack = UIBox{
+                    definition = create_UIBox_polygon_pack(),
+                    config = {align="tmi", offset = {x=0,y=G.ROOM.T.y + 9},major = G.hand, bond = 'Weak'}
+                }
+                G.booster_pack.alignment.offset.y = -2.2
+                        G.ROOM.jiggle = G.ROOM.jiggle + 3
+                ease_background_colour_blind(G.STATES.POLYGON_PACK)
+                G.E_MANAGER:add_event(Event({
+                    trigger = 'immediate',
+                    func = function()
                         G.E_MANAGER:add_event(Event({
                             trigger = 'after',
                             delay = 0.5,

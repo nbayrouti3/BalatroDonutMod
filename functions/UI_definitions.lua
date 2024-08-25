@@ -762,7 +762,7 @@ end
           end
         end
           G.GAME.spectral_rate = G.GAME.spectral_rate or 0
-          local total_rate = G.GAME.joker_rate + G.GAME.tarot_rate + G.GAME.planet_rate + G.GAME.playing_card_rate + G.GAME.spectral_rate
+          local total_rate = G.GAME.joker_rate + G.GAME.tarot_rate + G.GAME.planet_rate + G.GAME.playing_card_rate + G.GAME.spectral_rate + G.GAME.polygon_rate
           local polled_rate = pseudorandom(pseudoseed('cdt'..G.GAME.round_resets.ante))*total_rate
           local check_rate = 0
           for _, v in ipairs({
@@ -771,6 +771,7 @@ end
             {type = 'Planet', val = G.GAME.planet_rate},
             {type = (G.GAME.used_vouchers["v_illusion"] and pseudorandom(pseudoseed('illusion')) > 0.6) and 'Enhanced' or 'Base', val = G.GAME.playing_card_rate},
             {type = 'Spectral', val = G.GAME.spectral_rate},
+            {type = 'Polygon', val = G.GAME.polygon_rate},
           }) do
             if polled_rate > check_rate and polled_rate <= check_rate + v.val then
               local card = create_card(v.type, area, nil, nil, nil, nil, nil, 'sho')
@@ -1718,6 +1719,52 @@ function create_UIBox_spectral_pack()
   return t
 end
 
+function create_UIBox_polygon_pack()
+  local _size = G.GAME.pack_size
+  G.pack_cards = CardArea(
+    G.ROOM.T.x + 9 + G.hand.T.x, G.hand.T.y,
+    _size*G.CARD_W,
+    1.05*G.CARD_H, 
+    {card_limit = _size, type = 'consumeable', highlight_limit = 1})
+
+    local t = {n=G.UIT.ROOT, config = {align = 'tm', r = 0.15, colour = G.C.CLEAR, padding = 0.15}, nodes={
+      {n=G.UIT.R, config={align = "cl", colour = G.C.CLEAR,r=0.15, padding = 0.1, minh = 2, shadow = true}, nodes={
+        {n=G.UIT.R, config={align = "cm"}, nodes={
+        {n=G.UIT.C, config={align = "cm", padding = 0.1}, nodes={
+          {n=G.UIT.C, config={align = "cm", r=0.2, colour = G.C.CLEAR, shadow = true}, nodes={
+            {n=G.UIT.O, config={object = G.pack_cards}},
+          }}
+        }}
+      }},
+      {n=G.UIT.R, config={align = "cm"}, nodes={
+      }},
+      {n=G.UIT.R, config={align = "tm"}, nodes={
+        {n=G.UIT.C,config={align = "tm", padding = 0.05, minw = 2.4}, nodes={}},
+        {n=G.UIT.C,config={align = "tm", padding = 0.05}, nodes={
+        UIBox_dyn_container({
+          {n=G.UIT.C, config={align = "cm", padding = 0.05, minw = 4}, nodes={
+            {n=G.UIT.R,config={align = "bm", padding = 0.05}, nodes={
+              {n=G.UIT.O, config={object = DynaText({string = localize('k_polygon_pack'), colours = {G.C.WHITE},shadow = true, rotate = true, bump = true, spacing =2, scale = 0.7, maxw = 4, pop_in = 0.5})}}
+            }},
+            {n=G.UIT.R,config={align = "bm", padding = 0.05}, nodes={
+              {n=G.UIT.O, config={object = DynaText({string = {localize('k_choose')..' '}, colours = {G.C.WHITE},shadow = true, rotate = true, bump = true, spacing =2, scale = 0.5, pop_in = 0.7})}},
+              {n=G.UIT.O, config={object = DynaText({string = {{ref_table = G.GAME, ref_value = 'pack_choices'}}, colours = {G.C.WHITE},shadow = true, rotate = true, bump = true, spacing =2, scale = 0.5, pop_in = 0.7})}}
+            }},
+          }}
+        }),
+      }},
+        {n=G.UIT.C,config={align = "tm", padding = 0.05, minw = 2.4}, nodes={
+          {n=G.UIT.R,config={minh =0.2}, nodes={}},
+          {n=G.UIT.R,config={align = "tm",padding = 0.2, minh = 1.2, minw = 1.8, r=0.15,colour = G.C.GREY, one_press = true, button = 'skip_booster', hover = true,shadow = true, func = 'can_skip_booster'}, nodes = {
+            {n=G.UIT.T, config={text = localize('b_skip'), scale = 0.5, colour = G.C.WHITE, shadow = true, focus_args = {button = 'y', orientation = 'bm'}, func = 'set_button_pip'}}
+          }}
+        }}
+      }}
+    }}
+  }}
+  return t
+end
+
 function create_UIBox_standard_pack()
   local _size = G.GAME.pack_size
   G.pack_cards = CardArea(
@@ -2431,6 +2478,11 @@ function G.UIDEF.usage_tabs()
           label = localize('b_stat_spectrals'),
           tab_definition_function = create_UIBox_usage,
           tab_definition_function_args = {'consumeable_usage', 'Spectral'},
+        },
+        {
+          label = localize('b_stat_polygons'),
+          tab_definition_function = create_UIBox_usage,
+          tab_definition_function_args = {'consumeable_usage', 'Polygon'},
         },
         {
           label = localize('b_stat_vouchers'),
@@ -3447,6 +3499,7 @@ function create_UIBox_your_collection()
           UIBox_button({button = 'your_collection_tarots', label = {localize('b_tarot_cards')}, count = G.DISCOVER_TALLIES.tarots, minw = 4, id = 'your_collection_tarots', colour = G.C.SECONDARY_SET.Tarot}),
           UIBox_button({button = 'your_collection_planets', label = {localize('b_planet_cards')}, count = G.DISCOVER_TALLIES.planets, minw = 4, id = 'your_collection_planets', colour = G.C.SECONDARY_SET.Planet}),
           UIBox_button({button = 'your_collection_spectrals', label = {localize('b_spectral_cards')}, count = G.DISCOVER_TALLIES.spectrals, minw = 4, id = 'your_collection_spectrals', colour = G.C.SECONDARY_SET.Spectral}),
+          UIBox_button({button = 'your_collection_polygons', label = {localize('b_polygon_cards')}, count = G.DISCOVER_TALLIES.polygons, minw = 4, id = 'your_collection_polygons', colour = G.C.SECONDARY_SET.Polygon}),
         }}
       }},
     }},
@@ -3667,6 +3720,49 @@ function create_UIBox_your_collection_spectrals()
   return t
 end
 
+function create_UIBox_your_collection_polygons()
+  local deck_tables = {}
+
+  G.your_collection = {}
+  for j = 1, 2 do
+    G.your_collection[j] = CardArea( --This quite literally changes how much space the ui portion takes up
+      G.ROOM.T.x + 0.2*G.ROOM.T.w/2,G.ROOM.T.h,
+      (5)*G.CARD_W,
+      1*G.CARD_H, 
+      {card_limit = 3, type = 'title', highlight_limit = 0, collection = true}) -- This controls how far apart the cards are from each other
+    table.insert(deck_tables, 
+    {n=G.UIT.R, config={align = "cm", padding = 0, no_fill = true}, nodes={
+      {n=G.UIT.O, config={object = G.your_collection[j]}}
+    }}
+    )
+  end
+
+    for j = 1, #G.your_collection do
+      for i = 1, 3+j do
+      local center = G.P_CENTER_POOLS["Polygon"][i+(j-1)*3 + j - 1]
+      
+      local card = Card(G.your_collection[j].T.x + G.your_collection[j].T.w/2, G.your_collection[j].T.y, G.CARD_W, G.CARD_H, nil, center)
+      card:start_materialize(nil, i>1 or j>1)
+      G.your_collection[j]:emplace(card)
+    end
+  end
+
+  local polygon_options = {}
+  for i = 1, math.floor(#G.P_CENTER_POOLS.Polygon/6) do
+    table.insert(polygon_options, localize('k_page')..' '..tostring(i)..'/'..tostring(math.floor(#G.P_CENTER_POOLS.Polygon/6)))
+  end
+
+  INIT_COLLECTION_CARD_ALERTS()
+  
+  local t = create_UIBox_generic_options({ back_func = 'your_collection', contents = {
+            {n=G.UIT.R, config={align = "cm", minw = 2.5, padding = 0.1, r = 0.1, colour = G.C.BLACK, emboss = 0.05}, nodes=deck_tables},
+            {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
+              create_option_cycle({options = polygon_options, w = 4.5, cycle_shoulders = true, opt_callback = 'your_collection_polygon_page', focus_args = {snap_to = true, nav = 'wide'},current_option = 1, colour = G.C.RED, no_pips = true})
+            }},
+          }})
+  return t
+end
+
 function create_UIBox_your_collection_vouchers(exit)
   local deck_tables = {}
 
@@ -3857,7 +3953,7 @@ function create_UIBox_your_collection_tags()
     local temp_tag = Tag(v.key, true)
     if not v.discovered then temp_tag.hide_ability = true end
     local temp_tag_ui, temp_tag_sprite = temp_tag:generate_UI()
-    tag_matrix[math.ceil((k-1)/6+0.001)][1+((k-1)%6)] = {n=G.UIT.C, config={align = "cm", padding = 0.1}, nodes={
+    tag_matrix[math.ceil((k-1)/9+0.001)][1+((k-1)%10)] = {n=G.UIT.C, config={align = "cm", padding = 0.1}, nodes={
       temp_tag_ui,
     }}
     if discovered and not v.alerted then 

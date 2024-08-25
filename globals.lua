@@ -250,6 +250,7 @@ function Game:set_globals()
         STANDARD_PACK = 17,
         BUFFOON_PACK = 18,
         NEW_ROUND = 19,
+        POLYGON_PACK = 20,
     }
 
     self.STAGES = {
@@ -376,6 +377,7 @@ function Game:set_globals()
             Tarot = HEX('424e54'),--HEX('29adff'),
             Planet = HEX("424e54"),
             Spectral = HEX('424e54'),
+            Polygon = HEX('c74848'),
             Voucher = HEX("424e54"),
         }, 
         SECONDARY_SET = {
@@ -385,6 +387,7 @@ function Game:set_globals()
             Tarot = HEX('a782d1'),--HEX('29adff'),
             Planet = HEX('13afce'),
             Spectral = HEX('4584fa'),
+            Polygon = HEX('a43838'),
             Voucher = HEX("fd682b"),
             Edition = HEX("4ca893"),
         }, 

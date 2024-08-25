@@ -177,6 +177,7 @@ function Card:set_sprites(_center, _front)
                     (_center.set == 'Tarot' and G.t_undiscovered.pos) or 
                     (_center.set == 'Planet' and G.p_undiscovered.pos) or 
                     (_center.set == 'Spectral' and G.s_undiscovered.pos) or 
+                    (_center.set == 'Polygon' and G.s_undiscovered.pos) or 
                     (_center.set == 'Voucher' and G.v_undiscovered.pos) or 
                     (_center.set == 'Booster' and G.booster_undiscovered.pos))
                 elseif _center.set == 'Joker' or _center.consumeable or _center.set == 'Voucher' then
@@ -328,6 +329,9 @@ function Card:set_ability(center, initial, delay_sprites)
     if self.ability.name == 'Loyalty Card' then 
         self.ability.burnt_hand = 0
         self.ability.loyalty_remaining = self.ability.extra.every
+    end
+    if self.ability.name == 'Tri-Eyed Cat' then
+        self.ability.trigon_remaining = self.ability.extra.every
     end
 
     self.base_cost = center.cost or 1
@@ -778,6 +782,7 @@ function Card:generate_UIBox_ability_table()
         elseif self.ability.name == 'Mystic Summit' then loc_vars = {self.ability.extra.mult, self.ability.extra.d_remaining}
         elseif self.ability.name == 'Marble Joker' then
         elseif self.ability.name == 'Loyalty Card' then loc_vars = {self.ability.extra.Xmult, self.ability.extra.every + 1, localize{type = 'variable', key = (self.ability.loyalty_remaining == 0 and 'loyalty_active' or 'loyalty_inactive'), vars = {self.ability.loyalty_remaining}}}
+        elseif self.ability.name == 'Tri-Eyed Cat' then loc_vars = {self.ability.extra.every + 1, localize{type = 'variable', key = (self.ability.trigon_remaining == 0 and 'trigon_active' or 'trigon_inactive'), vars = {self.ability.trigon_remaining}}}
         elseif self.ability.name == '8 Ball' then loc_vars = {''..(G.GAME and G.GAME.probabilities.normal or 1),self.ability.extra}
         elseif self.ability.name == 'Dusk' then loc_vars = {self.ability.extra+1}
         elseif self.ability.name == 'Raised Fist' then
@@ -1509,8 +1514,8 @@ function Card:use_consumeable(area, copier)
                     hold = 1.4,
                     major = used_tarot,
                     backdrop_colour = G.C.SECONDARY_SET.Tarot,
-                    align = (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK) and 'tm' or 'cm',
-                    offset = {x = 0, y = (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK) and -0.2 or 0},
+                    align = (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.POLYGON_PACK) and 'tm' or 'cm',
+                    offset = {x = 0, y = (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.POLYGON_PACK) and -0.2 or 0},
                     silent = true
                     })
                     G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.06*G.SETTINGS.GAMESPEED, blockable = false, blocking = false, func = function()
@@ -1521,6 +1526,20 @@ function Card:use_consumeable(area, copier)
         end
         delay(0.6)
     end
+    if self.ability.name == 'Tri-Eyed Cat' then
+                        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                            play_sound('timpani')
+                            local card = create_card('Joker', G.jokers, nil, 0.99, nil, nil, nil, 'wra')
+                            card:add_to_deck()
+                            G.jokers:emplace(card)
+                            used_tarot:juice_up(0.3, 0.5)
+                                if G.GAME.dollars ~= 0 then
+                                    ease_dollars(-G.GAME.dollars, true)
+                                end
+                            return true end }))
+                        delay(0.6)
+    end
+        
 end
 
 function Card:can_use_consumeable(any_state, skip_check)
@@ -1564,7 +1583,16 @@ function Card:can_use_consumeable(any_state, skip_check)
                 return false
             end
         end
-        if G.STATE == G.STATES.SELECTING_HAND or G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.PLANET_PACK then
+        if self.ability.name == 'Tri-Eyed Cat' then
+            self.ability.trigon_remaining = (self.ability.extra.every-1-(G.GAME.hands_played - self.ability.hands_played_at_create))%(self.ability.extra.every+1)
+            if self.ability.trigon_remaining == 0 then
+                local eval = function(card) return (card.ability.trigon_remaining == 0) end
+                juice_card_until(self, eval, true)
+            elseif self.ability.trigon_remaining == self.ability.extra.every then
+                return true
+            end
+        end
+        if G.STATE == G.STATES.SELECTING_HAND or G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.PLANET_PACK or G.STATE == G.STATES.POLYGON_PACK then
             if self.ability.consumeable.max_highlighted then
                 if self.ability.consumeable.mod_num >= #G.hand.highlighted and #G.hand.highlighted >= (self.ability.consumeable.min_highlighted or 1) then
                     return true
@@ -1701,6 +1729,9 @@ function Card:open()
         elseif self.ability.name:find('Spectral') then
             G.STATE = G.STATES.SPECTRAL_PACK
             G.GAME.pack_size = self.ability.extra
+        elseif self.ability.name:find('Polygon') then
+            G.STATE = G.STATES.POLYGON_PACK
+            G.GAME.pack_size = self.ability.extra
         elseif self.ability.name:find('Standard') then
             G.STATE = G.STATES.STANDARD_PACK
             G.GAME.pack_size = self.ability.extra
@@ -1758,6 +1789,8 @@ function Card:open()
                         end
                     elseif self.ability.name:find('Spectral') then
                         card = create_card("Spectral", G.pack_cards, nil, nil, true, true, nil, 'spe')
+                    elseif self.ability.name:find('Polygon') then
+                        card = create_card("Polygon", G.pack_cards, nil, nil, true, true, nil, 'poly')
                     elseif self.ability.name:find('Standard') then
                         card = create_card((pseudorandom(pseudoseed('stdset'..G.GAME.round_resets.ante)) > 0.6) and "Enhanced" or "Base", G.pack_cards, nil, nil, nil, true, nil, 'sta')
                         local edition_rate = 2
@@ -2193,6 +2226,7 @@ function Card:start_materialize(dissolve_colours, silent, timefac)
     (self.ability.set == 'Planet'  and {G.C.SECONDARY_SET.Planet}) or
     (self.ability.set == 'Tarot' and {G.C.SECONDARY_SET.Tarot}) or
     (self.ability.set == 'Spectral' and {G.C.SECONDARY_SET.Spectral}) or
+    (self.ability.set == 'Polygon' and {G.C.SECONDARY_SET.Polygon}) or
     (self.ability.set == 'Booster' and {G.C.BOOSTER}) or
     (self.ability.set == 'Voucher' and {G.C.SECONDARY_SET.Voucher, G.C.CLEAR}) or 
     {G.C.GREEN}

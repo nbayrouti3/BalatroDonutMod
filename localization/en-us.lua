@@ -2232,6 +2232,62 @@
                 }
             }
         },
+        Polygon = {
+            c_trigon = {
+                name = "Tri-Eyed Cat",
+                text = {
+                    "Testing stuff out"
+                }
+            },
+            c_tetragon = {
+                name = "Quadruped Beast",
+                text = {}
+            },
+            c_pentagon = {
+                name = "Pentastar Hand",
+                text = {}
+            },
+            c_hexagon = {
+                name = "Hex-winged Angel",
+                text = {}
+            },
+            c_septagon = {
+                name = "Septabug",
+                text = {}
+            },
+            c_octagon = {
+                name = "Octoclops",
+                text = {}
+            },
+            c_nonagon = {
+                name = "Nonagon Lion",
+                text = {}
+            },
+            c_decagon = {
+                name = "Charybdis",
+                text = {}
+            },
+            c_hendecagon = {
+                name = "Echidna",
+                text = {}
+            },
+            c_dodecagon = {
+                name = "Typhon",
+                text = {}
+            },
+            c_hectogon = {
+                name = "Parallax",
+                text = {}
+            },
+            c_myriagon = {
+                name = "Fractal",
+                text = {}
+            },
+            c_apeirogon = {
+                name = "Infinity",
+                text = {}
+            }
+        },
         Edition = {
             e_base = {
                 name = "Base",
@@ -2570,6 +2626,13 @@
                 text = {
                     "Gives a free",
                     "{C:spectral}Spectral Pack"
+                }
+            },
+            tag_polygonal = {
+                name = "Polygonal Tag",
+                text = {
+                    "Give a free",
+                    "{C:polygon}Polygon Pack"
                 }
             }
         },
@@ -3162,6 +3225,15 @@
                     "learn what it does"
                 }
             },
+            undiscovered_polygon = {
+                name = "Not Discovered",
+                text = {
+                    "Purchase or use",
+                    "this card in an",
+                    "unseeded run to",
+                    "learn what it does"
+                }
+            },
             undiscovered_voucher = {
                 name = "Not Discovered",
                 text = {
@@ -3310,6 +3382,33 @@
                 text = {
                     "Choose {C:attention}#1#{} of up to",
                     "{C:attention}#2#{C:joker} Joker{} cards"
+                }
+            },
+            p_polygon_normal ={
+                name = "Polygon Pack",
+                text = {
+                    "Choose {C:attention}#1#{} of up to",
+                    "{C:attention}#2#{C:polygon} Polygon{} cards to",
+                    "add to your consumables",
+                    "{C:inactive}(Must have room)",
+                }
+            },
+            p_polygon_jumbo ={
+                name = "Jumbo Polygon Pack",
+                text = {
+                    "Choose {C:attention}#1#{} of up to",
+                    "{C:attention}#2#{C:polygon} Polygon{} cards to",
+                    "add to your consumables",
+                    "{C:inactive}(Must have room)",
+                }
+            },
+            p_polygon_mega ={
+                name = "Mega Polygon Pack",
+                text = {
+                    "Choose {C:attention}#1#{} of up to",
+                    "{C:attention}#2#{C:polygon} Polygon{} cards to",
+                    "add to your consumables",
+                    "{C:inactive}(Must have room)",
                 }
             },
             pinned_left = {
@@ -3601,6 +3700,7 @@
             b_stat_tarots = "Tarots",
             b_stat_planets = "Planets",
             b_stat_spectrals = "Spectrals",
+            b_stat_polygons = "Polygons",
             b_stat_vouchers = "Vouchers",
             b_next = "Next",
             b_endless = "Endless Mode",
@@ -3616,6 +3716,7 @@
             b_tarot_cards = "Tarot Cards",
             b_planet_cards = "Planet Cards",
             b_spectral_cards = "Spectral Cards",
+            b_polygon_cards = "Polygon Cards",
             b_enhanced_cards = "Enhanced Cards",
             b_editions = "Editions",
             b_booster_packs = "Booster Packs",
@@ -3671,6 +3772,7 @@
             k_dwarf_planet = "Dwarf Planet",
             k_planet_q = "Planet?",
             k_spectral = "Spectral",
+            k_polygon = "Polygon",
             k_booster = "Booster",
             k_edition = "Edition",
             k_hud_hands = "Hands",
@@ -3679,6 +3781,7 @@
             k_arcana_pack = "Arcana Pack",
             k_celestial_pack = "Celestial Pack",
             k_spectral_pack = "Spectral Pack",
+            k_polygon_pack = "Polygon Pack",
             k_standard_pack = "Standard Pack",
             k_buffoon_pack = "Buffoon Pack",
             k_enter_text = "Enter Text",
@@ -3866,6 +3969,7 @@
             k_plus_stone = "+1 Stone",
             k_plus_planet = "+1 Planet",
             k_plus_spectral = "+1 Spectral",
+            k_plus_polygon = "+1 Polygon",
             k_plus_joker = "+1 Joker",
             k_active_ex = "Active!",
             k_level_up_ex = "Level Up!",
@@ -3899,6 +4003,8 @@
             ante_x_voucher = "ANTE #1# VOUCHER",
             loyalty_active = "Active!",
             loyalty_inactive = "#1# remaining",
+            trigon_active = "Ready!",
+            trigon_inactive = "#1# remaining", 
             deck_preview_wheel_singular = "Numbers may be lower due to the #1# card drawn face down",
             deck_preview_wheel_plural = "Numbers may be lower due to the #1# cards drawn face down",
             challenges_completed = "Completed #1#/#2# Challenges",

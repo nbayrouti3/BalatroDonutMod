@@ -668,6 +668,28 @@ G.FUNCS.your_collection_spectral_page = function(args)
   INIT_COLLECTION_CARD_ALERTS()
 end
 
+G.FUNCS.your_collection_polygon_page = function(args)
+  if not args or not args.cycle_config then return end
+  for j = 1, #G.your_collection do
+    for i = #G.your_collection[j].cards,1, -1 do
+      local c = G.your_collection[j]:remove_card(G.your_collection[j].cards[i])
+      c:remove()
+      c = nil
+    end
+  end
+  
+  for j = 1, #G.your_collection do
+    for i = 1, 3+j do
+      local center = G.P_CENTER_POOLS["Polygon"][i+(j-1)*(4) + (9*(args.cycle_config.current_option - 1))]
+      if not center then break end
+      local card = Card(G.your_collection[j].T.x + G.your_collection[j].T.w/2, G.your_collection[j].T.y, G.CARD_W, G.CARD_H, G.P_CARDS.empty, center)
+      card:start_materialize(nil, i>1 or j>1)
+      G.your_collection[j]:emplace(card)
+    end
+  end
+  INIT_COLLECTION_CARD_ALERTS()
+end
+
 --Changing the current page being viewed for the booster pack card collection
 --
 ---@param args {cycle_config: table}
@@ -1457,6 +1479,13 @@ G.FUNCS.your_collection_spectrals = function(e)
   }
 end
 
+G.FUNCS.your_collection_polygons = function(e)
+  G.SETTINGS.paused = true
+  G.FUNCS.overlay_menu{
+    definition = create_UIBox_your_collection_polygons(),
+  }
+end
+
 G.FUNCS.your_collection_vouchers = function(e)
   G.SETTINGS.paused = true
   G.FUNCS.overlay_menu{
@@ -2086,7 +2115,7 @@ end
 
   G.FUNCS.can_skip_booster = function(e)
     if G.pack_cards and (G.pack_cards.cards[1]) and 
-    (G.STATE == G.STATES.PLANET_PACK or G.STATE == G.STATES.STANDARD_PACK or G.STATE == G.STATES.BUFFOON_PACK or (G.hand and (G.hand.cards[1] or (G.hand.config.card_limit <= 0)))) then 
+    (G.STATE == G.STATES.PLANET_PACK or G.STATE == G.STATES.STANDARD_PACK or G.STATE == G.STATES.BUFFOON_PACK or G.STATE == G.STATES.POLYGON_PACK or (G.hand and (G.hand.cards[1] or (G.hand.config.card_limit <= 0)))) then 
         e.config.colour = G.C.GREY
         e.config.button = 'skip_booster'
     else
@@ -2135,6 +2164,7 @@ end
     G.STATE = (G.STATE == G.STATES.TAROT_PACK and G.STATES.TAROT_PACK) or
       (G.STATE == G.STATES.PLANET_PACK and G.STATES.PLANET_PACK) or
       (G.STATE == G.STATES.SPECTRAL_PACK and G.STATES.SPECTRAL_PACK) or
+      (G.STATE == G.STATES.POLYGON_PACK and G.STATES.POLYGON_PACK) or
       (G.STATE == G.STATES.STANDARD_PACK and G.STATES.STANDARD_PACK) or
       (G.STATE == G.STATES.BUFFOON_PACK and G.STATES.BUFFOON_PACK) or
       G.STATES.PLAY_TAROT
@@ -2164,7 +2194,7 @@ end
     if card.area then card.area:remove_card(card) end
     
     if card.ability.consumeable then
-      if G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.PLANET_PACK or G.STATE == G.STATES.SPECTRAL_PACK then
+      if G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.PLANET_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.POLYGON_PACK then
         card.T.x = G.hand.T.x + G.hand.T.w/2 - card.T.w/2
         card.T.y = G.hand.T.y + G.hand.T.h/2 - card.T.h/2 - 0.5
         discover_card(card.config.center)
@@ -2220,8 +2250,8 @@ end
                 G.CONTROLLER.locks.use = false
 
                 if (prev_state == G.STATES.TAROT_PACK or prev_state == G.STATES.PLANET_PACK or
-                  prev_state == G.STATES.SPECTRAL_PACK or prev_state == G.STATES.STANDARD_PACK or
-                  prev_state == G.STATES.BUFFOON_PACK) and G.booster_pack then
+                  prev_state == G.STATES.SPECTRAL_PACK or prev_state == G.STATES.POLYGON_PACK or
+                  prev_state == G.STATES.STANDARD_PACK or prev_state == G.STATES.BUFFOON_PACK) and G.booster_pack then
                   if area == G.consumeables then
                     G.booster_pack.alignment.offset.y = G.booster_pack.alignment.offset.py
                     G.booster_pack.alignment.offset.py = nil
