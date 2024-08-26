@@ -1448,6 +1448,13 @@
                     "{C:attention}consumable{} with a {C:spectral}Spectral{} card",
                     "{C:inactive}(Must have consumables)",
                 }
+            },
+            j_camou = {
+                name = "Camou",
+                text = {
+                    "Copies ability of",
+                    "{C:attention}Joker{} to the left and right"
+                }
             }
         },
         Voucher = {
