@@ -917,6 +917,15 @@ function Card:generate_UIBox_ability_table()
         elseif self.ability.name == 'Chicot' then
         elseif self.ability.name == 'Perkeo' then loc_vars = {self.ability.extra}
         elseif self.ability.name == 'Haunted Joker' then loc_vars = {''..(G.GAME and G.GAME.probabilities.normal or 1),self.ability.extra}
+        elseif self.ability.name == 'Camou' then 
+            self.ability.blueprint_compat_ui = self.ability.blueprint_compat_ui or ''; self.ability.blueprint_compat_check = nil
+            main_end = (self.area and self.area == G.jokers) and {
+                {n=G.UIT.C, config={align = "bm", minh = 0.4}, nodes={
+                    {n=G.UIT.C, config={ref_table = self, align = "m", colour = G.C.JOKER_GREY, r = 0.05, padding = 0.06, func = 'blueprint_compat'}, nodes={
+                        {n=G.UIT.T, config={ref_table = self.ability, ref_value = 'blueprint_compat_ui',colour = G.C.UI.TEXT_LIGHT, scale = 0.32*0.8}},
+                    }}
+                }}
+            } or nil
         end
     end
     local badges = {}
@@ -2332,6 +2341,44 @@ function Card:calculate_joker(context)
                     return other_joker_ret
                 end
             end
+        end
+        if self.ability.name == "Camou" then
+            local left_joker = nil
+            local right_joker = nil
+            local ret_joker = nil
+            for i = 1, #G.jokers.cards do
+                if G.jokers.cards[i] == self then left_joker = G.jokers.cards[i-1] end
+                if G.jokers.cards[i] == self then right_joker = G.jokers.cards[i+1] end
+            end
+            if left_joker and left_joker ~= self then
+                context.blueprint = (context.blueprint and (context.blueprint + 1)) or 1
+                context.blueprint_card = context.blueprint_card or self
+                if context.blueprint > #G.jokers.cards + 1 then return end
+                local left_joker_ret = left_joker:calculate_joker(context)
+                if left_joker_ret then 
+                    ret_joker = left_joker_ret
+                    ret_joker.count = 1
+                    ret_joker.card = context.blueprint_card or self
+                    ret_joker.colour = G.C.BLUE
+                end
+            end
+            if right_joker and right_joker ~= self then
+                context.blueprint = (context.blueprint and (context.blueprint + 1)) or 1
+                context.blueprint_card = context.blueprint_card or self
+                if context.blueprint > #G.jokers.cards + 1 then return end
+                local right_joker_ret = right_joker:calculate_joker(context)
+                if right_joker_ret then
+                    if ret_joker then
+                        ret_joker.count = 2
+                    else
+                        ret_joker = right_joker_ret
+                        ret_joker.card = context.blueprint_card or self
+                        ret_joker.colour = G.C.BLUE
+                    end
+                end
+            end
+            
+            return ret_joker
         end
         if context.open_booster then
             if self.ability.name == 'Hallucination' and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
