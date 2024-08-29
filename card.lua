@@ -1185,7 +1185,7 @@ function Card:use_consumeable(area, copier)
         end
         update_hand_text({sound = 'button', volume = 0.7, pitch = 1.1, delay = 0}, {mult = 0, chips = 0, handname = '', level = ''})
     end
-    if self.ability.name == 'Talisman' or self.ability.name == 'Deja Vu' or self.ability.name == 'Trance' or self.ability.name == 'Medium' then
+    if self.ability.name == 'Talisman' or self.ability.name == 'Deja Vu' or self.ability.name == 'Trance' or self.ability.name == 'Medium' or self.ability.name == 'Cat Toy' then
         local conv_card = G.hand.highlighted[1]
         G.E_MANAGER:add_event(Event({func = function()
             play_sound('tarot1')
@@ -1774,10 +1774,11 @@ function Card:open()
                         local seal_poll = pseudorandom(pseudoseed('stdseal'..G.GAME.round_resets.ante))
                         if seal_poll > 1 - 0.02*seal_rate then
                             local seal_type = pseudorandom(pseudoseed('stdsealtype'..G.GAME.round_resets.ante))
-                            if seal_type > 0.75 then card:set_seal('Red')
-                            elseif seal_type > 0.5 then card:set_seal('Blue')
-                            elseif seal_type > 0.25 then card:set_seal('Gold')
-                            else card:set_seal('Purple')
+                            if seal_type > 0.8 then card:set_seal('Red')
+                            elseif seal_type > 0.6 then card:set_seal('Blue')
+                            elseif seal_type > 0.4 then card:set_seal('Gold')
+                            elseif seal_type > 0.2 then card:set_seal('Purple')
+                            else card:set_seal('Biscuit')
                             end
                         end
                     elseif self.ability.name:find('Buffoon') then
@@ -2259,6 +2260,14 @@ function Card:calculate_seal(context)
                     card = self
                 }
         end
+
+        if self.seal == 'Biscuit'then
+            G.E_MANAGER:add_event(Event({ func = function()
+                G.hand:add_to_highlighted(self, true)
+                play_sound('card1', 1)
+                G.FUNCS.discard_cards_from_highlighted(nil, true) 
+            return true end })) 
+        end
     end
     if context.discard then
         if self.seal == 'Purple' and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
@@ -2515,10 +2524,11 @@ function Card:calculate_joker(context)
                             front = pseudorandom_element(G.P_CARDS, pseudoseed('cert_fr')), 
                             center = G.P_CENTERS.c_base}, G.hand, nil, nil, {G.C.SECONDARY_SET.Enhanced})
                         local seal_type = pseudorandom(pseudoseed('certsl'))
-                        if seal_type > 0.75 then _card:set_seal('Red', true)
-                        elseif seal_type > 0.5 then _card:set_seal('Blue', true)
-                        elseif seal_type > 0.25 then _card:set_seal('Gold', true)
-                        else _card:set_seal('Purple', true)
+                        if seal_type > 0.8 then _card:set_seal('Red', true)
+                        elseif seal_type > 0.6 then _card:set_seal('Blue', true)
+                        elseif seal_type > 0.4 then _card:set_seal('Gold', true)
+                        elseif seal_type > 0.2 then _card:set_seal('Purple', true)
+                        else _card:set_seal('Biscuit', true)
                         end
                         G.GAME.blind:debuff_card(_card)
                         G.hand:sort()

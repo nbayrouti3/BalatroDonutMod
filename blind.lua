@@ -203,6 +203,13 @@ function Blind:set_blind(blind, reset, silent)
             return true end })) 
         end
     end
+    if self.name == "Smothering Tithe" and not reset then
+        if G.GAME.modifiers.discard_cost then
+            G.GAME.modifiers.discard_cost = G.GAME.modifiers.discard_cost + 2
+        else
+            G.GAME.modifiers.discard_cost = 2
+        end
+    end
 
     --add new debuffs
     for _, v in ipairs(G.playing_cards) do
@@ -341,6 +348,9 @@ function Blind:defeat(silent)
     if self.name == 'The Manacle' and not self.disabled then
         G.hand:change_size(1)
     end
+    if self.name == 'Smothering Tithe' and not self.disabled then
+        G.GAME.modifiers.discard_cost = G.GAME.modifiers.discard_cost - 2
+    end
 end
 
 function Blind:get_type()
@@ -393,6 +403,9 @@ function Blind:disable()
     if self.name == 'Violet Vessel' then 
         self.chips = self.chips/3
         self.chip_text = number_format(self.chips)
+    end
+    if self.name == 'Smothering Tithe' then
+        G.GAME.modifiers.discard_cost = G.GAME.modifiers.discard_cost - 2
     end
     G.E_MANAGER:add_event(Event({
         trigger = 'immediate',

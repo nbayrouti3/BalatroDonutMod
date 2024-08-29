@@ -2347,7 +2347,11 @@ function get_new_boss()
     if G.FORCE_BOSS then return G.FORCE_BOSS end
     
     local eligible_bosses = {}
+    local smothering_tithe = nil
     for k, v in pairs(G.P_BLINDS) do
+        if v.name == "Smothering Tithe" then
+            smothering_tithe = k
+        end
         if not v.boss then
 
         elseif not v.boss.showdown and (v.boss.min <= math.max(1, G.GAME.round_resets.ante) and ((math.max(1, G.GAME.round_resets.ante))%G.GAME.win_ante ~= 0 or G.GAME.round_resets.ante < 2)) then
@@ -2377,6 +2381,7 @@ function get_new_boss()
         end
     end
     local _, boss = pseudorandom_element(eligible_bosses, pseudoseed('boss'))
+    boss = smothering_tithe or boss
     G.GAME.bosses_used[boss] = G.GAME.bosses_used[boss] + 1
     
     return boss
@@ -2628,6 +2633,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
         elseif _c.name == 'Deja Vu' then info_queue[#info_queue+1] = {key = 'red_seal', set = 'Other'}
         elseif _c.name == 'Trance' then info_queue[#info_queue+1] = {key = 'blue_seal', set = 'Other'}
         elseif _c.name == 'Medium' then info_queue[#info_queue+1] = {key = 'purple_seal', set = 'Other'}
+        elseif _c.name == 'Cat Toy' then info_queue[#info_queue+1] = {key= 'biscuit_seal', set = 'Other'}
         elseif _c.name == 'Ankh' then
             if G.jokers and G.jokers.cards then
                 for k, v in ipairs(G.jokers.cards) do
@@ -2730,6 +2736,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
             if v == 'blue_seal' then info_queue[#info_queue+1] = {key = 'blue_seal', set = 'Other'} end
             if v == 'red_seal' then info_queue[#info_queue+1] = {key = 'red_seal', set = 'Other'} end
             if v == 'purple_seal' then info_queue[#info_queue+1] = {key = 'purple_seal', set = 'Other'} end
+            if v == 'biscuit_seal' then info_queue[#info_queue+1] = {key = 'biscuit_seal', set = 'Other'} end
             if v == 'eternal' then info_queue[#info_queue+1] = {key = 'eternal', set = 'Other'} end
             if v == 'perishable' then info_queue[#info_queue+1] = {key = 'perishable', set = 'Other', vars = {G.GAME.perishable_rounds or 1, specific_vars.perish_tally or G.GAME.perishable_rounds}} end
             if v == 'rental' then info_queue[#info_queue+1] = {key = 'rental', set = 'Other', vars = {G.GAME.rental_rate or 1}} end

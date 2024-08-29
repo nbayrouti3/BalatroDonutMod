@@ -1145,6 +1145,7 @@ end
       red_seal = G.C.RED,
       blue_seal = G.C.BLUE,
       purple_seal = G.C.PURPLE,
+      -- need a biscuit seal one?
       pinned_left = G.C.ORANGE,
     }
     return G.BADGE_COL[key] or {1, 0, 0, 1}
@@ -3652,8 +3653,8 @@ function create_UIBox_your_collection_spectrals()
   end
 
   local spectral_options = {}
-  for i = 1, math.floor(#G.P_CENTER_POOLS.Tarot/9) do
-    table.insert(spectral_options, localize('k_page')..' '..tostring(i)..'/'..tostring(math.floor(#G.P_CENTER_POOLS.Spectral/9)))
+  for i = 1, math.ceil(#G.P_CENTER_POOLS.Spectral/9) do
+    table.insert(spectral_options, localize('k_page')..' '..tostring(i)..'/'..tostring(math.ceil(#G.P_CENTER_POOLS.Spectral/9)))
   end
 
   INIT_COLLECTION_CARD_ALERTS()
