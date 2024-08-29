@@ -2223,6 +2223,13 @@
                     "{C:legendary,E:1}poker hand",
                     "by {C:attention}1{} level"
                 }
+            },
+            c_cat_toy = {
+                name = "Cat Toy",
+                text = {"Add a {C:attention}Biscuit Seal{}",
+                    "to {C:attention}1{} selected",
+                    "card in your hand"
+                }
             }
         },
         Edition = {
@@ -2765,6 +2772,13 @@
                     "Forces 1 card to",
                     "always be selected"
                 }
+            },
+            bl_smothering_tithe = {
+                name = "Smothering Tithe",
+                text = {
+                    "Every time you discard",
+                    "lose $2"
+                }
             }
         },
         Back = {
@@ -2928,6 +2942,14 @@
                     "Creates a {C:tarot}Tarot{} card",
                     "when {C:attention}discarded",
                     "{C:inactive}(Must have room)"
+                }
+            },
+            biscuit_seal = {
+                name = "Biscuit Seal",
+                text = {
+                    "{C:attention}Discards{} this card and",
+                    "{C:attention}draws{} a card if held in hand",
+                    "after all scoring is finished"
                 }
             },
             eternal = {
@@ -3533,6 +3555,7 @@
             blue_seal = "Blue Seal",
             red_seal = "Red Seal",
             purple_seal = "Purple Seal",
+            biscuit_seal = "Biscuit Seal",
             locked = "Locked",
             eternal = "Eternal",
             perishable = "Perishable",

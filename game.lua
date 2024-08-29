@@ -191,6 +191,7 @@ function Game:start_up()
         Purple = Sprite(0, 0, self.CARD_W, self.CARD_H, self.ASSET_ATLAS["centers"], {x = 4,y = 4}),
         Red = Sprite(0, 0, self.CARD_W, self.CARD_H, self.ASSET_ATLAS["centers"], {x = 5,y = 4}),
         Blue = Sprite(0, 0, self.CARD_W, self.CARD_H, self.ASSET_ATLAS["centers"], {x = 6,y = 4}),
+        Biscuit = Sprite(0, 0, self.CARD_W, self.CARD_H, self.ASSET_ATLAS["centers"], {x = 6, y = 5}),
     }
     self.sticker_map = {
         'White','Red','Green','Black','Blue','Purple','Orange','Gold'
@@ -220,6 +221,7 @@ function Game:init_item_prototypes()
         Red =       {order = 2,  discovered = false, set = "Seal"},
         Blue =      {order = 3,  discovered = false, set = "Seal"},
         Purple =    {order = 4,  discovered = false, set = "Seal"},
+        Biscuit =   {order = 5,  discovered = true,  set = "Seal"},
     }
     self.P_TAGS = {
         tag_uncommon =      {name = 'Uncommon Tag',     set = 'Tag', discovered = false, min_ante = nil, order = 1, config = {type = 'store_joker_create'}, pos = {x = 0,y = 0}},
@@ -264,7 +266,7 @@ function Game:init_item_prototypes()
         bl_small =           {name = 'Small Blind',  defeated = false, order = 1, dollars = 3, mult = 1,  vars = {}, debuff_text = '', debuff = {}, pos = {x=0, y=0}},
         bl_big =             {name = 'Big Blind',    defeated = false, order = 2, dollars = 4, mult = 1.5,vars = {}, debuff_text = '', debuff = {}, pos = {x=0, y=1}},
         bl_ox =              {name = 'The Ox',       defeated = false, order = 4, dollars = 5, mult = 2,  vars = {localize('ph_most_played')}, debuff = {}, pos = {x=0, y=2}, boss = {min = 6, max = 10}, boss_colour = HEX('b95b08')},
-        bl_hook =            {name = 'The Hook',     defeated = false, order = 3, dollars = 5, mult = 2,  vars = {}, debuff = {}, pos = {x=0, y=7}, boss = {min = 1, max = 10}, boss_colour = HEX('a84024')},
+        bl_hook =            {name = 'The Hook',     defeated = false, order = 31, dollars = 5, mult = 2,  vars = {}, debuff = {}, pos = {x=0, y=7}, boss = {min = 1, max = 10}, boss_colour = HEX('a84024')},
         bl_mouth =           {name = 'The Mouth',    defeated = false, order = 17, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=18}, boss = {min = 2, max = 10}, boss_colour = HEX('ae718e')},
         bl_fish =            {name = 'The Fish',     defeated = false, order = 10, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=5}, boss = {min = 2, max = 10}, boss_colour = HEX('3e85bd')},
         bl_club =            {name = 'The Club',     defeated = false, order = 9, dollars = 5, mult = 2,  vars = {}, debuff = {suit = 'Clubs'}, pos = {x=0, y=4}, boss = {min = 1, max = 10}, boss_colour = HEX('b9cb92')},
@@ -292,7 +294,7 @@ function Game:init_item_prototypes()
         bl_flint =           {name = 'The Flint',    defeated = false, order = 24, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=24}, boss = {min = 2, max = 10}, boss_colour = HEX('e56a2f')},
         bl_final_acorn =     {name = 'Amber Acorn',  defeated = false, order = 26, dollars = 8, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=27}, boss = {showdown = true, min = 10, max = 10}, boss_colour = HEX('fda200')},
         bl_final_heart =     {name = 'Crimson Heart',defeated = false, order = 29, dollars = 8, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=25}, boss = {showdown = true, min = 10, max = 10}, boss_colour = HEX('ac3232')},
-        
+        bl_smothering_tithe= {name = 'Smothering Tithe', defeated = false, order = 3, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=8}, boss = {min = 1, max = 10}, boss_color = HEX('ac3232')},
     }
     self.b_undiscovered = {name = 'Undiscovered', debuff_text = 'Defeat this blind to discover', pos = {x=0,y=30}}
 
@@ -587,6 +589,7 @@ function Game:init_item_prototypes()
         c_cryptid=          {order = 16,   discovered = false, cost = 4, consumeable = true, name = "Cryptid", pos = {x=5,y=5}, set = "Spectral", config = {extra = 2, max_highlighted = 1}},
         c_soul=             {order = 17,   discovered = false, cost = 4, consumeable = true, name = "The Soul", pos = {x=2,y=2}, set = "Spectral", effect = "Unlocker", config = {}, hidden = true},
         c_black_hole=       {order = 18,   discovered = false, cost = 4, consumeable = true, name = "Black Hole", pos = {x=9,y=3}, set = "Spectral", config = {}, hidden = true},
+        c_cat_toy=          {order = 19,   discovered = false,  cost = 4, consumeable = true, name = "Cat Toy", pos = {x=9, y=3}, set = "Spectral", config = {extra = 'Biscuit', max_highlighted = 1}},
 
         --Vouchers
 
@@ -731,7 +734,7 @@ function Game:init_item_prototypes()
 
 
     -------------------------------------
-    local TESTHELPER_unlocks = false and not _RELEASE_MODE
+    local TESTHELPER_unlocks = true and not _RELEASE_MODE
     -------------------------------------
     if not love.filesystem.getInfo(G.SETTINGS.profile..'') then love.filesystem.createDirectory( G.SETTINGS.profile..'' ) end
     if not love.filesystem.getInfo(G.SETTINGS.profile..'/'..'meta.jkr') then love.filesystem.append( G.SETTINGS.profile..'/'..'meta.jkr', 'return {}') end
