@@ -1455,6 +1455,29 @@
                     "Copies ability of",
                     "{C:attention}Joker{} to the left and right"
                 }
+            },
+            j_lion = {
+                name = "Lion Joker",
+                text = {
+                    "When sold, all cards in your",
+                    "hand become {C:attention}Steel{} cards"
+                }
+            },
+            j_twin = {
+                name = "Joker Twin",
+                text = {
+                    "Copies ability of a",
+                    "random {C:attention}Joker{}"
+                }
+            },
+            j_phallussy = {
+                name = "Gambler's Phallussy",
+                text = {
+                    "Every played card counts",
+                    "in scoring. Scored cards have a",
+                    "chance to give either {X:mult,C:white}X#1#{}",
+                    "or {X:mult,C:white}X#2#{} Mult"
+                }
             }
         },
         Voucher = {

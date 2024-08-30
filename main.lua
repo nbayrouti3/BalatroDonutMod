@@ -1,8 +1,7 @@
+if arg[2] == "debug" then
+    require("lldebugger").start()
+end
 if (love.system.getOS() == 'OS X' ) and (jit.arch == 'arm64' or jit.arch == 'arm') then jit.off() end
-package.loaded["lldebugger"] = assert(loadfile(os.getenv("LOCAL_LUA_DEBUGGER_FILEPATH")))()
--- require("lldebugger").start()
--- print("turned on debugger")
---if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then print("entered debugger start, haven't turned on the debugger yet"); require("lldebugger").start(); print("turned on debugger") end
 require "engine/object"
 require "bit"
 require "engine/string_packer"
@@ -390,3 +389,13 @@ function love.resize(w, h)
 	G.CANVAS = love.graphics.newCanvas(w*G.CANV_SCALE, h*G.CANV_SCALE, {type = '2d', readable = true})
 	G.CANVAS:setFilter('linear', 'linear')
 end 
+
+local love_errorhandler = love.errorhandler
+
+function love.errorhandler(msg)
+    if lldebugger then
+        error(msg, 2)
+    else
+        return love_errorhandler(msg)
+    end
+end
