@@ -926,6 +926,9 @@ function Card:generate_UIBox_ability_table()
                     }}
                 }}
             } or nil
+        elseif self.ability.name == 'Lion Joker' then loc_vars = self.ability.extra 
+        elseif self.ability.name == 'Joker Twin' then loc_vars = self.ability.extra
+        elseif self.ability.name == "Gambler's Phallussy" then loc_vars = {2, 0.5}
         end
     end
     local badges = {}
@@ -2386,8 +2389,30 @@ function Card:calculate_joker(context)
                     end
                 end
             end
-            
             return ret_joker
+        end
+        if self.ability.name == "Joker Twin" then
+            local jokers= {}
+            for i=1, #G.jokers.cards do 
+                if G.jokers.cards[i] ~= self then
+                    jokers[#jokers+1] = G.jokers.cards[i]
+                end
+            end
+
+            if #jokers > 0 then 
+                --card_eval_status_text(context.blueprint_card or self, 'extra', nil, nil, nil, {message = localize('k_duplicated_ex')})
+                local chosen_joker = pseudorandom_element(jokers, pseudoseed('invisible'))
+                print(chosen_joker.ability.name)
+                context.blueprint = (context.blueprint and (context.blueprint + 1)) or 1
+                context.blueprint_card = context.blueprint_card or self
+                if context.blueprint > #G.jokers.cards + 1 then return end
+                local joker_ret = chosen_joker:calculate_joker(context)
+                if joker_ret then
+                    joker_ret.card = context.blueprint_card or self
+                    joker_ret.colour = G.C.BLUE
+                    return joker_ret
+                end
+            end
         end
         if context.open_booster then
             if self.ability.name == 'Hallucination' and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
@@ -2447,6 +2472,11 @@ function Card:calculate_joker(context)
                     end
                 else
                     card_eval_status_text(context.blueprint_card or self, 'extra', nil, nil, nil, {message = localize('k_no_other_jokers')})
+                end
+            end
+            if self.ability.name == 'Lion Joker' then
+                for i=1, #G.hand.cards do
+                    G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function() G.hand.cards[i]:set_ability(G.P_CENTERS['m_steel']);return true end }))
                 end
             end
         elseif context.selling_card then
@@ -3311,6 +3341,29 @@ function Card:calculate_joker(context)
                     context.other_card:is_suit(self.ability.extra.suit) then
                     return {
                         mult = self.ability.extra.s_mult,
+                        card = self
+                    }
+                end
+                if self.ability.name == "Gambler's Phallussy" and not context.blueprint then
+                    local x_mult = 2
+                    local range_mod = 0
+                    local x_mult_chance = love.math.random(0,#context.scoring_hand * 2)
+                    if x_mult_chance >= 0 and x_mult_chance <= #context.scoring_hand + range_mod then
+                        x_mult = 0.5
+                    else
+                        range_mod = range_mod + 1
+                    end
+                    -- G.E_MANAGER:add_event(Event({
+                    --     func = function()
+                    --         v:juice_up()
+                    --         return true
+                    --     end
+                    -- })) 
+                    self.ability.x_mult = x_mult
+                    return {
+                        x_mult = self.ability.x_mult,
+                        message = localize{type='variable',key='a_xmult',vars={self.ability.x_mult}},
+                        colour = G.C.MULT,
                         card = self
                     }
                 end

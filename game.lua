@@ -528,8 +528,9 @@ function Game:init_item_prototypes()
         j_perkeo=           {order = 150,  unlocked = false, discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Perkeo", pos = {x=7,y=8}, soul_pos = {x=7, y=9}, set = "Joker", effect = "", config = {}, unlock_condition = {type = '', extra = '', hidden = true}},
         j_hauntedjoker=     {order = 151,  unlocked = true,  discovered = true,  blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = "Haunted Joker", pos = {x=0,y=16}, set = "Joker", effect = "Spawn Tarot", cost_mult = 1.0, config = {extra=10}},
         j_camou=            {order = 152, unlocked = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Camou", pos = {x=3,y=16}, soul_pos = {x=4,y=16}, set = "Joker", effect = "Copycat", cost_mult = 1.0, config = {}},
-
-
+        j_lion=             {order = 153, unlocked = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = "Lion Joker", pos = {x=5, y=14}, set = "Joker", effect = "Steel Card", cost_mult = 1.0, config = {}},
+        j_twin=             {order = 154, unlocked = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = "Joker Twin", pos = {x=5, y=10}, set = "Joker", effect = "Copycat", cost_mult = 1.0, config = {}},
+        j_phallussy=        {order = 155, unlocked = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Gambler's Phallussy", pos = {x=6, y=16}, set = "Joker", effect = "", cost_mult = 1.0, config = {}},
         --All Consumeables
 
         --Tarots
