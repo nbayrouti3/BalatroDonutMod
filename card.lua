@@ -208,6 +208,15 @@ function Card:set_sprites(_center, _front)
             self.children.floating_sprite.states.click.can = false
         end
 
+        if _center.soul_anim_pos then
+            local x_offset = self.T.w * 0.5
+            local y_offset = self.T.h * 0.5
+            self.children.animated_sprite = AnimatedSprite(self.T.x + x_offset, self.T.y + y_offset, self.T.w, self.T.h, G.ANIMATION_ATLAS['dancing_dunc'], self.config.center.soul_anim_pos)
+            self.children.animated_sprite.role.draw_major = self
+            self.children.animated_sprite.states.hover.can = false
+            self.children.animated_sprite.states.click.can = false
+        end
+
         if not self.children.back then
             self.children.back = Sprite(self.T.x, self.T.y, self.T.w, self.T.h, G.ASSET_ATLAS["centers"], self.params.bypass_back or (self.playing_card and G.GAME[self.back].pos or G.P_CENTERS['b_red'].pos))
             self.children.back.states.hover = self.states.hover
@@ -929,6 +938,8 @@ function Card:generate_UIBox_ability_table()
         elseif self.ability.name == 'Lion Joker' then loc_vars = self.ability.extra 
         elseif self.ability.name == 'Joker Twin' then loc_vars = self.ability.extra
         elseif self.ability.name == "Gambler's Phallussy" then loc_vars = {2, 0.5}
+        elseif self.ability.name == 'Dancing Duncan' then loc_vars = {2, 4, self.ability.mult}
+        elseif self.ability.name == 'Freeze Dried Strawberry' then loc_vars = {self.ability.extra.chips, 1, self.ability.extra.chance}
         end
     end
     local badges = {}
@@ -3347,7 +3358,7 @@ function Card:calculate_joker(context)
                 if self.ability.name == "Gambler's Phallussy" and not context.blueprint then
                     local x_mult = 2
                     local range_mod = 0
-                    local x_mult_chance = love.math.random(0,#context.scoring_hand * 2)
+                    local x_mult_chance = math.random(0,#context.scoring_hand * 2)
                     if x_mult_chance >= 0 and x_mult_chance <= #context.scoring_hand + range_mod then
                         x_mult = 0.5
                     else
@@ -3686,6 +3697,13 @@ function Card:calculate_joker(context)
                             self.ability.mult = self.ability.mult + self.ability.extra
                         end
                     end
+                    if self.ability.name == 'Dancing Duncan' then
+                        if context.scoring_name == 'Pair' then
+                            self.ability.mult = self.ability.mult + 2
+                        elseif context.scoring_name == 'Two Pair' then
+                            self.ability.mult = self.ability.mult + 4
+                        end
+                    end
                     if self.ability.name == 'Obelisk' and not context.blueprint then
                         local reset = true
                         local play_more_than = (G.GAME.hands[context.scoring_name].played or 0)
@@ -3854,6 +3872,18 @@ function Card:calculate_joker(context)
                             return {
                                 message = localize{type='variable',key='a_chips',vars={G.GAME.current_round.discards_left*self.ability.extra}},
                                 chip_mod = G.GAME.current_round.discards_left*self.ability.extra
+                            }
+                        end
+                        if self.ability.name == 'Freeze Dried Strawberry' then
+                            local break_chance = math.random(1, self.ability.extra.chance)
+                            if break_chance == 1 then
+                                self:shatter()
+                                return
+                            end
+
+                            return {
+                                message = localize{type='variable', key='a_chips', vars={self.ability.extra.chips}},
+                                chip_mod = self.ability.extra.chips
                             }
                         end
                         if self.ability.name == 'Stuntman' then
@@ -4136,6 +4166,12 @@ function Card:calculate_joker(context)
                             }
                         end
                         if self.ability.name == 'Ride the Bus' and self.ability.mult > 0 then
+                            return {
+                                message = localize{type='variable',key='a_mult',vars={self.ability.mult}},
+                                mult_mod = self.ability.mult
+                            }
+                        end
+                        if self.ability.name == 'Dancing Duncan' and self.ability.mult > 0 then
                             return {
                                 message = localize{type='variable',key='a_mult',vars={self.ability.mult}},
                                 mult_mod = self.ability.mult
@@ -4583,7 +4619,7 @@ function Card:draw(layer)
             end
             
             --If the card has any edition/seal, add that here
-            if self.edition or self.seal or self.ability.eternal or self.ability.rental or self.ability.perishable or self.sticker or self.ability.set == 'Spectral' or self.debuff or self.greyed or self.ability.name == 'The Soul' or self.ability.set == 'Voucher' or self.ability.set == 'Booster' or self.config.center.soul_pos or self.config.center.demo then
+            if self.edition or self.seal or self.ability.eternal or self.ability.rental or self.ability.perishable or self.sticker or self.ability.set == 'Spectral' or self.debuff or self.greyed or self.ability.name == 'The Soul' or self.ability.set == 'Voucher' or self.ability.set == 'Booster' or self.config.center.soul_pos or self.config.center.soul_anim_pos or self.config.center.demo then
                 if (self.ability.set == 'Voucher' or self.config.center.demo) and (self.ability.name ~= 'Antimatter' or not (self.config.center.discovered or self.bypass_discovery_center)) then
                     self.children.center:draw_shader('voucher', nil, self.ARGS.send_to_shader)
                 end
@@ -4660,6 +4696,15 @@ function Card:draw(layer)
                     end
                     
                 end
+                if self.config.center.soul_anim_pos and (self.config.center.discovered or self.bypass_discovery_center) then
+                    local scale_mod = 0.07 + 0.02*math.sin(1.8*G.TIMERS.REAL) + 0.00*math.sin((G.TIMERS.REAL - math.floor(G.TIMERS.REAL))*math.pi*14)*(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL)))^3
+                    local rotate_mod = 0.05*math.sin(1.219*G.TIMERS.REAL) + 0.00*math.sin((G.TIMERS.REAL)*math.pi*5)*(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL)))^2
+                    local x_mod = self.T.w / 4
+                    local y_mod = self.T.h / 4
+                                                --draw_shader(_shader, _shadow_height, _send, _no_tilt, other_obj, ms, mr, mx, my, custom_shader, tilt_shadow)
+                    -- self.children.animated_sprite:draw_shader('dissolve',0, nil, true, self.children.center,scale_mod, rotate_mod,x_mod, y_mod * 1.15,nil, 0)
+                    self.children.animated_sprite:draw_shader('dissolve', nil, nil, true, self.children.center, scale_mod, rotate_mod, x_mod, y_mod, nil, 0)
+                end
                 if self.debuff then
                     self.children.center:draw_shader('debuff', nil, self.ARGS.send_to_shader)
                     if self.children.front and self.ability.effect ~= 'Stone Card' then
@@ -4698,7 +4743,7 @@ function Card:draw(layer)
         end
 
         for k, v in pairs(self.children) do
-            if k ~= 'focused_ui' and k ~= "front" and k ~= "back" and k ~= "soul_parts" and k ~= "center" and k ~= 'floating_sprite' and k~= "shadow" and k~= "use_button" and k ~= 'buy_button' and k ~= 'buy_and_use_button' and k~= "debuff" and k ~= 'price' and k~= 'particles' and k ~= 'h_popup' then v:draw() end
+            if k ~= 'focused_ui' and k ~= "front" and k ~= "back" and k ~= "soul_parts" and k ~= "center" and k ~= 'floating_sprite' and k~= "shadow" and k~= "use_button" and k ~= 'buy_button' and k ~= 'buy_and_use_button' and k~= "debuff" and k ~= 'price' and k~= 'particles' and k ~= 'h_popup' and k ~= 'animated_sprite' then v:draw() end
         end
 
         if (layer == 'card' or layer == 'both') and self.area == G.hand then 
