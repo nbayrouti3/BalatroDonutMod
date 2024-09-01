@@ -2007,3 +2007,29 @@ function RESET_STATES(state)
       end
   end
 end
+
+function GET_TOTAL_DUPLICATES_IN_DECK()
+  local dupes = {}
+  local count = 0
+  for _, v in pairs(G.playing_cards) do
+    if v.config.center == G.P_CENTERS.c_base then
+      if #dupes == 0 then
+        table.insert(dupes, v.config.card.name)
+      else
+        local found = false
+        for _,dupe in pairs(dupes) do
+          if v.config.card.name == dupe then
+            count = count + 1
+            found = true
+          end
+        end
+
+        if found == false then
+          table.insert(dupes, v.config.card.name)
+        end
+      end
+    end
+  end
+  return count
+end
+

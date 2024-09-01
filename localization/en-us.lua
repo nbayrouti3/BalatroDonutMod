@@ -1494,6 +1494,14 @@
                     "Gives {C:chips}+#1#{}",
                     "Has a {C:green}#2# in #3#{} chance to break"
                 }
+            },
+            j_part_of_you = {
+                name = "Part of You",
+                text = {
+                    "This joker gains {X:mult,C:white} +#1# {} Mult for each",
+                    "duplicate card in your {C:attention}full deck",
+                    "{C:inactive}(Currently {X:mult,C:white} +#2# {C:inactive} Mult)",
+                }
             }
         },
         Voucher = {
