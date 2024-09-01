@@ -535,6 +535,7 @@ function Game:init_item_prototypes()
         j_phallussy=        {order = 155, unlocked = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Gambler's Phallussy", pos = {x=6, y=16}, set = "Joker", effect = "", cost_mult = 1.0, config = {}},
         j_dancing_dunc=     {order = 156, unlocked = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 4, name = "Dancing Duncan", pos = {x=4, y=12}, soul_anim_pos = {x=0, y=0}, set = "Joker", effect = "Type Mult", cost_mult = 1.0, config = {}},
         j_strawberry=       {order = 157, unlocked = true, discovered = true, bluepring_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 3, name = "Freeze Dried Strawberry", pos = {x=5, y=11}, set = "Joker", effect = "", cost_mult = 1.0, config = {extra = {chips = 50, chance = 4}}},
+        j_part_of_you=      {order = 158, unlocked = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 8, name = "Part of You", pos = {x=7, y=16}, set = "Joker", effect = "", cost_mult = 1.0, config = {mult = 0.25}},
 
         --All Consumeables
 
