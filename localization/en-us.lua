@@ -1446,21 +1446,31 @@
                     "When hand is played, has a {C:green}#1# in #2#{}",
                     "chance to replace a random",
                     "{C:attention}consumable{} with a {C:spectral}Spectral{} card",
-                    "{C:inactive}(Must have consumable)",
+                    "{C:inactive}(Must have consumable)"
                 }
             },
             j_singularity = {
                 name = "The Singularity",
                 text = {
                     "{C:red}+#1#{} Retriggers if",
-                    "played hand is {C:attention}Singular{}",
+                    "played hand is {C:attention}Singular{}"
                 }
             },
             j_sacrificial = {
                 name = "Sacrificial Joker",
                 text = {
-                    "Wins current blind when sold",
-                    "{C:inactive}(Does not give money)",
+                    "{C:red}Wins current blind when sold",
+                    "{C:inactive}(Sells for $0 after first shop)"
+                }
+            },
+            j_metajoker = {
+                name = "Meta Joker",
+                text = {
+                    "52 65 74 72 69 67 67 65",
+                    "72 20 {C:attention}2{} 2C 20 {C:attention}4{} 20 61",
+                    "6E 64 20 {C:attention}8{} 20 74 6F",
+                    "6D 61 6B 65 20 {C:attention}16",
+                    "{C:inactive}It's Gomez Time!"
                 }
             }
         },
@@ -3975,6 +3985,7 @@
             k_level_up_ex = "Level Up!",
             k_upgrade_ex = "Upgrade!",
             k_again_ex = "Again!",
+            k_to16_ex = "To 16!",
             k_val_up = "Value Up!",
             k_reset = "Reset",
             k_extinct_ex = "Extinct!",
@@ -3987,6 +3998,7 @@
             k_eaten_ex = "Eaten!",
             k_drank_ex = "Drank!",
             k_eroded_ex = "Eroded!",
+            k_sacrificed_ex = "Sacrificed!",
         },
         v_dictionary = {
             a_xmult = "X#1# Mult",

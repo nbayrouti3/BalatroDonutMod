@@ -91,6 +91,9 @@ function CardArea:remove_card(card, discarded_only)
     return card
 end
 
+--function CardArea:toggle_ability_triggered(name)
+    --if 
+
 function CardArea:change_size(delta)
     if delta ~= 0 then 
         G.E_MANAGER:add_event(Event({

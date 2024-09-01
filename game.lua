@@ -529,9 +529,10 @@ function Game:init_item_prototypes()
         j_perkeo=           {order = 150,  unlocked = false, discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Perkeo", pos = {x=7,y=8}, soul_pos = {x=7, y=9}, set = "Joker", effect = "", config = {}, unlock_condition = {type = '', extra = '', hidden = true}},
 
         --Custom Jokers
-        j_hauntedjoker=     {order = 151,  unlocked = true,  discovered = false,  blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = "Haunted Joker", pos = {x=0,y=16}, set = "Joker", effect = "Spawn Spectral", cost_mult = 1.0, config = {extra = 10}},
-        j_singularity=      {order = 152,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = 'The Singularity', pos = {x = 5, y = 16}, set = 'Joker', effect = "Retrigger", cost_mult = 1.0, config = {extra = 4}},
-        j_sacrificial=      {order = 153,  unlocked = true,  discovered = false, blueprint_compat = false, perishable_compat = true, eternal_compat = false, rarity = 1, cost = 20, name = 'Sacrificial Joker', pos = {x = 2, y = 16}, set = 'Joker', effect = "", cost_mult = 1.0, config = {}},
+        j_hauntedjoker=     {order = 151,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = "Haunted Joker", pos = {x=0,y=16}, set = "Joker", effect = "Spawn Spectral", cost_mult = 1.0, config = {extra = 10}},
+        j_singularity=      {order = 152,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = 'The Singularity', pos = {x=5, y=16}, set = 'Joker', effect = "Retrigger", cost_mult = 1.0, config = {extra = 4}},
+        j_sacrificial=      {order = 153,  unlocked = true,  discovered = false, blueprint_compat = false, perishable_compat = true, eternal_compat = false, rarity = 1, cost = 20, name = 'Sacrificial Joker', pos = {x=2, y=16}, set = 'Joker', effect = "", cost_mult = 1.0, config = {}},
+        j_metajoker=        {order = 154,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = 'Meta Joker', pos ={x=6, y=16}, soul_pos = {x=7, y=16}, set = 'Joker', effect = "4 And 8 Retrigger", cost_mult = 1.0, config = {extra = {four = 3, eight = 1, two = 7}}},
 
 
 
