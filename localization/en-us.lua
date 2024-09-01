@@ -1478,6 +1478,22 @@
                     "chance to give either {X:mult,C:white}X#1#{}",
                     "or {X:mult,C:white}X#2#{} Mult"
                 }
+            },
+            j_dancing_dunc = {
+                name = "Dancing Duncan",
+                text = {
+                    "This Joker gains {X:mult,C:white} +#1# {} Mult",
+                    "for every Pair played and {X:mult,C:white} +#2# {} Mult",
+                    "for every Two Pair played",
+                    "{C:inactive}(Currently {X:mult,C:white} +#3# {C:inactive} Mult)"
+                }
+            },
+            j_strawberry = {
+                name = "Freeze Dried Strawberry",
+                text = {
+                    "Gives {C:chips}+#1#{}",
+                    "Has a {C:green}#2# in #3#{} chance to break"
+                }
             }
         },
         Voucher = {
