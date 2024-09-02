@@ -1498,9 +1498,9 @@
             j_part_of_you = {
                 name = "Part of You",
                 text = {
-                    "This joker gains {X:mult,C:white} +#1# {} Mult for each",
+                    "This joker gains {X:mult,C:white} x#1# {} Mult for each",
                     "duplicate card in your {C:attention}full deck",
-                    "{C:inactive}(Currently {X:mult,C:white} +#2# {C:inactive} Mult)",
+                    "{C:inactive}(Currently {X:mult,C:white} x#2# {C:inactive} Mult)",
                 }
             }
         },
