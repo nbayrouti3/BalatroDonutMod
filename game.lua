@@ -597,19 +597,19 @@ function Game:init_item_prototypes()
         c_black_hole=       {order = 18,   discovered = false, cost = 4, consumeable = true, name = "Black Hole", pos = {x=9,y=3}, set = "Spectral", config = {}, hidden = true},
 
         --Polygonal
-        c_trigon=           {order = 1,    discovered = true,  cost = 4, consumeable = true, name = "Tri-Eyed Cat", pos = {x=6,y=5}, set = "Polygon", config = {extra = {every = 5, remaining = "5 remaining"}}},
-        c_tetragon=         {order = 2,    discovered = true,  cost = 4, consumeable = true, name = "Quadra Beast", pos = {x=7,y=5}, set = "Polygon", config = {}},
-        c_pentagon=         {order = 3,    discovered = true,  cost = 4, consumeable = true, name = "Penta Hand", pos = {x=8,y=5}, set = "Polygon", config = {}},
-        c_hexagon=          {order = 4,    discovered = true,  cost = 4, consumeable = true, name = "Hexwing Angel", pos = {x=9,y=5}, set = "Polygon", config = {}},
-        c_septagon=         {order = 5,    discovered = true,  cost = 4, consumeable = true, name = "Septabug", pos = {x=0,y=6}, set = "Polygon", config = {}},
-        c_octagon=          {order = 6,    discovered = true,  cost = 4, consumeable = true, name = "Octoclops", pos = {x=1,y=6}, set = "Polygon", config = {}},
-        c_nonagon=          {order = 7,    discovered = true,  cost = 4, consumeable = true, name = "Nonagon Lion", pos = {x=2,y=6}, set = "Polygon", config = {}},
-        c_decagon=          {order = 8,    discovered = true,  cost = 4, consumeable = true, name = "Charybdis", pos = {x=3,y=6}, set = "Polygon", config = {}},
-        c_hendecagon=       {order = 9,    discovered = true,  cost = 4, consumeable = true, name = "Echidna", pos = {x=4,y=6}, set = "Polygon", config = {}},
-        c_dodecagon=        {order = 10,   discovered = true,  cost = 4, consumeable = true, name = "Typhon", pos = {x=5,y=6}, set = "Polygon", config = {}},
-        c_hectogon=         {order = 11,   discovered = true,  cost = 4, consumeable = true, name = "Parallax", pos = {x=6,y=6}, set = "Polygon", config = {}, hidden = true},
-        c_myriagon=         {order = 12,   discovered = true,  cost = 4, consumeable = true, name = "Fractal", pos = {x=7,y=6}, set = "Polygon", config = {}, hidden = true},
-        c_apeirogon=        {order = 13,   discovered = true,  cost = 4, consumeable = true, name = "Infinity", pos = {x=8,y=6}, set = "Polygon", config = {}, hidden = true},
+        c_trigon=           {order = 1,    discovered = true,  cost = 4, consumeable = true, name = "Tri-Eyed Cat", pos = {x=6,y=5}, set = "Polygon", config = {extra = 3, polygon_rounds = 0}},
+        c_tetragon=         {order = 2,    discovered = true,  cost = 4, consumeable = true, name = "Quadra Beast", pos = {x=7,y=5}, set = "Polygon", config = {extra = 4, polygon_rounds = 0}},
+        c_pentagon=         {order = 3,    discovered = true,  cost = 4, consumeable = true, name = "Penta Hand", pos = {x=8,y=5}, set = "Polygon", config = {extra = 5, polygon_rounds = 0}},
+        c_hexagon=          {order = 4,    discovered = true,  cost = 4, consumeable = true, name = "Hexwing Angel", pos = {x=9,y=5}, set = "Polygon", config = {extra = 6, polygon_rounds = 0}},
+        c_septagon=         {order = 5,    discovered = true,  cost = 4, consumeable = true, name = "Septabug", pos = {x=0,y=6}, set = "Polygon", config = {extra = 7, polygon_rounds = 0}},
+        c_octagon=          {order = 6,    discovered = true,  cost = 4, consumeable = true, name = "Octoclops", pos = {x=1,y=6}, set = "Polygon", config = {extra = 8, polygon_rounds = 0}},
+        c_nonagon=          {order = 7,    discovered = true,  cost = 4, consumeable = true, name = "Nonagon Lion", pos = {x=2,y=6}, set = "Polygon", config = {extra = 9, polygon_rounds = 0}},
+        c_decagon=          {order = 8,    discovered = true,  cost = 4, consumeable = true, name = "Charybdis", pos = {x=3,y=6}, set = "Polygon", config = {extra = 10, polygon_rounds = 0}},
+        c_hendecagon=       {order = 9,    discovered = true,  cost = 4, consumeable = true, name = "Echidna", pos = {x=4,y=6}, set = "Polygon", config = {extra = 11, polygon_rounds = 0}},
+        c_dodecagon=        {order = 10,   discovered = true,  cost = 4, consumeable = true, name = "Typhon", pos = {x=5,y=6}, set = "Polygon", config = {extra = 12, polygon_rounds = 0}},
+        c_hectogon=         {order = 11,   discovered = true,  cost = 4, consumeable = true, name = "Parallax", pos = {x=6,y=6}, set = "Polygon", config = {extra = 13, polygon_rounds = 0}, hidden = true},
+        c_myriagon=         {order = 12,   discovered = true,  cost = 4, consumeable = true, name = "Fractal", pos = {x=7,y=6}, set = "Polygon", config = {extra = 14, polygon_rounds = 0}, hidden = true},
+        c_apeirogon=        {order = 13,   discovered = true,  cost = 4, consumeable = true, name = "Infinity", pos = {x=8,y=6}, set = "Polygon", config = {extra = 15, polygon_rounds = 0}, hidden = true},
 
         --Vouchers
 

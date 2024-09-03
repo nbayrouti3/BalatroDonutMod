@@ -2026,7 +2026,7 @@ function get_current_pool(_type, _rarity, _legendary, _append)
                 else
                     add = true
                 end
-                if v.name == 'Black Hole' or v.name == 'The Soul' then
+                if v.name == 'Black Hole' or v.name == 'The Soul' or v.name == 'Parallax' or v.name == 'Fractal' or v.name == 'Infinity' then
                     add = false
                 end
             end
@@ -2104,6 +2104,21 @@ function create_card(_type, area, legendary, _rarity, skip_materialize, soulable
         not (G.GAME.used_jokers['c_black_hole'] and not next(find_joker("Showman")))  then 
             if pseudorandom('soul_'.._type..G.GAME.round_resets.ante) > 0.997 then
                 forced_key = 'c_black_hole'
+            end
+        end
+        if (_type == 'Polygon') and not (G.GAME.used_jokers['c_hectogon'] and not next(find_joker("Showman"))) then
+            if pseudorandom ('soul_'.._type..G.GAME.round_resets.ante) > 0.980 then
+                forced_key = 'c_hectogon'
+            end
+        end
+        if (_type == 'Polygon') and not (G.GAME.used_jokers['c_myriagon'] and not next(find_joker("Showman"))) then
+            if pseudorandom ('soul_'.._type..G.GAME.round_resets.ante) > 0.985 then
+                forced_key = 'c_myriagon'
+            end
+        end
+        if (_type == 'Polygon') and not (G.GAME.used_jokers['c_apeirogon'] and not next(find_joker("Showman"))) then
+            if pseudorandom ('soul_'.._type..G.GAME.round_resets.ante) > 0.990 then
+                forced_key = 'c_apeirogon'
             end
         end
     end
@@ -2715,7 +2730,24 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
        elseif _c.name == "The World" then loc_vars = {_c.config.max_highlighted, localize(_c.config.suit_conv, 'suits_plural'), colours = {G.C.SUITS[_c.config.suit_conv]}}
        end
        localize{type = 'descriptions', key = _c.key, set = _c.set, nodes = desc_nodes, vars = loc_vars}
-   end
+
+    elseif _c.set == 'Polygon' then
+        if _c.name == "Tri-Eyed Cat" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Quadra Beast" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Penta Hand" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Hexwing Angel" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Septabug" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Octoclops" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Nonagon Lion" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Charybdis" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Echidna" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Typhon" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Parallax" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Fractal" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Infinity" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        end
+        localize{type = 'descriptions', key = _c.key, set = _c.set, nodes = desc_nodes, vars = loc_vars}
+    end
 
     if main_end then 
         desc_nodes[#desc_nodes+1] = main_end 
