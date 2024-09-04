@@ -321,7 +321,7 @@ function ease_background_colour_blind(state, blind_override)
         ease_colour(G.C.DYN_UI.MAIN, mix_colours(G.C.SECONDARY_SET.Spectral, G.C.BLACK, 0.9))
     elseif state == G.STATES.STANDARD_PACK then
         ease_colour(G.C.DYN_UI.MAIN, G.C.RED)
-    elseif state == G.STATES.BUFFOON_PACK then
+    elseif state == G.STATES.BUFFOON_PACK or state == G.STATES.FRIENDLY_BUFFOON_PACK then
         ease_colour(G.C.DYN_UI.MAIN, G.C.FILTER)
     elseif state == G.STATES.PLANET_PACK then
         ease_colour(G.C.DYN_UI.MAIN, mix_colours(G.C.SECONDARY_SET.Planet, G.C.BLACK, 0.9))
@@ -335,7 +335,7 @@ function ease_background_colour_blind(state, blind_override)
         ease_background_colour{new_colour = G.C.SECONDARY_SET.Spectral, special_colour = darken(G.C.BLACK, 0.2), contrast = 2}
     elseif state == G.STATES.STANDARD_PACK then
         ease_background_colour{new_colour = darken(G.C.BLACK, 0.2), special_colour = G.C.RED, contrast = 3}
-    elseif state == G.STATES.BUFFOON_PACK then
+    elseif state == G.STATES.BUFFOON_PACK  or state == G.STATES.FRIENDLY_BUFFOON_PACK then
         ease_background_colour{new_colour = G.C.FILTER, special_colour = G.C.BLACK, contrast = 2}
     elseif state == G.STATES.PLANET_PACK then
         ease_background_colour{new_colour = G.C.BLACK, contrast = 3}
@@ -1946,6 +1946,10 @@ function get_pack(_key, _type)
         G.GAME.first_shop_buffoon = true
         return G.P_CENTERS['p_buffoon_normal_'..(math.random(1, 2))]
     end
+    if not G.GAME.first_shop_friendly_buffoon and not G.GAME.banned_keys['p_friendly_buffoon_normal_1'] then
+        G.GAME.first_shop_friendly_buffoon = true
+        return G.P_CENTERS['p_friendly_buffoon_normal_'..(math.random(1, 2))]
+    end
     local cume, it, center = 0, 0, nil
     for k, v in ipairs(G.P_CENTER_POOLS['Booster']) do
         if (not _type or _type == v.kind) and not G.GAME.banned_keys[v.key] then cume = cume + (v.weight or 1 ) end
@@ -1968,7 +1972,11 @@ function get_current_pool(_type, _rarity, _legendary, _append)
         if _type == 'Joker' then 
             local rarity = _rarity or pseudorandom('rarity'..G.GAME.round_resets.ante..(_append or '')) 
             rarity = (_legendary and 4) or (rarity > 0.95 and 3) or (rarity > 0.7 and 2) or 1
-            _starting_pool, _pool_key = G.P_JOKER_RARITY_POOLS[rarity], 'Joker'..rarity..((not _legendary and _append) or '')
+            if _append == 'frb' then
+                _starting_pool, _pool_key = G.P_FRIENDLY_JOKER_RARITY_POOLS[rarity], 'Friendly Joker'..rarity..((not _legendary and _append) or '')
+            else
+                _starting_pool, _pool_key = G.P_JOKER_RARITY_POOLS[rarity], 'Joker'..rarity..((not _legendary and _append) or '')
+            end
         else _starting_pool, _pool_key = G.P_CENTER_POOLS[_type], _type..(_append or '')
         end
     
@@ -2103,8 +2111,6 @@ function create_card(_type, area, legendary, _rarity, skip_materialize, soulable
     if _type == 'Base' then 
         forced_key = 'c_base'
     end
-
-
 
     if forced_key and not G.GAME.banned_keys[forced_key] then 
         center = G.P_CENTERS[forced_key]
@@ -2559,6 +2565,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
         elseif _c.name == 'Ethereal Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_spectral_normal_1 
         elseif _c.name == 'Standard Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_standard_mega_1 
         elseif _c.name == 'Buffoon Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_buffoon_mega_1 
+        elseif _c.name == 'Friendly Buffoon Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_friendly_buffoon_mega_1
         end
         localize{type = 'descriptions', key = _c.key, set = 'Tag', nodes = desc_nodes, vars = specific_vars or {}}
     elseif _c.set == 'Voucher' then
@@ -2621,6 +2628,9 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
         elseif _c.name == 'Buffoon Pack' then desc_override = 'p_buffoon_normal'; loc_vars = {_c.config.choose, _c.config.extra}
         elseif _c.name == 'Jumbo Buffoon Pack' then desc_override = 'p_buffoon_jumbo'; loc_vars = {_c.config.choose, _c.config.extra}
         elseif _c.name == 'Mega Buffoon Pack' then desc_override = 'p_buffoon_mega'; loc_vars = {_c.config.choose, _c.config.extra}
+        elseif _c.name == 'Friendly Buffoon Pack' then desc_override = 'p_friendly_buffoon_normal'; loc_vars = {_c.config.choose, _c.config.extra}
+        elseif _c.name == 'Jumbo Friendly Buffoon Pack' then desc_override = 'p_friendly_buffoon_jumbo'; loc_vars = {_c.config.choose, _c.config.extra}
+        elseif _c.name == 'Mega Friendly Buffoon Pack' then desc_override = 'p_friendly_buffoon_mega'; loc_vars = {_c.config.choose, _c.config.extra}
         end
         name_override = desc_override
         if not full_UI_table.name then full_UI_table.name = localize{type = 'name', set = 'Other', key = name_override, nodes = full_UI_table.name} end

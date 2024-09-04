@@ -2536,6 +2536,13 @@
                     "{C:attention}Mega Buffoon Pack"
                 }
             },
+            tag_friendly_buffoon = {
+                name = "Friendly Buffoon Tag",
+                text = {
+                    "Gives a free",
+                    "{C:attention}Mega Friendly Buffoon Pack"
+                }
+            },
             tag_handy = {
                 name = "Handy Tag",
                 text = {
@@ -3374,6 +3381,30 @@
                     "{C:attention}#2#{C:joker} Joker{} cards"
                 }
             },
+            p_friendly_buffoon_normal = {
+                name = "Friendly Buffoon Pack",
+                text = {
+                    "Choose {C:attention}#1#{} of up to",
+                    "{C:attention}#2#{C:joker} Joker{} cards",
+                    "made by your friends!"
+                }
+            },
+            p_friendly_buffoon_jumbo = {
+                name = "Jumbo Friendly Buffoon Pack",
+                text = {
+                    "Choose {C:attention}#1#{} of up to",
+                    "{C:attention}#2#{C:joker} Joker{} cards",
+                    "made by your friends!"
+                }
+            },
+            p_friendly_buffoon_mega = {
+                name = "Mega Friendly Buffoon Pack",
+                text = {
+                    "Choose {C:attention}#1#{} of up to",
+                    "{C:attention}#2#{C:joker} Joker{} cards",
+                    "made by your friends!"
+                }
+            },
             pinned_left = {
                 name = "Pinned",
                 text = {
@@ -3744,6 +3775,7 @@
             k_spectral_pack = "Spectral Pack",
             k_standard_pack = "Standard Pack",
             k_buffoon_pack = "Buffoon Pack",
+            k_friendly_buffoon_pack = "Friendly Buffoon Pack",
             k_enter_text = "Enter Text",
             k_defeated_by = "Defeated By",
             k_level_prefix = "lvl.",

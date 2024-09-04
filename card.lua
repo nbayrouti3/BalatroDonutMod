@@ -1599,6 +1599,12 @@ function Card:can_use_consumeable(any_state, skip_check)
                 return true
             end
         end
+
+        if self.ability.set == 'Polygon' and self.ability.polygon_rounds >= self.ability.extra then
+            return true
+        else
+            return false
+        end
     end
     return false
 end
@@ -1726,6 +1732,9 @@ function Card:open()
         elseif self.ability.name:find('Standard') then
             G.STATE = G.STATES.STANDARD_PACK
             G.GAME.pack_size = self.ability.extra
+        elseif self.ability.name:find('Friendly Buffoon') then
+            G.STATE = G.STATES.FRIENDLY_BUFFOON_PACK
+            G.GAME.pack_size = self.ability.extra
         elseif self.ability.name:find('Buffoon') then
             G.STATE = G.STATES.BUFFOON_PACK
             G.GAME.pack_size = self.ability.extra
@@ -1796,9 +1805,10 @@ function Card:open()
                             else card:set_seal('Biscuit')
                             end
                         end
+                    elseif self.ability.name:find('Friendly Buffoon') then
+                        card = create_card("Joker", G.pack_cards, nil, nil, true, true, nil, 'frb')
                     elseif self.ability.name:find('Buffoon') then
                         card = create_card("Joker", G.pack_cards, nil, nil, true, true, nil, 'buf')
-
                     end
                     card.T.x = self.T.x
                     card.T.y = self.T.y
