@@ -1446,7 +1446,7 @@
                     "When hand is played, has a {C:green}#1# in #2#{}",
                     "chance to replace a random",
                     "{C:attention}consumable{} with a {C:spectral}Spectral{} card",
-                    "{C:inactive}(Must have consumables)",
+                    "{C:inactive}(Must have a consumable)"
                 }
             },
             j_camou = {
@@ -2271,12 +2271,70 @@
                     "by {C:attention}1{} level"
                 }
             },
+
             c_cat_toy = {
+
                 name = "Cat Toy",
                 text = {"Add a {C:attention}Biscuit Seal{}",
                     "to {C:attention}1{} selected",
                     "card in your hand"
                 }
+            }
+        },
+        Polygon = {
+            c_trigon = {
+                name = "Tri-Eyed Cat",
+                text = {
+                    "Testing stuff out"
+                }
+            },
+            c_tetragon = {
+                name = "Quadruped Beast",
+                text = {}
+            },
+            c_pentagon = {
+                name = "Pentastar Hand",
+                text = {}
+            },
+            c_hexagon = {
+                name = "Hex-winged Angel",
+                text = {}
+            },
+            c_septagon = {
+                name = "Septabug",
+                text = {}
+            },
+            c_octagon = {
+                name = "Octoclops",
+                text = {}
+            },
+            c_nonagon = {
+                name = "Nonagon Lion",
+                text = {}
+            },
+            c_decagon = {
+                name = "Charybdis",
+                text = {}
+            },
+            c_hendecagon = {
+                name = "Echidna",
+                text = {}
+            },
+            c_dodecagon = {
+                name = "Typhon",
+                text = {}
+            },
+            c_hectogon = {
+                name = "Parallax",
+                text = {}
+            },
+            c_myriagon = {
+                name = "Fractal",
+                text = {}
+            },
+            c_apeirogon = {
+                name = "Infinity",
+                text = {}
             }
         },
         Edition = {
@@ -3966,10 +4024,12 @@
             k_level_up_ex = "Level Up!",
             k_upgrade_ex = "Upgrade!",
             k_again_ex = "Again!",
+            k_to16_ex = "To 16!",
             k_val_up = "Value Up!",
             k_reset = "Reset",
             k_extinct_ex = "Extinct!",
             k_disabled_ex = "Disabled!",
+            k_poly_ready = "Ready!",
             k_safe_ex = "Safe!",
             k_saved_ex = "Saved!",
             k_swapped_ex = "Swapped!",
@@ -3978,6 +4038,7 @@
             k_eaten_ex = "Eaten!",
             k_drank_ex = "Drank!",
             k_eroded_ex = "Eroded!",
+            k_sacrificed_ex = "Sacrificed!",
         },
         v_dictionary = {
             a_xmult = "X#1# Mult",
