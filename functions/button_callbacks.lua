@@ -2086,7 +2086,7 @@ end
 
   G.FUNCS.can_skip_booster = function(e)
     if G.pack_cards and (G.pack_cards.cards[1]) and 
-    (G.STATE == G.STATES.PLANET_PACK or G.STATE == G.STATES.STANDARD_PACK or G.STATE == G.STATES.BUFFOON_PACK or (G.hand and (G.hand.cards[1] or (G.hand.config.card_limit <= 0)))) then 
+    (G.STATE == G.STATES.PLANET_PACK or G.STATE == G.STATES.STANDARD_PACK or G.STATE == G.STATES.BUFFOON_PACK or G.STATE == G.STATES.FRIENDLY_BUFFOON_PACK or (G.hand and (G.hand.cards[1] or (G.hand.config.card_limit <= 0)))) then 
         e.config.colour = G.C.GREY
         e.config.button = 'skip_booster'
     else
@@ -2137,6 +2137,7 @@ end
       (G.STATE == G.STATES.SPECTRAL_PACK and G.STATES.SPECTRAL_PACK) or
       (G.STATE == G.STATES.STANDARD_PACK and G.STATES.STANDARD_PACK) or
       (G.STATE == G.STATES.BUFFOON_PACK and G.STATES.BUFFOON_PACK) or
+      (G.STATE == G.STATES.FRIENDLY_BUFFOON_PACK and G.STATES.FRIENDLY_BUFFOON_PACK) or
       G.STATES.PLAY_TAROT
       
     G.CONTROLLER.locks.use = true
@@ -2221,7 +2222,7 @@ end
 
                 if (prev_state == G.STATES.TAROT_PACK or prev_state == G.STATES.PLANET_PACK or
                   prev_state == G.STATES.SPECTRAL_PACK or prev_state == G.STATES.STANDARD_PACK or
-                  prev_state == G.STATES.BUFFOON_PACK) and G.booster_pack then
+                  prev_state == G.STATES.BUFFOON_PACK or prev_state == G.STATES.FRIENDLY_BUFFOON_PACK) and G.booster_pack then
                   if area == G.consumeables then
                     G.booster_pack.alignment.offset.y = G.booster_pack.alignment.offset.py
                     G.booster_pack.alignment.offset.py = nil

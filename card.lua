@@ -940,7 +940,7 @@ function Card:generate_UIBox_ability_table()
         elseif self.ability.name == "Gambler's Phallussy" then loc_vars = {2, 0.5}
         elseif self.ability.name == 'Dancing Duncan' then loc_vars = {2, 4, self.ability.mult}
         elseif self.ability.name == 'Freeze Dried Strawberry' then loc_vars = {self.ability.extra.chips, 1, self.ability.extra.chance}
-        elseif self.ability.name == 'Part of You' then loc_vars = {self.ability.mult, 1 + self.ability.mult*(self.ability.dupe_tally or 0)}
+        elseif self.ability.name == 'Part of You' then loc_vars = {self.ability.x_mult, self.ability.extra + self.ability.x_mult*(self.ability.dupe_tally or 0)}
         end
     end
     local badges = {}
@@ -1599,6 +1599,12 @@ function Card:can_use_consumeable(any_state, skip_check)
                 return true
             end
         end
+
+        if self.ability.set == 'Polygon' and self.ability.polygon_rounds >= self.ability.extra then
+            return true
+        else
+            return false
+        end
     end
     return false
 end
@@ -1726,6 +1732,9 @@ function Card:open()
         elseif self.ability.name:find('Standard') then
             G.STATE = G.STATES.STANDARD_PACK
             G.GAME.pack_size = self.ability.extra
+        elseif self.ability.name:find('Friendly Buffoon') then
+            G.STATE = G.STATES.FRIENDLY_BUFFOON_PACK
+            G.GAME.pack_size = self.ability.extra
         elseif self.ability.name:find('Buffoon') then
             G.STATE = G.STATES.BUFFOON_PACK
             G.GAME.pack_size = self.ability.extra
@@ -1796,9 +1805,10 @@ function Card:open()
                             else card:set_seal('Biscuit')
                             end
                         end
+                    elseif self.ability.name:find('Friendly Buffoon') then
+                        card = create_card("Joker", G.pack_cards, nil, nil, true, true, nil, 'frb')
                     elseif self.ability.name:find('Buffoon') then
                         card = create_card("Joker", G.pack_cards, nil, nil, true, true, nil, 'buf')
-
                     end
                     card.T.x = self.T.x
                     card.T.y = self.T.y
@@ -3919,8 +3929,8 @@ function Card:calculate_joker(context)
                         end
                         if self.ability.name == 'Part of You' and self.ability.dupe_tally > 0 then
                             return {
-                                message = localize{type='variable', key='a_mult',vars={1 + (self.ability.mult * self.ability.dupe_tally)}},
-                                mult_mod = 1 + (self.ability.mult * self.ability.dupe_tally)
+                                message = localize{type='variable', key='a_xmult',vars={self.ability.extra + (self.ability.x_mult * self.ability.dupe_tally)}},
+                                Xmult_mod = self.ability.extra + (self.ability.x_mult * self.ability.dupe_tally)
                             }
                         end
                         if self.ability.name == 'Vagabond' and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
