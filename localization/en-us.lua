@@ -1502,6 +1502,30 @@
                     "duplicate card in your {C:attention}full deck",
                     "{C:inactive}(Currently {X:mult,C:white} x#2# {C:inactive} Mult)",
                 }
+            },
+            j_singularity = {
+                name = "The Singularity",
+                text = {
+                    "{C:red}+#1#{} Retriggers if",
+                    "played hand is {C:attention}Singular{}"
+                }
+            },
+            j_sacrificial = {
+                name = "Sacrificial Joker",
+                text = {
+                    "{C:red}Wins current blind when sold",
+                    "{C:inactive}(Sells for $0 after first shop)"
+                }
+            },
+            j_metajoker = {
+                name = "Meta Joker",
+                text = {
+                    "52 65 74 72 69 67 67 65",
+                    "72 20 {C:attention}2{} 2C 20 {C:attention}4{} 20 61",
+                    "6E 64 20 {C:attention}8{} 20 74 6F",
+                    "6D 61 6B 65 20 {C:attention}16",
+                    "{C:inactive}It's Gomez Time!"
+                }
             }
         },
         Voucher = {
@@ -2746,6 +2770,13 @@
                     "Gives a free",
                     "{C:spectral}Spectral Pack"
                 }
+            },
+            tag_polygonal = {
+                name = "Polygonal Tag",
+                text = {
+                    "Give a free",
+                    "{C:polygon}Polygon Pack"
+                }
             }
         },
         Blind = {
@@ -3352,6 +3383,15 @@
                     "learn what it does"
                 }
             },
+            undiscovered_polygon = {
+                name = "Not Discovered",
+                text = {
+                    "Purchase or use",
+                    "this card in an",
+                    "unseeded run to",
+                    "learn what it does"
+                }
+            },
             undiscovered_voucher = {
                 name = "Not Discovered",
                 text = {
@@ -3524,6 +3564,32 @@
                     "Choose {C:attention}#1#{} of up to",
                     "{C:attention}#2#{C:joker} Joker{} cards",
                     "made by your friends!"
+                }
+            },
+            p_polygon_normal ={
+                name = "Polygon Pack",
+                text = {"Choose {C:attention}#1#{} of up to",
+                    "{C:attention}#2#{C:polygon} Polygon{} cards to",
+                    "add to your consumables",
+                    "{C:inactive}(Must have room)"
+                }
+            },
+            p_polygon_jumbo ={
+                name = "Jumbo Polygon Pack",
+                text = {
+                    "Choose {C:attention}#1#{} of up to",
+                    "{C:attention}#2#{C:polygon} Polygon{} cards to",
+                    "add to your consumables",
+                    "{C:inactive}(Must have room)",
+                }
+            },
+            p_polygon_mega ={
+                name = "Mega Polygon Pack",
+                text  = {
+                    "Choose {C:attention}#1#{} of up to",
+                    "{C:attention}#2#{C:polygon} Polygon{} cards to",
+                    "add to your consumables",
+                    "{C:inactive}(Must have room)",
                 }
             },
             pinned_left = {
@@ -3816,6 +3882,7 @@
             b_stat_tarots = "Tarots",
             b_stat_planets = "Planets",
             b_stat_spectrals = "Spectrals",
+            b_stat_polygons = "Polygons",
             b_stat_vouchers = "Vouchers",
             b_next = "Next",
             b_endless = "Endless Mode",
@@ -3831,6 +3898,7 @@
             b_tarot_cards = "Tarot Cards",
             b_planet_cards = "Planet Cards",
             b_spectral_cards = "Spectral Cards",
+            b_polygon_cards = "Polygon Cards",
             b_enhanced_cards = "Enhanced Cards",
             b_editions = "Editions",
             b_booster_packs = "Booster Packs",
@@ -3886,6 +3954,7 @@
             k_dwarf_planet = "Dwarf Planet",
             k_planet_q = "Planet?",
             k_spectral = "Spectral",
+            k_polygon = "Polygon",
             k_booster = "Booster",
             k_edition = "Edition",
             k_hud_hands = "Hands",
@@ -3894,6 +3963,7 @@
             k_arcana_pack = "Arcana Pack",
             k_celestial_pack = "Celestial Pack",
             k_spectral_pack = "Spectral Pack",
+            k_polygon_pack = "Polygon Pack",
             k_standard_pack = "Standard Pack",
             k_buffoon_pack = "Buffoon Pack",
             k_friendly_buffoon_pack = "Friendly Buffoon Pack",
@@ -4082,6 +4152,7 @@
             k_plus_stone = "+1 Stone",
             k_plus_planet = "+1 Planet",
             k_plus_spectral = "+1 Spectral",
+            k_plus_polygon = "+1 Polygon",
             k_plus_joker = "+1 Joker",
             k_active_ex = "Active!",
             k_level_up_ex = "Level Up!",

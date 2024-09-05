@@ -249,6 +249,7 @@ function Game:init_item_prototypes()
         tag_orbital =       {name = 'Orbital Tag',      set = 'Tag', discovered = false, min_ante = 2,   order = 23, config = {type = 'immediate', levels = 3}, pos = {x = 5,y = 2}},
         tag_economy =       {name = 'Economy Tag',      set = 'Tag', discovered = false, min_ante = nil, order = 24, config = {type = 'immediate', max = 40}, pos = {x = 4,y = 3}},
         tag_friendly_buffoon={name = 'Friendly Buffoon Tag', set = 'Tag', discovered = false, min_ante = 1, order = 25, config = {type = 'new_blind_choice', }, pos = {x = 4, y = 2}},
+        tag_polygonal =      {name = 'Polygonal Tag',    set = 'Tag', discovered = false, min_ante = nil,   order = 25, config = {type = 'new_blind_choice', }, pos = {x = 0,y = 5}},
     }
     self.tag_undiscovered = {name = 'Not Discovered', order = 1, config = {type = ''}, pos = {x=3,y=4}}
 
@@ -267,7 +268,7 @@ function Game:init_item_prototypes()
         bl_small =           {name = 'Small Blind',  defeated = false, order = 1, dollars = 3, mult = 1,  vars = {}, debuff_text = '', debuff = {}, pos = {x=0, y=0}},
         bl_big =             {name = 'Big Blind',    defeated = false, order = 2, dollars = 4, mult = 1.5,vars = {}, debuff_text = '', debuff = {}, pos = {x=0, y=1}},
         bl_ox =              {name = 'The Ox',       defeated = false, order = 4, dollars = 5, mult = 2,  vars = {localize('ph_most_played')}, debuff = {}, pos = {x=0, y=2}, boss = {min = 6, max = 10}, boss_colour = HEX('b95b08')},
-        bl_hook =            {name = 'The Hook',     defeated = false, order = 31, dollars = 5, mult = 2,  vars = {}, debuff = {}, pos = {x=0, y=7}, boss = {min = 1, max = 10}, boss_colour = HEX('a84024')},
+        bl_hook =            {name = 'The Hook',     defeated = false, order = 3, dollars = 5, mult = 2,  vars = {}, debuff = {}, pos = {x=0, y=7}, boss = {min = 1, max = 10}, boss_colour = HEX('a84024')},
         bl_mouth =           {name = 'The Mouth',    defeated = false, order = 17, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=18}, boss = {min = 2, max = 10}, boss_colour = HEX('ae718e')},
         bl_fish =            {name = 'The Fish',     defeated = false, order = 10, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=5}, boss = {min = 2, max = 10}, boss_colour = HEX('3e85bd')},
         bl_club =            {name = 'The Club',     defeated = false, order = 9, dollars = 5, mult = 2,  vars = {}, debuff = {suit = 'Clubs'}, pos = {x=0, y=4}, boss = {min = 1, max = 10}, boss_colour = HEX('b9cb92')},
@@ -295,7 +296,7 @@ function Game:init_item_prototypes()
         bl_flint =           {name = 'The Flint',    defeated = false, order = 24, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=24}, boss = {min = 2, max = 10}, boss_colour = HEX('e56a2f')},
         bl_final_acorn =     {name = 'Amber Acorn',  defeated = false, order = 26, dollars = 8, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=27}, boss = {showdown = true, min = 10, max = 10}, boss_colour = HEX('fda200')},
         bl_final_heart =     {name = 'Crimson Heart',defeated = false, order = 29, dollars = 8, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=25}, boss = {showdown = true, min = 10, max = 10}, boss_colour = HEX('ac3232')},
-        bl_smothering_tithe= {name = 'Smothering Tithe', defeated = false, order = 3, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=8}, boss = {min = 1, max = 10}, boss_color = HEX('ac3232')},
+        bl_smothering_tithe= {name = 'Smothering Tithe', defeated = false, order = 31, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=8}, boss = {min = 1, max = 10}, boss_color = HEX('ac3232')},
     }
     self.b_undiscovered = {name = 'Undiscovered', debuff_text = 'Defeat this blind to discover', pos = {x=0,y=30}}
 
@@ -360,6 +361,7 @@ function Game:init_item_prototypes()
     self.j_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=9,y=9}, set = "Joker", cost_mult = 1.0,config = {}}
     self.t_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=6,y=2}, set = "Tarot", cost_mult = 1.0,config = {}}
     self.p_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=7,y=2}, set = "Planet", cost_mult = 1.0,config = {}}
+    self.po_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=9,y=5}, set = "planet", cost_mult = 1.0,config = {}}
     self.s_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=5,y=2}, set = "Spectral", cost_mult = 1.0,config = {}}
     self.v_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=8,y=2}, set = "Voucher", cost_mult = 1.0,config = {}}
     self.booster_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=0,y=5}, set = "Booster", cost_mult = 1.0,config = {}}
@@ -537,6 +539,9 @@ function Game:init_item_prototypes()
         j_dancing_dunc=     {order = 156, unlocked = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 4, name = "Dancing Duncan", pos = {x=4, y=12}, soul_anim_pos = {x=0, y=0}, set = "Joker", effect = "Type Mult", cost_mult = 1.0, config = {}, friendly = true},
         j_strawberry=       {order = 157, unlocked = true, discovered = true, bluepring_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 3, name = "Freeze Dried Strawberry", pos = {x=5, y=11}, set = "Joker", effect = "", cost_mult = 1.0, config = {extra = {chips = 50, chance = 4}}, friendly = true},
         j_part_of_you=      {order = 158, unlocked = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 8, name = "Part of You", pos = {x=7, y=16}, set = "Joker", effect = "", cost_mult = 1.0, config = {extra = 1, Xmult = 0.15}, friendly = true},
+        j_singularity=      {order = 159,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = 'The Singularity', pos = {x=5, y=16}, set = 'Joker', effect = "Retrigger", cost_mult = 1.0, config = {extra = 4}, friendly = true},
+        j_sacrificial=      {order = 160,  unlocked = true,  discovered = false, blueprint_compat = false, perishable_compat = true, eternal_compat = false, rarity = 1, cost = 20, name = 'Sacrificial Joker', pos = {x=2, y=16}, set = 'Joker', effect = "", cost_mult = 1.0, config = {}, friendly = true},
+        j_metajoker=        {order = 161,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = 'Meta Joker', pos ={x=6, y=16}, soul_pos = {x=7, y=16}, set = 'Joker', effect = "4 And 8 Retrigger", cost_mult = 1.0, config = {extra = {four = 3, eight = 1, two = 7}}, friendly = true},
 
         --All Consumeables
 
@@ -600,19 +605,19 @@ function Game:init_item_prototypes()
         c_cat_toy=          {order = 19,   discovered = false,  cost = 4, consumeable = true, name = "Cat Toy", pos = {x=9, y=3}, set = "Spectral", config = {extra = 'Biscuit', max_highlighted = 1}},
         
         --Polygonal
-        c_trigon=           {order = 1,    discovered = true,  cost = 4, consumeable = true, name = "Tri-Eyed Cat", pos = {x=6,y=5}, set = "Polygon", config = {extra = {every = 5, remaining = "5 remaining"}}},
-        c_tetragon=         {order = 2,    discovered = true,  cost = 4, consumeable = true, name = "Quadra Beast", pos = {x=7,y=5}, set = "Polygon", config = {}},
-        c_pentagon=         {order = 3,    discovered = true,  cost = 4, consumeable = true, name = "Penta Hand", pos = {x=8,y=5}, set = "Polygon", config = {}},
-        c_hexagon=          {order = 4,    discovered = true,  cost = 4, consumeable = true, name = "Hexwing Angel", pos = {x=9,y=5}, set = "Polygon", config = {}},
-        c_septagon=         {order = 5,    discovered = true,  cost = 4, consumeable = true, name = "Septabug", pos = {x=0,y=6}, set = "Polygon", config = {}},
-        c_octagon=          {order = 6,    discovered = true,  cost = 4, consumeable = true, name = "Octoclops", pos = {x=1,y=6}, set = "Polygon", config = {}},
-        c_nonagon=          {order = 7,    discovered = true,  cost = 4, consumeable = true, name = "Nonagon Lion", pos = {x=2,y=6}, set = "Polygon", config = {}},
-        c_decagon=          {order = 8,    discovered = true,  cost = 4, consumeable = true, name = "Charybdis", pos = {x=3,y=6}, set = "Polygon", config = {}},
-        c_hendecagon=       {order = 9,    discovered = true,  cost = 4, consumeable = true, name = "Echidna", pos = {x=4,y=6}, set = "Polygon", config = {}},
-        c_dodecagon=        {order = 10,   discovered = true,  cost = 4, consumeable = true, name = "Typhon", pos = {x=5,y=6}, set = "Polygon", config = {}},
-        c_hectogon=         {order = 11,   discovered = true,  cost = 4, consumeable = true, name = "Parallax", pos = {x=6,y=6}, set = "Polygon", config = {}, hidden = true},
-        c_myriagon=         {order = 12,   discovered = true,  cost = 4, consumeable = true, name = "Fractal", pos = {x=7,y=6}, set = "Polygon", config = {}, hidden = true},
-        c_apeirogon=        {order = 13,   discovered = true,  cost = 4, consumeable = true, name = "Infinity", pos = {x=8,y=6}, set = "Polygon", config = {}, hidden = true},
+        c_trigon=           {order = 1,    discovered = true,  cost = 4, consumeable = true, name = "Tri-Eyed Cat", pos = {x=6,y=5}, set = "Polygon", config = {extra = 3, polygon_rounds = 0}},
+        c_tetragon=         {order = 2,    discovered = true,  cost = 4, consumeable = true, name = "Quadra Beast", pos = {x=7,y=5}, set = "Polygon", config = {extra = 4, polygon_rounds = 0}},
+        c_pentagon=         {order = 3,    discovered = true,  cost = 4, consumeable = true, name = "Penta Hand", pos = {x=8,y=5}, set = "Polygon", config = {extra = 5, polygon_rounds = 0}},
+        c_hexagon=          {order = 4,    discovered = true,  cost = 4, consumeable = true, name = "Hexwing Angel", pos = {x=9,y=5}, set = "Polygon", config = {extra = 6, polygon_rounds = 0}},
+        c_septagon=         {order = 5,    discovered = true,  cost = 4, consumeable = true, name = "Septabug", pos = {x=0,y=6}, set = "Polygon", config = {extra = 7, polygon_rounds = 0}},
+        c_octagon=          {order = 6,    discovered = true,  cost = 4, consumeable = true, name = "Octoclops", pos = {x=1,y=6}, set = "Polygon", config = {extra = 8, polygon_rounds = 0}},
+        c_nonagon=          {order = 7,    discovered = true,  cost = 4, consumeable = true, name = "Nonagon Lion", pos = {x=2,y=6}, set = "Polygon", config = {extra = 9, polygon_rounds = 0}},
+        c_decagon=          {order = 8,    discovered = true,  cost = 4, consumeable = true, name = "Charybdis", pos = {x=3,y=6}, set = "Polygon", config = {extra = 10, polygon_rounds = 0}},
+        c_hendecagon=       {order = 9,    discovered = true,  cost = 4, consumeable = true, name = "Echidna", pos = {x=4,y=6}, set = "Polygon", config = {extra = 11, polygon_rounds = 0}},
+        c_dodecagon=        {order = 10,   discovered = true,  cost = 4, consumeable = true, name = "Typhon", pos = {x=5,y=6}, set = "Polygon", config = {extra = 12, polygon_rounds = 0}},
+        c_hectogon=         {order = 11,   discovered = true,  cost = 4, consumeable = true, name = "Parallax", pos = {x=6,y=6}, set = "Polygon", config = {extra = 13, polygon_rounds = 0}, hidden = true},
+        c_myriagon=         {order = 12,   discovered = true,  cost = 4, consumeable = true, name = "Fractal", pos = {x=7,y=6}, set = "Polygon", config = {extra = 14, polygon_rounds = 0}, hidden = true},
+        c_apeirogon=        {order = 13,   discovered = true,  cost = 4, consumeable = true, name = "Infinity", pos = {x=8,y=6}, set = "Polygon", config = {extra = 15, polygon_rounds = 0}, hidden = true},
 
         --Vouchers
 
@@ -721,11 +726,16 @@ function Game:init_item_prototypes()
         p_buffoon_normal_2 =        {order = 26, discovered = false, name = "Buffoon Pack", weight = 0.6, kind = 'Buffoon', cost = 4, pos = {x=1,y=8}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
         p_buffoon_jumbo_1 =         {order = 27, discovered = false, name = "Jumbo Buffoon Pack", weight = 0.6, kind = 'Buffoon', cost = 6, pos = {x=2,y=8}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 1}},
         p_buffoon_mega_1 =          {order = 28, discovered = false, name = "Mega Buffoon Pack", weight = 0.15, kind = 'Buffoon', cost = 8, pos = {x=3,y=8}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 2}},
-        p_friendly_buffoon_normal_1 =        {order = 29, discovered = false, name = "Friendly Buffoon Pack", weight = 0.6, kind = 'Friendly Buffoon', cost = 4, pos = {x=0,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
-        p_friendly_buffoon_normal_2 =        {order = 30, discovered = false, name = "Friendly Buffoon Pack", weight = 0.6, kind = 'Friendly Buffoon', cost = 4, pos = {x=1,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
-        p_friendly_buffoon_jumbo_1 =         {order = 31, discovered = false, name = "Jumbo Friendly Buffoon Pack", weight = 0.6, kind = 'Friendly Buffoon', cost = 6, pos = {x=2,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 1}},
-        p_friendly_buffoon_mega_1 =          {order = 32, discovered = false, name = "Mega Friendly Buffoon Pack", weight = 0.15, kind = 'Friendly Buffoon', cost = 8, pos = {x=3,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 2}},
-        
+         p_friendly_buffoon_normal_1 =        {order = 29, discovered = false, name = "Friendly Buffoon Pack", weight = 0.6, kind = 'Friendly Buffoon', cost = 4, pos = {x=0,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
+         p_friendly_buffoon_normal_2 =        {order = 30, discovered = false, name = "Friendly Buffoon Pack", weight = 0.6, kind = 'Friendly Buffoon', cost = 4, pos = {x=1,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
+         p_friendly_buffoon_jumbo_1 =         {order = 31, discovered = false, name = "Jumbo Friendly Buffoon Pack", weight = 0.6, kind = 'Friendly Buffoon', cost = 6, pos = {x=2,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 1}},
+         p_friendly_buffoon_mega_1 =          {order = 32, discovered = false, name = "Mega Friendly Buffoon Pack", weight = 0.15, kind = 'Friendly Buffoon', cost = 8, pos = {x=3,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 2}},
+         
+         p_polygon_normal_1 =        {order = 33, discovered = true,  name = "Polygon Pack", weight = 0.4, kind = 'Polygon', cost = 4, pos = {x=0,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
+         p_polygon_normal_2 =        {order = 34, discovered = true,  name = "Polygon Pack", weight = 0.4, kind = 'Polygon', cost = 4, pos = {x=1,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
+         p_polygon_jumbo_1 =         {order = 35, discovered = true,  name = "Jumbo Polygon Pack", weight = 0.4, kind = 'Polygon', cost = 4, pos = {x=2,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 1}},
+         p_polygon_mega_1 =          {order = 36, discovered = true,  name = "Mega Polygon Pack", weight = 0.1, kind = 'Polygon', cost = 4, pos = {x=3,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 2}},
+
         --Extras       
         soul={pos = {x=0,y=1}},
         undiscovered_joker={pos = {x=5,y=3}},
@@ -742,6 +752,7 @@ function Game:init_item_prototypes()
         Planet = {},
         Tarot_Planet = {},
         Spectral = {},
+        Polygon = {},
         Consumeables = {},
         Voucher = {},
         Back = {},
@@ -868,6 +879,7 @@ function Game:init_item_prototypes()
     table.sort(self.P_CENTER_POOLS["Spectral"], function (a, b) return a.order < b.order end)
     table.sort(self.P_CENTER_POOLS["Voucher"], function (a, b) return a.order < b.order end)
     table.sort(self.P_CENTER_POOLS["Booster"], function (a, b) return a.order < b.order end)
+    table.sort(self.P_CENTER_POOLS["Polygon"], function (a, b) return a.order< b.order end)
     table.sort(self.P_CENTER_POOLS["Consumeables"], function (a, b) return a.order < b.order end)
     table.sort(self.P_CENTER_POOLS["Back"], function (a, b) return (a.order - (a.unlocked and 100 or 0)) < (b.order - (b.unlocked and 100 or 0)) end)
     table.sort(self.P_CENTER_POOLS["Enhanced"], function (a, b) return a.order < b.order end)
@@ -1105,6 +1117,7 @@ function Game:set_render_settings()
 
     self.ASSET_ATLAS.Planet = self.ASSET_ATLAS.Tarot
     self.ASSET_ATLAS.Spectral = self.ASSET_ATLAS.Tarot
+    self.ASSET_ATLAS.Polygon = self.ASSET_ATLAS.Tarot
 end
 
 function Game:init_window(reset)
@@ -1890,6 +1903,7 @@ function Game:init_game_object()
         tarot_rate = 4,
         planet_rate = 4, 
         spectral_rate = 0,
+        polygon_rate = 1,
         playing_card_rate = 0,
         consumeable_buffer = 0,
         joker_buffer = 0,
@@ -2572,6 +2586,10 @@ function Game:update(dt)
 
         if self.STATE == self.STATES.SPECTRAL_PACK then
             self:update_spectral_pack(dt)
+        end
+
+        if self.STATE == self.STATES.POLYGON_PACK then
+            self:update_polygon_pack(dt)
         end
 
         if self.STATE == self.STATES.STANDARD_PACK then
@@ -3395,6 +3413,57 @@ function Game:update_spectral_pack(dt)
                 G.booster_pack.alignment.offset.y = -2.2
                         G.ROOM.jiggle = G.ROOM.jiggle + 3
                 ease_background_colour_blind(G.STATES.SPECTRAL_PACK)
+                G.E_MANAGER:add_event(Event({
+                    trigger = 'immediate',
+                    func = function()
+                        G.FUNCS.draw_from_deck_to_hand()
+
+                        G.E_MANAGER:add_event(Event({
+                            trigger = 'after',
+                            delay = 0.5,
+                            func = function()
+                                G.CONTROLLER:recall_cardarea_focus('pack_cards')
+                                return true
+                            end}))
+                        return true
+                    end
+                }))  
+                return true
+            end
+        }))  
+    end
+end
+
+function Game:update_polygon_pack(dt)
+    if self.buttons then self.buttons:remove(); self.buttons = nil end
+    if self.shop then G.shop.alignment.offset.y = G.ROOM.T.y+11 end
+
+    if not G.STATE_COMPLETE then
+        G.STATE_COMPLETE = true
+        G.CONTROLLER.interrupt.focus = true
+        G.E_MANAGER:add_event(Event({
+            trigger = 'immediate',
+            func = function()
+                G.booster_pack_sparkles = Particles(1, 1, 0,0, {
+                    timer = 0.015,
+                    scale = 0.1,
+                    initialize = true,
+                    lifespan = 3,
+                    speed = 0.2,
+                    padding = -1,
+                    attach = G.ROOM_ATTACH,
+                    colours = {G.C.WHITE, lighten(G.C.GOLD, 0.2)},
+                    fill = true
+                })
+                G.booster_pack_sparkles.fade_alpha = 1
+                G.booster_pack_sparkles:fade(1, 0)
+                G.booster_pack = UIBox{
+                    definition = create_UIBox_polygon_pack(),
+                    config = {align="tmi", offset = {x=0,y=G.ROOM.T.y + 9},major = G.hand, bond = 'Weak'}
+                }
+                G.booster_pack.alignment.offset.y = -2.2
+                        G.ROOM.jiggle = G.ROOM.jiggle + 3
+                ease_background_colour_blind(G.STATES.POLYGON_PACK)
                 G.E_MANAGER:add_event(Event({
                     trigger = 'immediate',
                     func = function()
