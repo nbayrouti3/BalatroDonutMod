@@ -4238,7 +4238,6 @@ function Card:calculate_joker(context)
                 end
             end
         end
-    end
 
 function Card:is_suit(suit, bypass_debuff, flush_calc)
     if flush_calc then

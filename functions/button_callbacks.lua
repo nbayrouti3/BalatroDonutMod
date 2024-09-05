@@ -2250,7 +2250,7 @@ end
                 G.CONTROLLER.locks.use = false
 
                 if (prev_state == G.STATES.TAROT_PACK or prev_state == G.STATES.PLANET_PACK or
-                  prev_state == G.STATES.SPECTRAL_PACK or prev_state == G.STATE.POLYGON_PACK or prev_state == G.STATES.STANDARD_PACK or
+                  prev_state == G.STATES.SPECTRAL_PACK or prev_state == G.STATES.POLYGON_PACK or prev_state == G.STATES.STANDARD_PACK or
                   prev_state == G.STATES.BUFFOON_PACK or prev_state == G.STATES.FRIENDLY_BUFFOON_PACK) and G.booster_pack then
                   if area == G.consumeables then
                     G.booster_pack.alignment.offset.y = G.booster_pack.alignment.offset.py

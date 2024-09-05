@@ -2048,7 +2048,7 @@ function get_current_pool(_type, _rarity, _legendary, _append)
             if _type == 'Tarot' or _type == 'Tarot_Planet' then _pool[#_pool + 1] = "c_strength"
             elseif _type == 'Planet' then _pool[#_pool + 1] = "c_pluto"
             elseif _type == 'Spectral' then _pool[#_pool + 1] = "c_incantation"
-            elseif _type == 'Polygon' then _pool[#_pool + 1] = 'c_trigon'
+            elseif _type == 'Polygon' then _pool[#_pool + 1] = "c_trigon"
             elseif _type == 'Joker' then _pool[#_pool + 1] = "j_joker"
             elseif _type == 'Demo' then _pool[#_pool + 1] = "j_joker"
             elseif _type == 'Voucher' then _pool[#_pool + 1] = "v_blank"

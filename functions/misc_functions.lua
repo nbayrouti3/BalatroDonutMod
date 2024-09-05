@@ -1201,8 +1201,8 @@ function set_consumeable_usage(card)
         G.GAME.consumeable_usage_total.planet = G.GAME.consumeable_usage_total.planet + 1
         G.GAME.consumeable_usage_total.tarot_planet = G.GAME.consumeable_usage_total.tarot_planet + 1
       elseif card.config.center.set == 'Spectral' then  G.GAME.consumeable_usage_total.spectral = G.GAME.consumeable_usage_total.spectral + 1
-      elseif card.config.center.set == 'Polygon' then G.GAME.consumeable_usage_total.polygon = G.GAME.consumeable_usage_total.polygon + 1
-      --Apparently not needed? ^
+      --elseif card.config.center.set == 'Polygon' then G.GAME.consumeable_usage_total.polygon = G.GAME.consumeable_usage_total.polygon + 1
+      --Apparently not needed? ^ Crashes game when consumable is used.
       end
 
       G.GAME.consumeable_usage_total.all = G.GAME.consumeable_usage_total.all + 1
