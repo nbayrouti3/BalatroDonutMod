@@ -720,10 +720,10 @@ function Game:init_item_prototypes()
         p_buffoon_mega_1 =          {order = 28, discovered = false, name = "Mega Buffoon Pack", weight = 0.15, kind = 'Buffoon', cost = 8, pos = {x=3,y=8}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 2}},
 
         --Custom Boosters
-        p_polygon_normal_1 =        {order = 33, discovered = true,  name = "Polygon Pack", weight = 0.4, kind = 'Polygon', cost = 4, pos = {x=0,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
-        p_polygon_normal_2 =        {order = 34, discovered = true,  name = "Polygon Pack", weight = 0.4, kind = 'Polygon', cost = 4, pos = {x=1,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
-        p_polygon_jumbo_1 =         {order = 35, discovered = true,  name = "Jumbo Polygon Pack", weight = 0.4, kind = 'Polygon', cost = 4, pos = {x=2,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 1}},
-        p_polygon_mega_1 =          {order = 36, discovered = true,  name = "Mega Polygon Pack", weight = 0.1, kind = 'Polygon', cost = 4, pos = {x=3,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 2}},
+        p_polygon_normal_1 =        {order = 37, discovered = true,  name = "Polygon Pack", weight = 0.4, kind = 'Polygon', cost = 4, pos = {x=0,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
+        p_polygon_normal_2 =        {order = 38, discovered = true,  name = "Polygon Pack", weight = 0.4, kind = 'Polygon', cost = 4, pos = {x=1,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
+        p_polygon_jumbo_1 =         {order = 39, discovered = true,  name = "Jumbo Polygon Pack", weight = 0.4, kind = 'Polygon', cost = 4, pos = {x=2,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 1}},
+        p_polygon_mega_1 =          {order = 40, discovered = true,  name = "Mega Polygon Pack", weight = 0.1, kind = 'Polygon', cost = 4, pos = {x=3,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 2}},
 
         --Extras       
         soul={pos = {x=0,y=1}},
