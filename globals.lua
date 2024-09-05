@@ -251,7 +251,6 @@ function Game:set_globals()
         BUFFOON_PACK = 18,
         NEW_ROUND = 19,
         POLYGON_PACK = 20,
-        FRIENDLY_BUFFOON_PACK = 21,
     }
 
     self.STAGES = {

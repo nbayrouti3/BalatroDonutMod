@@ -576,7 +576,7 @@ G.FUNCS.evaluate_play = function(e)
     --Add all the pure bonus cards to the scoring hand
     local pures = {}
     for i=1, #G.play.cards do
-        if next(find_joker('Splash')) or next(find_joker("Gambler's Phallussy")) then
+        if next(find_joker('Splash')) then
             scoring_hand[i] = G.play.cards[i]
         else
             if G.play.cards[i].ability.effect == 'Stone Card' then

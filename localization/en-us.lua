@@ -1446,14 +1446,7 @@
                     "When hand is played, has a {C:green}#1# in #2#{}",
                     "chance to replace a random",
                     "{C:attention}consumable{} with a {C:spectral}Spectral{} card",
-                    "{C:inactive}(Must have consumables)",
-                }
-            },
-            j_camou = {
-                name = "Camou",
-                text = {
-                    "Copies ability of",
-                    "{C:attention}Joker{} to the left and right"
+                    "{C:inactive}(Must have consumable)"
                 }
             },
             j_singularity = {
@@ -1470,13 +1463,6 @@
                     "{C:inactive}(Sells for $0 after first shop)"
                 }
             },
-            j_lion = {
-                name = "Lion Joker",
-                text = {
-                    "When sold, all cards in your",
-                    "hand become {C:attention}Steel{} cards"
-                }
-            },
             j_metajoker = {
                 name = "Meta Joker",
                 text = {
@@ -1485,44 +1471,6 @@
                     "6E 64 20 {C:attention}8{} 20 74 6F",
                     "6D 61 6B 65 20 {C:attention}16",
                     "{C:inactive}It's Gomez Time!"
-            j_twin = {
-                name = "Joker Twin",
-                text = {
-                    "Copies ability of a",
-                    "random {C:attention}Joker{}"
-                }
-            },
-            j_phallussy = {
-                name = "Gambler's Phallussy",
-                text = {
-                    "Every played card counts",
-                    "in scoring. Scored cards have a",
-                    "chance to give either {X:mult,C:white}X#1#{}",
-                    "or {X:mult,C:white}X#2#{} Mult"
-                }
-            },
-            j_dancing_dunc = {
-                name = "Dancing Duncan",
-                text = {
-                    "This Joker gains {X:mult,C:white} +#1# {} Mult",
-                    "for every Pair played and {X:mult,C:white} +#2# {} Mult",
-                    "for every Two Pair played",
-                    "{C:inactive}(Currently {X:mult,C:white} +#3# {C:inactive} Mult)"
-                }
-            },
-            j_strawberry = {
-                name = "Freeze Dried Strawberry",
-                text = {
-                    "Gives {C:chips}+#1#{}",
-                    "Has a {C:green}#2# in #3#{} chance to break"
-                }
-            },
-            j_part_of_you = {
-                name = "Part of You",
-                text = {
-                    "This joker gains {X:mult,C:white} x#1# {} Mult for each",
-                    "duplicate card in your {C:attention}full deck",
-                    "{C:inactive}(Currently {X:mult,C:white} x#2# {C:inactive} Mult)",
                 }
             }
         },
@@ -2292,12 +2240,6 @@
                     "{C:legendary,E:1}poker hand",
                     "by {C:attention}1{} level"
                 }
-            c_cat_toy = {
-                name = "Cat Toy",
-                text = {"Add a {C:attention}Biscuit Seal{}",
-                    "to {C:attention}1{} selected",
-                    "card in your hand"
-                }
             }
         },
         Polygon = {
@@ -2676,13 +2618,6 @@
                     "{C:attention}Mega Buffoon Pack"
                 }
             },
-            tag_friendly_buffoon = {
-                name = "Friendly Buffoon Tag",
-                text = {
-                    "Gives a free",
-                    "{C:attention}Mega Friendly Buffoon Pack"
-                }
-            },
             tag_handy = {
                 name = "Handy Tag",
                 text = {
@@ -2973,13 +2908,6 @@
                     "Forces 1 card to",
                     "always be selected"
                 }
-            },
-            bl_smothering_tithe = {
-                name = "Smothering Tithe",
-                text = {
-                    "Every time you discard",
-                    "lose $2"
-                }
             }
         },
         Back = {
@@ -3143,14 +3071,6 @@
                     "Creates a {C:tarot}Tarot{} card",
                     "when {C:attention}discarded",
                     "{C:inactive}(Must have room)"
-                }
-            },
-            biscuit_seal = {
-                name = "Biscuit Seal",
-                text = {
-                    "{C:attention}Discards{} this card and",
-                    "{C:attention}draws{} a card if held in hand",
-                    "after all scoring is finished"
                 }
             },
             eternal = {
@@ -3492,33 +3412,6 @@
                     "be used immediately"
                 }
             },
-            p_polygon_normal = {
-                name = "Polygon Pack",
-                text = {
-                    "Choose {C:attention}#1#{} of up to",
-                    "{C:attention}#2#{C:polygon} Polygon{} cards to",
-                    "add to your consumables",
-                    "{C:inactive}(Must have room)",
-                }
-            },
-            p_polygon_jumbo = {
-                name = "Polygon Pack",
-                text = {
-                    "Choose {C:attention}#1#{} of up to",
-                    "{C:attention}#2#{C:polygon} Polygon{} cards to",
-                    "add to your consumables",
-                    "{C:inactive}(Must have room)",
-                }
-            },
-            p_polygon_mega = {
-                name = "Polygon Pack",
-                text = {
-                    "Choose {C:attention}#1#{} of up to",
-                    "{C:attention}#2#{C:polygon} Polygon{} cards to",
-                    "add to your consumables",
-                    "{C:inactive}(Must have room)",
-                }
-            },
             p_standard_normal = {
                 name = "Standard Pack",
                 text = {
@@ -3564,28 +3457,31 @@
                     "{C:attention}#2#{C:joker} Joker{} cards"
                 }
             },
-            p_friendly_buffoon_normal = {
-                name = "Friendly Buffoon Pack",
+            p_polygon_normal ={
+                name = "Polygon Pack",
                 text = {
                     "Choose {C:attention}#1#{} of up to",
-                    "{C:attention}#2#{C:joker} Joker{} cards",
-                    "made by your friends!"
+                    "{C:attention}#2#{C:polygon} Polygon{} cards to",
+                    "add to your consumables",
+                    "{C:inactive}(Must have room)",
                 }
             },
-            p_friendly_buffoon_jumbo = {
-                name = "Jumbo Friendly Buffoon Pack",
+            p_polygon_jumbo ={
+                name = "Jumbo Polygon Pack",
                 text = {
                     "Choose {C:attention}#1#{} of up to",
-                    "{C:attention}#2#{C:joker} Joker{} cards",
-                    "made by your friends!"
+                    "{C:attention}#2#{C:polygon} Polygon{} cards to",
+                    "add to your consumables",
+                    "{C:inactive}(Must have room)",
                 }
             },
-            p_friendly_buffoon_mega = {
-                name = "Mega Friendly Buffoon Pack",
+            p_polygon_mega ={
+                name = "Mega Polygon Pack",
                 text = {
                     "Choose {C:attention}#1#{} of up to",
-                    "{C:attention}#2#{C:joker} Joker{} cards",
-                    "made by your friends!"
+                    "{C:attention}#2#{C:polygon} Polygon{} cards to",
+                    "add to your consumables",
+                    "{C:inactive}(Must have room)",
                 }
             },
             pinned_left = {
@@ -3816,7 +3712,6 @@
             blue_seal = "Blue Seal",
             red_seal = "Red Seal",
             purple_seal = "Purple Seal",
-            biscuit_seal = "Biscuit Seal",
             locked = "Locked",
             eternal = "Eternal",
             perishable = "Perishable",
@@ -3962,7 +3857,6 @@
             k_polygon_pack = "Polygon Pack",
             k_standard_pack = "Standard Pack",
             k_buffoon_pack = "Buffoon Pack",
-            k_friendly_buffoon_pack = "Friendly Buffoon Pack",
             k_enter_text = "Enter Text",
             k_defeated_by = "Defeated By",
             k_level_prefix = "lvl.",
