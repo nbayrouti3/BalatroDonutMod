@@ -1146,6 +1146,7 @@ end
       red_seal = G.C.RED,
       blue_seal = G.C.BLUE,
       purple_seal = G.C.PURPLE,
+      biscuit_seal = G.C.BROWN,
       pinned_left = G.C.ORANGE,
     }
     return G.BADGE_COL[key] or {1, 0, 0, 1}
@@ -2465,6 +2466,11 @@ function G.UIDEF.usage_tabs()
           tab_definition_function_args = {'consumeable_usage'},
         },
         {
+          label = localize('b_stat_polygons'),
+          tab_definition_function = create_UIBox_usage,
+          tab_definition_function_args = {'consumeable_usage', 'Polygon'},
+        },
+        {
           label = localize('b_stat_tarots'),
           tab_definition_function = create_UIBox_usage,
           tab_definition_function_args = {'consumeable_usage', 'Tarot'},
@@ -2600,6 +2606,49 @@ function create_UIBox_high_scores()
     not G.F_NO_ACHIEVEMENTS and {n=G.UIT.C, config={align = "cm", r = 0.1, colour = G.C.CLEAR}, nodes=cheevs} or nil
   }})
 
+  return t
+end
+
+function create_UIBox_your_collection_polygons()
+  local deck_tables = {}
+
+  G.your_collection = {}
+  for j = 1, 2 do
+    G.your_collection[j] = CardArea( --This quite literally changes how much space the ui portion takes up
+      G.ROOM.T.x + 0.2*G.ROOM.T.w/2,G.ROOM.T.h,
+      (5)*G.CARD_W,
+      1*G.CARD_H, 
+      {card_limit = 3, type = 'title', highlight_limit = 0, collection = true}) -- This controls how far apart the cards are from each other
+    table.insert(deck_tables, 
+    {n=G.UIT.R, config={align = "cm", padding = 0, no_fill = true}, nodes={
+      {n=G.UIT.O, config={object = G.your_collection[j]}}
+    }}
+    )
+  end
+
+    for j = 1, #G.your_collection do
+      for i = 1, 3+j do
+      local center = G.P_CENTER_POOLS["Polygon"][i+(j-1)*3 + j - 1]
+
+      local card = Card(G.your_collection[j].T.x + G.your_collection[j].T.w/2, G.your_collection[j].T.y, G.CARD_W, G.CARD_H, nil, center)
+      card:start_materialize(nil, i>1 or j>1)
+      G.your_collection[j]:emplace(card)
+    end
+  end
+
+  local polygon_options = {}
+  for i = 1, math.floor(#G.P_CENTER_POOLS.Polygon/6) do
+    table.insert(polygon_options, localize('k_page')..' '..tostring(i)..'/'..tostring(math.floor(#G.P_CENTER_POOLS.Polygon/6)))
+  end
+
+  INIT_COLLECTION_CARD_ALERTS()
+
+  local t = create_UIBox_generic_options({ back_func = 'your_collection', contents = {
+            {n=G.UIT.R, config={align = "cm", minw = 2.5, padding = 0.1, r = 0.1, colour = G.C.BLACK, emboss = 0.05}, nodes=deck_tables},
+            {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
+              create_option_cycle({options = polygon_options, w = 4.5, cycle_shoulders = true, opt_callback = 'your_collection_polygon_page', focus_args = {snap_to = true, nav = 'wide'},current_option = 1, colour = G.C.RED, no_pips = true})
+            }},
+          }})
   return t
 end
 

@@ -2048,7 +2048,7 @@ function get_current_pool(_type, _rarity, _legendary, _append)
             if _type == 'Tarot' or _type == 'Tarot_Planet' then _pool[#_pool + 1] = "c_strength"
             elseif _type == 'Planet' then _pool[#_pool + 1] = "c_pluto"
             elseif _type == 'Spectral' then _pool[#_pool + 1] = "c_incantation"
-            elseif _type == 'Polygon' then _pool[#_pool +1] = "c_trigon"
+            elseif _type == 'Polygon' then _pool[#_pool + 1] = 'c_trigon'
             elseif _type == 'Joker' then _pool[#_pool + 1] = "j_joker"
             elseif _type == 'Demo' then _pool[#_pool + 1] = "j_joker"
             elseif _type == 'Voucher' then _pool[#_pool + 1] = "v_blank"
@@ -2575,7 +2575,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
         elseif _c.name == 'Charm Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_arcana_mega_1 
         elseif _c.name == 'Meteor Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_celestial_mega_1 
         elseif _c.name == 'Ethereal Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_spectral_normal_1 
-        elseif _c.name == 'Polygonal Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_polygon_jumbo_1
+        elseif _c.name == 'Polygonal Tag' then info_queue[#info_queue + 1] = G.P_CENTERS.p_polygon_jumbo_1
         elseif _c.name == 'Standard Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_standard_mega_1 
         elseif _c.name == 'Buffoon Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_buffoon_mega_1 
         end
@@ -2640,6 +2640,9 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
         elseif _c.name == 'Buffoon Pack' then desc_override = 'p_buffoon_normal'; loc_vars = {_c.config.choose, _c.config.extra}
         elseif _c.name == 'Jumbo Buffoon Pack' then desc_override = 'p_buffoon_jumbo'; loc_vars = {_c.config.choose, _c.config.extra}
         elseif _c.name == 'Mega Buffoon Pack' then desc_override = 'p_buffoon_mega'; loc_vars = {_c.config.choose, _c.config.extra}
+        elseif _c.name == 'Friendly Buffoon Pack' then desc_override = 'p_friendly_buffoon_normal'; loc_vars = {_c.config.choose, _c.config.extra}
+        elseif _c.name == 'Jumbo Friendly Buffoon Pack' then desc_override = 'p_friendly_buffoon_jumbo'; loc_vars = {_c.config.choose, _c.config.extra}
+        elseif _c.name == 'Mega Friendly Buffoon Pack' then desc_override = 'p_friendly_buffoon_mega'; loc_vars = {_c.config.choose, _c.config.extra}
         elseif _c.name == 'Polygon Pack' then desc_override = 'p_polygon_normal'; loc_vars = {_c.config.choose, _c.config.extra}
         elseif _c.name == 'Jumbo Polygon Pack' then desc_override = 'p_polygon_jumbo'; loc_vars = {_c.config.choose, _c.config.extra}
         elseif _c.name == 'Mega Polygon Pack' then desc_override = 'p_polygon_mega'; loc_vars = {_c.config.choose, _c.config.extra}

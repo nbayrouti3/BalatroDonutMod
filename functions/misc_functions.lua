@@ -1201,7 +1201,7 @@ function set_consumeable_usage(card)
         G.GAME.consumeable_usage_total.planet = G.GAME.consumeable_usage_total.planet + 1
         G.GAME.consumeable_usage_total.tarot_planet = G.GAME.consumeable_usage_total.tarot_planet + 1
       elseif card.config.center.set == 'Spectral' then  G.GAME.consumeable_usage_total.spectral = G.GAME.consumeable_usage_total.spectral + 1
-      --elseif card.config.center.set == 'Polygon' then G.GAME.consumeable_usage_total.polygon = G.GAME.consumeable_usage_total.polygon + 1
+      elseif card.config.center.set == 'Polygon' then G.GAME.consumeable_usage_total.polygon = G.GAME.consumeable_usage_total.polygon + 1
       --Apparently not needed? ^
       end
 
@@ -1295,7 +1295,7 @@ function set_profile_progress()
 end
 
 function set_discover_tallies()
-  G.DISCOVER_TALLIES = G.DISCOVER_TALLIES or {
+   G.DISCOVER_TALLIES = G.DISCOVER_TALLIES or {
       blinds = {tally = 0, of = 0},
       tags = {tally = 0, of = 0},
       jokers = {tally = 0, of = 0},
@@ -1350,7 +1350,7 @@ function set_discover_tallies()
           if v.discovered then 
               G.DISCOVER_TALLIES.spectrals.tally = G.DISCOVER_TALLIES.spectrals.tally+1
           end
-        elseif v.set == 'Polygon' then
+        elseif v.set == 'Polygon' then 
           G.DISCOVER_TALLIES.polygons.of = G.DISCOVER_TALLIES.polygons.of+1
           if v.discovered then
               G.DISCOVER_TALLIES.polygons.tally = G.DISCOVER_TALLIES.polygons.tally+1
@@ -1518,7 +1518,7 @@ function loc_colour(_c, _default)
     tarot = G.C.SECONDARY_SET.Tarot,
     planet = G.C.SECONDARY_SET.Planet,
     spectral = G.C.SECONDARY_SET.Spectral,
-    polygon = G.C.SECONDARY_SET.Polygon,
+    polygon = G.C.SECONDARY_SET.Polygon, 
     edition = G.C.EDITION,
     dark_edition = G.C.DARK_EDITION,
     legendary = G.C.RARITY[4],

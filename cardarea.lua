@@ -278,8 +278,7 @@ function CardArea:draw()
 
     self.ARGS.invisible_area_types = self.ARGS.invisible_area_types or {discard=1, voucher=1, play=1, consumeable=1, title = 1, title_2 = 1}
     if self.ARGS.invisible_area_types[self.config.type] or
-        (self.config.type == 'hand' and ({[G.STATES.SHOP]=1, [G.STATES.TAROT_PACK]=1, [G.STATES.SPECTRAL_PACK]=1, [G.STATES.SPECTRAL_PACK]=1, [G.STATES.POLYGON_PACK]=1, [G.STATES.STANDARD_PACK]=1,[G.STATES.BUFFOON_PACK]=1,[G.STATES.PLANET_PACK]=1, [G.STATES.ROUND_EVAL]=1, [G.STATES.BLIND_SELECT]=1})[state]) or
-        --(self.config.type == 'hand' and ({[G.STATES.POLYGON.PACK]=1})[state]) or
+        (self.config.type == 'hand' and ({[G.STATES.SHOP]=1, [G.STATES.TAROT_PACK]=1, [G.STATES.SPECTRAL_PACK]=1, [G.STATES.POLYGON_PACK]=1,[G.STATES.STANDARD_PACK]=1,[G.STATES.BUFFOON_PACK]=1,[G.STATES.FRIENDLY_BUFFOON_PACK]=1,[G.STATES.PLANET_PACK]=1, [G.STATES.ROUND_EVAL]=1, [G.STATES.BLIND_SELECT]=1})[state]) or
         (self.config.type == 'deck' and self ~= G.deck) or
         (self.config.type == 'shop' and self ~= G.shop_vouchers) then
     else

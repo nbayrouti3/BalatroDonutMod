@@ -1446,7 +1446,61 @@
                     "When hand is played, has a {C:green}#1# in #2#{}",
                     "chance to replace a random",
                     "{C:attention}consumable{} with a {C:spectral}Spectral{} card",
-                    "{C:inactive}(Must have consumable)"
+                    "{C:inactive}(Must have consumables)"
+                }
+            },
+            j_camou = {
+                name = "Camou",
+                text = {
+                    "Copies ability of",
+                    "{C:attention}Joker{} to the left and right"
+                }
+            },
+            j_lion = {
+                name = "Lion Joker",
+                text = {
+                    "When sold, all cards in your",
+                    "hand become {C:attention}Steel{} cards"
+                }
+            },
+            j_twin = {
+                name = "Joker Twin",
+                text = {
+                    "Copies ability of a",
+                    "random {C:attention}Joker{}"
+                }
+            },
+            j_phallussy = {
+                name = "Gambler's Phallussy",
+                text = {
+                    "Every played card counts",
+                    "in scoring. Scored cards have a",
+                    "chance to give either {X:mult,C:white}X#1#{}",
+                    "or {X:mult,C:white}X#2#{} Mult"
+                }
+            },
+            j_dancing_dunc = {
+                name = "Dancing Duncan",
+                text = {
+                    "This Joker gains {X:mult,C:white} +#1# {} Mult",
+                    "for every Pair played and {X:mult,C:white} +#2# {} Mult",
+                    "for every Two Pair played",
+                    "{C:inactive}(Currently {X:mult,C:white} +#3# {C:inactive} Mult)"
+                }
+            },
+            j_strawberry = {
+                name = "Freeze Dried Strawberry",
+                text = {
+                    "Gives {C:chips}+#1#{}",
+                    "Has a {C:green}#2# in #3#{} chance to break"
+                }
+            },
+            j_part_of_you = {
+                name = "Part of You",
+                text = {
+                    "This joker gains {X:mult,C:white} x#1# {} Mult for each",
+                    "duplicate card in your {C:attention}full deck",
+                    "{C:inactive}(Currently {X:mult,C:white} x#2# {C:inactive} Mult)",
                 }
             },
             j_singularity = {
@@ -2239,6 +2293,13 @@
                     "Upgrade every",
                     "{C:legendary,E:1}poker hand",
                     "by {C:attention}1{} level"
+                }
+            },
+            c_cat_toy = {
+                name = "Cat Toy",
+                text = {"Add a {C:attention}Biscuit Seal{}",
+                    "to {C:attention}1{} selected",
+                    "card in your hand"
                 }
             }
         },
@@ -3478,6 +3539,32 @@
             p_polygon_mega ={
                 name = "Mega Polygon Pack",
                 text = {
+                    "Choose {C:attention}#1#{} of up to",
+                    "{C:attention}#2#{C:polygon} Polygon{} cards to",
+                    "add to your consumables",
+                    "{C:inactive}(Must have room)",
+                }
+            },
+            p_polygon_normal ={
+                name = "Polygon Pack",
+                text = {"Choose {C:attention}#1#{} of up to",
+                    "{C:attention}#2#{C:polygon} Polygon{} cards to",
+                    "add to your consumables",
+                    "{C:inactive}(Must have room)"
+                }
+            },
+            p_polygon_jumbo ={
+                name = "Jumbo Polygon Pack",
+                text = {
+                    "Choose {C:attention}#1#{} of up to",
+                    "{C:attention}#2#{C:polygon} Polygon{} cards to",
+                    "add to your consumables",
+                    "{C:inactive}(Must have room)",
+                }
+            },
+            p_polygon_mega ={
+                name = "Mega Polygon Pack",
+                text  = {
                     "Choose {C:attention}#1#{} of up to",
                     "{C:attention}#2#{C:polygon} Polygon{} cards to",
                     "add to your consumables",
