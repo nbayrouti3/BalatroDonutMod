@@ -948,6 +948,7 @@ function Card:generate_UIBox_ability_table()
         elseif self.ability.name == 'Part of You' then loc_vars = {self.ability.x_mult, self.ability.extra + self.ability.x_mult*(self.ability.dupe_tally or 0)}
         elseif self.ability.name == 'The Singularity' then loc_vars = {self.ability.extra}
         elseif self.ability.name == 'Sacrificial Joker' then
+        elseif self.ability.name == 'Moist Chan' then loc_vars = {self.ability.extra.chips, self.ability.extra.mult}
         end
     end
     local badges = {}
@@ -3395,6 +3396,14 @@ function Card:calculate_joker(context)
                     end
                 if self.ability.name == 'Walkie Talkie' and
                 (context.other_card:get_id() == 10 or context.other_card:get_id() == 4) then
+                    return {
+                        chips = self.ability.extra.chips,
+                        mult = self.ability.extra.mult,
+                        card = self
+                    }
+                end
+                if self.ability.name == 'Moist Chan' and
+                (context.other_card:get_id() == 6 or context.other_card:get_id() == 9) then
                     return {
                         chips = self.ability.extra.chips,
                         mult = self.ability.extra.mult,

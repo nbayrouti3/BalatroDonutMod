@@ -762,6 +762,7 @@ end
           end
         end
           G.GAME.spectral_rate = G.GAME.spectral_rate or 0
+          local total_rate = G.GAME.joker_rate + G.GAME.tarot_rate + G.GAME.planet_rate + G.GAME.playing_card_rate + G.GAME.spectral_rate + G.GAME.polygon_rate
           local polled_rate = pseudorandom(pseudoseed('cdt'..G.GAME.round_resets.ante))*total_rate
           local check_rate = 0
           for _, v in ipairs({
