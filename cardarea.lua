@@ -91,6 +91,9 @@ function CardArea:remove_card(card, discarded_only)
     return card
 end
 
+--function CardArea:toggle_ability_triggered(name)
+    --if 
+
 function CardArea:change_size(delta)
     if delta ~= 0 then 
         G.E_MANAGER:add_event(Event({
@@ -275,7 +278,7 @@ function CardArea:draw()
 
     self.ARGS.invisible_area_types = self.ARGS.invisible_area_types or {discard=1, voucher=1, play=1, consumeable=1, title = 1, title_2 = 1}
     if self.ARGS.invisible_area_types[self.config.type] or
-        (self.config.type == 'hand' and ({[G.STATES.SHOP]=1, [G.STATES.TAROT_PACK]=1, [G.STATES.SPECTRAL_PACK]=1, [G.STATES.STANDARD_PACK]=1,[G.STATES.BUFFOON_PACK]=1,[G.STATES.FRIENDLY_BUFFOON_PACK]=1,[G.STATES.PLANET_PACK]=1, [G.STATES.ROUND_EVAL]=1, [G.STATES.BLIND_SELECT]=1})[state]) or
+        (self.config.type == 'hand' and ({[G.STATES.SHOP]=1, [G.STATES.TAROT_PACK]=1, [G.STATES.SPECTRAL_PACK]=1, [G.STATES.POLYGON_PACK]=1,[G.STATES.STANDARD_PACK]=1,[G.STATES.BUFFOON_PACK]=1,[G.STATES.FRIENDLY_BUFFOON_PACK]=1,[G.STATES.PLANET_PACK]=1, [G.STATES.ROUND_EVAL]=1, [G.STATES.BLIND_SELECT]=1})[state]) or
         (self.config.type == 'deck' and self ~= G.deck) or
         (self.config.type == 'shop' and self ~= G.shop_vouchers) then
     else
@@ -433,7 +436,7 @@ function CardArea:align_cards()
             end
         end
     end
-    if self.config.type == 'hand' and (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK  or G.STATE == G.STATES.PLANET_PACK) then
+    if self.config.type == 'hand' and (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.PLANET_PACK) then
         for k, card in ipairs(self.cards) do
             if not card.states.drag.is then 
                 card.T.r = 0.4*(-#self.cards/2 - 0.5 + k)/(#self.cards)+ (G.SETTINGS.reduced_motion and 0 or 1)*0.02*math.sin(2*G.TIMERS.REAL+card.T.x)

@@ -1446,7 +1446,7 @@
                     "When hand is played, has a {C:green}#1# in #2#{}",
                     "chance to replace a random",
                     "{C:attention}consumable{} with a {C:spectral}Spectral{} card",
-                    "{C:inactive}(Must have consumables)",
+                    "{C:inactive}(Must have consumables)"
                 }
             },
             j_camou = {
@@ -1461,6 +1461,71 @@
                 text = {
                     "When sold, all cards in your",
                     "hand become {C:attention}Steel{} cards"
+                }
+            },
+            j_twin = {
+                name = "Joker Twin",
+                text = {
+                    "Copies ability of a",
+                    "random {C:attention}Joker{}"
+                }
+            },
+            j_phallussy = {
+                name = "Gambler's Phallussy",
+                text = {
+                    "Every played card counts",
+                    "in scoring. Scored cards have a",
+                    "chance to give either {X:mult,C:white}X#1#{}",
+                    "or {X:mult,C:white}X#2#{} Mult"
+                }
+            },
+            j_dancing_dunc = {
+                name = "Dancing Duncan",
+                text = {
+                    "This Joker gains {X:mult,C:white} +#1# {} Mult",
+                    "for every Pair played and {X:mult,C:white} +#2# {} Mult",
+                    "for every Two Pair played",
+                    "{C:inactive}(Currently {X:mult,C:white} +#3# {C:inactive} Mult)"
+                }
+            },
+            j_strawberry = {
+                name = "Freeze Dried Strawberry",
+                text = {
+                    "Gives {C:chips}+#1#{}",
+                    "Has a {C:green}#2# in #3#{} chance to break"
+                }
+            },
+            j_part_of_you = {
+                name = "Part of You",
+                text = {
+                    "This joker gains {X:mult,C:white} x#1# {} Mult for each",
+                    "duplicate card in your {C:attention}full deck",
+                    "{C:inactive}(Currently {X:mult,C:white} x#2# {C:inactive} Mult)",
+                    "{C:inactive}(Must have consumables)",
+                }
+            },
+            j_singularity = {
+                name = "The Singularity",
+                text = {
+                    "{C:red}+#1#{} Retriggers if",
+                    "played hand is {C:attention}Singular{}"
+                }
+            },
+            j_sacrificial = {
+                name = "Sacrificial Joker",
+                text = {
+                    "{C:red}Wins current blind when sold",
+                    "{C:inactive}(Sells for $0 after first shop)"
+                }
+            },
+            j_metajoker = {
+                name = "Meta Joker",
+                text = {
+                    "52 65 74 72 69 67 67 65",
+                    "72 20 {C:attention}2{} 2C 20 {C:attention}4{} 20 61",
+                    "6E 64 20 {C:attention}8{} 20 74 6F",
+                    "6D 61 6B 65 20 {C:attention}16",
+                    "{C:inactive}It's Gomez Time!"
                 }
             },
             j_twin = {
@@ -2279,6 +2344,125 @@
                 }
             }
         },
+        Polygon = {
+            c_trigon = {
+                name = "Tri-Eyed Cat",
+                text = {
+                    "After {C:attention}#1#{} hands played,",
+                    "use this card to",
+                    "{C:attention}PLACEHOLDER",
+                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                }
+            },
+            c_tetragon = {
+                name = "Quadruped Beast",
+                text = {
+                    "After {C:attention}#1#{} hands played,",
+                    "use this card to",
+                    "{C:attention}PLACEHOLDER",
+                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                }
+            },
+            c_pentagon = {
+                name = "Pentastar Hand",
+                text = {
+                    "After {C:attention}#1#{} hands played,",
+                    "use this card to",
+                    "{C:attention}PLACEHOLDER",
+                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                }
+            },
+            c_hexagon = {
+                name = "Hex-winged Angel",
+                text = {
+                    "After {C:attention}#1#{} hands played,",
+                    "use this card to",
+                    "{C:attention}PLACEHOLDER",
+                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                }
+            },
+            c_septagon = {
+                name = "Septabug",
+                text = {
+                    "After {C:attention}#1#{} hands played,",
+                    "use this card to",
+                    "{C:attention}PLACEHOLDER",
+                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                }
+            },
+            c_octagon = {
+                name = "Octoclops",
+                text = {
+                    "After {C:attention}#1#{} hands played,",
+                    "use this card to",
+                    "{C:attention}PLACEHOLDER",
+                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                }
+            },
+            c_nonagon = {
+                name = "Nonagon Lion",
+                text = {
+                    "After {C:attention}#1#{} hands played,",
+                    "use this card to",
+                    "{C:attention}PLACEHOLDER",
+                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                }
+            },
+            c_decagon = {
+                name = "Charybdis",
+                text = {
+                    "After {C:attention}#1#{} hands played,",
+                    "use this card to",
+                    "{C:attention}PLACEHOLDER",
+                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                }
+            },
+            c_hendecagon = {
+                name = "Echidna",
+                text = {
+                    "After {C:attention}#1#{} hands played,",
+                    "use this card to",
+                    "{C:attention}PLACEHOLDER",
+                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                }
+            },
+            c_dodecagon = {
+                name = "Typhon",
+                text = {
+                    "After {C:attention}#1#{} hands played,",
+                    "use this card to",
+                    "{C:attention}PLACEHOLDER",
+                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                }
+            },
+            c_hectogon = {
+                name = "Parallax",
+                text = {
+                    "After {C:attention}#1#{} hands played,",
+                    "use this card to",
+                    "{C:attention}PLACEHOLDER",
+                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                }
+            },
+            c_myriagon = {
+                name = "Fractal",
+                text = {
+                    "After {C:attention}#1#{} hands played,",
+                    "use this card to",
+                    "{C:attention}PLACEHOLDER",
+                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                }
+            },
+            c_apeirogon = {
+                name = "Infinity",
+                text = {
+                    "After {C:attention}#1#{} hands played,",
+                    "use this card to",
+                    "{C:attention}PLACEHOLDER",
+                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                }
+            }
+        },
         Edition = {
             e_base = {
                 name = "Base",
@@ -2624,6 +2808,13 @@
                 text = {
                     "Gives a free",
                     "{C:spectral}Spectral Pack"
+                }
+            },
+            tag_polygonal = {
+                name = "Polygonal Tag",
+                text = {
+                    "Give a free",
+                    "{C:polygon}Polygon Pack"
                 }
             }
         },
@@ -3231,6 +3422,15 @@
                     "learn what it does"
                 }
             },
+            undiscovered_polygon = {
+                name = "Not Discovered",
+                text = {
+                    "Purchase or use",
+                    "this card in an",
+                    "unseeded run to",
+                    "learn what it does"
+                }
+            },
             undiscovered_voucher = {
                 name = "Not Discovered",
                 text = {
@@ -3336,6 +3536,33 @@
                     "be used immediately"
                 }
             },
+            p_polygon_normal = {
+                name = "Polygon Pack",
+                text = {
+                    "Choose {C:attention}#1#{} of up to",
+                    "{C:attention}#2#{C:polygon} Polygon{} cards to",
+                    "add to your consumables",
+                    "{C:inactive}(Must have room)",
+                }
+            },
+            p_polygon_jumbo = {
+                name = "Polygon Pack",
+                text = {
+                    "Choose {C:attention}#1#{} of up to",
+                    "{C:attention}#2#{C:polygon} Polygon{} cards to",
+                    "add to your consumables",
+                    "{C:inactive}(Must have room)",
+                }
+            },
+            p_polygon_mega = {
+                name = "Polygon Pack",
+                text = {
+                    "Choose {C:attention}#1#{} of up to",
+                    "{C:attention}#2#{C:polygon} Polygon{} cards to",
+                    "add to your consumables",
+                    "{C:inactive}(Must have room)",
+                }
+            },
             p_standard_normal = {
                 name = "Standard Pack",
                 text = {
@@ -3405,6 +3632,7 @@
                     "made by your friends!"
                 }
             },
+            
             pinned_left = {
                 name = "Pinned",
                 text = {
@@ -3695,6 +3923,7 @@
             b_stat_tarots = "Tarots",
             b_stat_planets = "Planets",
             b_stat_spectrals = "Spectrals",
+            b_stat_polygons = "Polygons",
             b_stat_vouchers = "Vouchers",
             b_next = "Next",
             b_endless = "Endless Mode",
@@ -3710,6 +3939,7 @@
             b_tarot_cards = "Tarot Cards",
             b_planet_cards = "Planet Cards",
             b_spectral_cards = "Spectral Cards",
+            b_polygon_cards = "Polygon Cards",
             b_enhanced_cards = "Enhanced Cards",
             b_editions = "Editions",
             b_booster_packs = "Booster Packs",
@@ -3765,6 +3995,7 @@
             k_dwarf_planet = "Dwarf Planet",
             k_planet_q = "Planet?",
             k_spectral = "Spectral",
+            k_polygon = "Polygon",
             k_booster = "Booster",
             k_edition = "Edition",
             k_hud_hands = "Hands",
@@ -3773,6 +4004,7 @@
             k_arcana_pack = "Arcana Pack",
             k_celestial_pack = "Celestial Pack",
             k_spectral_pack = "Spectral Pack",
+            k_polygon_pack = "Polygon Pack",
             k_standard_pack = "Standard Pack",
             k_buffoon_pack = "Buffoon Pack",
             k_friendly_buffoon_pack = "Friendly Buffoon Pack",
@@ -3961,15 +4193,18 @@
             k_plus_stone = "+1 Stone",
             k_plus_planet = "+1 Planet",
             k_plus_spectral = "+1 Spectral",
+            k_plus_polygon = "+1 Polygon",
             k_plus_joker = "+1 Joker",
             k_active_ex = "Active!",
             k_level_up_ex = "Level Up!",
             k_upgrade_ex = "Upgrade!",
             k_again_ex = "Again!",
+            k_to16_ex = "To 16!",
             k_val_up = "Value Up!",
             k_reset = "Reset",
             k_extinct_ex = "Extinct!",
             k_disabled_ex = "Disabled!",
+            k_poly_ready = "Ready!",
             k_safe_ex = "Safe!",
             k_saved_ex = "Saved!",
             k_swapped_ex = "Swapped!",
@@ -3978,6 +4213,7 @@
             k_eaten_ex = "Eaten!",
             k_drank_ex = "Drank!",
             k_eroded_ex = "Eroded!",
+            k_sacrificed_ex = "Sacrificed!",
         },
         v_dictionary = {
             a_xmult = "X#1# Mult",

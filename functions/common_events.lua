@@ -319,6 +319,8 @@ function ease_background_colour_blind(state, blind_override)
         ease_colour(G.C.DYN_UI.MAIN, mix_colours(G.C.WHITE, G.C.BLACK, 0.9))
     elseif state == G.STATES.SPECTRAL_PACK then
         ease_colour(G.C.DYN_UI.MAIN, mix_colours(G.C.SECONDARY_SET.Spectral, G.C.BLACK, 0.9))
+    elseif state == G.STATES.POLYGON_PACK then
+        ease_colour(G.C.DYN_UI.MAIN, mix_colours(G.C.SECONDARY_SET.Polygon, G.C.BLACK, 0.9))
     elseif state == G.STATES.STANDARD_PACK then
         ease_colour(G.C.DYN_UI.MAIN, G.C.RED)
     elseif state == G.STATES.BUFFOON_PACK or state == G.STATES.FRIENDLY_BUFFOON_PACK then
@@ -333,6 +335,8 @@ function ease_background_colour_blind(state, blind_override)
         ease_background_colour{new_colour = G.C.PURPLE, special_colour = darken(G.C.BLACK, 0.2), contrast = 1.5}
     elseif state == G.STATES.SPECTRAL_PACK then
         ease_background_colour{new_colour = G.C.SECONDARY_SET.Spectral, special_colour = darken(G.C.BLACK, 0.2), contrast = 2}
+    elseif state == G.STATES.POLYGON_PACK then
+        ease_background_colour{new_colour = G.C.SECONDARY_SET.Polygon, special_colour = darken(G.C.BLACK, 0.2), contrast = 2}
     elseif state == G.STATES.STANDARD_PACK then
         ease_background_colour{new_colour = darken(G.C.BLACK, 0.2), special_colour = G.C.RED, contrast = 3}
     elseif state == G.STATES.BUFFOON_PACK  or state == G.STATES.FRIENDLY_BUFFOON_PACK then
@@ -658,13 +662,14 @@ end
 function set_alerts()
     if G.REFRESH_ALERTS then
         G.REFRESH_ALERTS = nil
-        local alert_joker, alert_voucher, alert_tarot, alert_planet, alert_spectral, alert_blind, alert_edition, alert_tag, alert_seal, alert_booster = false,false,false,false,false,false,false,false,false,false
+        local alert_joker, alert_voucher, alert_tarot, alert_planet, alert_spectral, alert_polygon, alert_blind, alert_edition, alert_tag, alert_seal, alert_booster = false,false,false,false,false,false,false,false,false,false,false
         for k, v in pairs(G.P_CENTERS) do
             if v.discovered and not v.alerted then
                 if v.set == 'Voucher' then alert_voucher = true end
                 if v.set == 'Tarot' then alert_tarot = true end
                 if v.set == 'Planet' then alert_planet = true end
                 if v.set == 'Spectral' then alert_spectral = true end
+                if v.set == 'Polygon' then alert_polygon = true end
                 if v.set == 'Joker' then alert_joker = true end
                 if v.set == 'Edition' then alert_edition = true end
                 if v.set == 'Booster' then alert_booster = true end
@@ -686,7 +691,7 @@ function set_alerts()
             end
         end
 
-        local alert_any = alert_voucher or alert_joker or alert_tarot or alert_planet or alert_spectral or alert_blind or alert_edition or alert_seal or alert_tag
+        local alert_any = alert_voucher or alert_joker or alert_tarot or alert_planet or alert_spectral or alert_polygon or alert_blind or alert_edition or alert_seal or alert_tag
 
         G.ARGS.set_alerts_alertables = G.ARGS.set_alerts_alertables or {
             {id = 'your_collection', alert_uibox_name = 'your_collection_alert'},
@@ -694,6 +699,7 @@ function set_alerts()
             {id = 'your_collection_tarots', alert_uibox_name = 'your_collection_tarots_alert'},
             {id = 'your_collection_planets', alert_uibox_name = 'your_collection_planets_alert'},
             {id = 'your_collection_spectrals', alert_uibox_name = 'your_collection_spectrals_alert'},
+            {id = 'your_collection_polygons', alert_uibox_name = 'your_collection_polygons_alert'},
             {id = 'your_collection_vouchers', alert_uibox_name = 'your_collection_vouchers_alert'},
             {id = 'your_collection_editions', alert_uibox_name = 'your_collection_editions_alert'},
             {id = 'your_collection_blinds', alert_uibox_name = 'your_collection_blinds_alert'},
@@ -712,6 +718,8 @@ function set_alerts()
         G.ARGS.set_alerts_alertables[9].should_alert = alert_tag
         G.ARGS.set_alerts_alertables[10].should_alert = alert_seal
         G.ARGS.set_alerts_alertables[11].should_alert = alert_booster
+        G.ARGS.set_alerts_alertables[12].should_alert = alert_polygon
+
 
         for k, v in ipairs(G.ARGS.set_alerts_alertables) do
             if G.OVERLAY_MENU and G.OVERLAY_MENU:get_UIE_by_ID(v.id) then
@@ -2027,7 +2035,7 @@ function get_current_pool(_type, _rarity, _legendary, _append)
                 else
                     add = true
                 end
-                if v.name == 'Black Hole' or v.name == 'The Soul' then
+                if v.name == 'Black Hole' or v.name == 'The Soul' or v.name == 'Parallax' or v.name == 'Fractal' or v.name == 'Infinity' then
                     add = false
                 end
             end
@@ -2049,6 +2057,7 @@ function get_current_pool(_type, _rarity, _legendary, _append)
             if _type == 'Tarot' or _type == 'Tarot_Planet' then _pool[#_pool + 1] = "c_strength"
             elseif _type == 'Planet' then _pool[#_pool + 1] = "c_pluto"
             elseif _type == 'Spectral' then _pool[#_pool + 1] = "c_incantation"
+            elseif _type == 'Polygon' then _pool[#_pool + 1] = "c_trigon"
             elseif _type == 'Joker' then _pool[#_pool + 1] = "j_joker"
             elseif _type == 'Demo' then _pool[#_pool + 1] = "j_joker"
             elseif _type == 'Voucher' then _pool[#_pool + 1] = "v_blank"
@@ -2104,6 +2113,21 @@ function create_card(_type, area, legendary, _rarity, skip_materialize, soulable
         not (G.GAME.used_jokers['c_black_hole'] and not next(find_joker("Showman")))  then 
             if pseudorandom('soul_'.._type..G.GAME.round_resets.ante) > 0.997 then
                 forced_key = 'c_black_hole'
+            end
+        end
+        if (_type == 'Polygon') and not (G.GAME.used_jokers['c_hectogon'] and not next(find_joker("Showman"))) then
+            if pseudorandom ('soul_'.._type..G.GAME.round_resets.ante) > 0.980 then
+                forced_key = 'c_hectogon'
+            end
+        end
+        if (_type == 'Polygon') and not (G.GAME.used_jokers['c_myriagon'] and not next(find_joker("Showman"))) then
+            if pseudorandom ('soul_'.._type..G.GAME.round_resets.ante) > 0.985 then
+                forced_key = 'c_myriagon'
+            end
+        end
+        if (_type == 'Polygon') and not (G.GAME.used_jokers['c_apeirogon'] and not next(find_joker("Showman"))) then
+            if pseudorandom ('soul_'.._type..G.GAME.round_resets.ante) > 0.990 then
+                forced_key = 'c_apeirogon'
             end
         end
     end
@@ -2563,6 +2587,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
         elseif _c.name == 'Charm Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_arcana_mega_1 
         elseif _c.name == 'Meteor Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_celestial_mega_1 
         elseif _c.name == 'Ethereal Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_spectral_normal_1 
+        elseif _c.name == 'Polygonal Tag' then info_queue[#info_queue + 1] = G.P_CENTERS.p_polygon_jumbo_1
         elseif _c.name == 'Standard Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_standard_mega_1 
         elseif _c.name == 'Buffoon Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_buffoon_mega_1 
         elseif _c.name == 'Friendly Buffoon Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_friendly_buffoon_mega_1
@@ -2628,6 +2653,12 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
         elseif _c.name == 'Buffoon Pack' then desc_override = 'p_buffoon_normal'; loc_vars = {_c.config.choose, _c.config.extra}
         elseif _c.name == 'Jumbo Buffoon Pack' then desc_override = 'p_buffoon_jumbo'; loc_vars = {_c.config.choose, _c.config.extra}
         elseif _c.name == 'Mega Buffoon Pack' then desc_override = 'p_buffoon_mega'; loc_vars = {_c.config.choose, _c.config.extra}
+        elseif _c.name == 'Friendly Buffoon Pack' then desc_override = 'p_friendly_buffoon_normal'; loc_vars = {_c.config.choose, _c.config.extra}
+        elseif _c.name == 'Jumbo Friendly Buffoon Pack' then desc_override = 'p_friendly_buffoon_jumbo'; loc_vars = {_c.config.choose, _c.config.extra}
+        elseif _c.name == 'Mega Friendly Buffoon Pack' then desc_override = 'p_friendly_buffoon_mega'; loc_vars = {_c.config.choose, _c.config.extra}
+        elseif _c.name == 'Polygon Pack' then desc_override = 'p_polygon_normal'; loc_vars = {_c.config.choose, _c.config.extra}
+        elseif _c.name == 'Jumbo Polygon Pack' then desc_override = 'p_polygon_jumbo'; loc_vars = {_c.config.choose, _c.config.extra}
+        elseif _c.name == 'Mega Polygon Pack' then desc_override = 'p_polygon_mega'; loc_vars = {_c.config.choose, _c.config.extra}
         elseif _c.name == 'Friendly Buffoon Pack' then desc_override = 'p_friendly_buffoon_normal'; loc_vars = {_c.config.choose, _c.config.extra}
         elseif _c.name == 'Jumbo Friendly Buffoon Pack' then desc_override = 'p_friendly_buffoon_jumbo'; loc_vars = {_c.config.choose, _c.config.extra}
         elseif _c.name == 'Mega Friendly Buffoon Pack' then desc_override = 'p_friendly_buffoon_mega'; loc_vars = {_c.config.choose, _c.config.extra}
@@ -2719,7 +2750,24 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
        elseif _c.name == "The World" then loc_vars = {_c.config.max_highlighted, localize(_c.config.suit_conv, 'suits_plural'), colours = {G.C.SUITS[_c.config.suit_conv]}}
        end
        localize{type = 'descriptions', key = _c.key, set = _c.set, nodes = desc_nodes, vars = loc_vars}
-   end
+
+    elseif _c.set == 'Polygon' then
+        if _c.name == "Tri-Eyed Cat" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Quadra Beast" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Penta Hand" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Hexwing Angel" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Septabug" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Octoclops" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Nonagon Lion" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Charybdis" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Echidna" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Typhon" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Parallax" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Fractal" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        elseif _c.name == "Infinity" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        end
+        localize{type = 'descriptions', key = _c.key, set = _c.set, nodes = desc_nodes, vars = loc_vars}
+    end
 
     if main_end then 
         desc_nodes[#desc_nodes+1] = main_end 

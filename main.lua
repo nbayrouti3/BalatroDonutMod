@@ -1,6 +1,3 @@
-if arg[2] == "debug" then
-    require("lldebugger").start()
-end
 if (love.system.getOS() == 'OS X' ) and (jit.arch == 'arm64' or jit.arch == 'arm') then jit.off() end
 require "engine/object"
 require "bit"
@@ -111,7 +108,7 @@ function love.load()
 	-- 	if not (st.init and st:init()) then
 	-- 		love.event.quit()
 	-- 	end
-		--Set up the render window and the stage for the splash screen, then enter the gameloop with :update
+	-- 	--Set up the render window and the stage for the splash screen, then enter the gameloop with :update
 	-- 	G.STEAM = st
 	-- else
 	-- end
@@ -389,13 +386,3 @@ function love.resize(w, h)
 	G.CANVAS = love.graphics.newCanvas(w*G.CANV_SCALE, h*G.CANV_SCALE, {type = '2d', readable = true})
 	G.CANVAS:setFilter('linear', 'linear')
 end 
-
-local love_errorhandler = love.errorhandler
-
-function love.errorhandler(msg)
-    if lldebugger then
-        error(msg, 2)
-    else
-        return love_errorhandler(msg)
-    end
-end
