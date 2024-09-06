@@ -2093,6 +2093,18 @@ end
     end
   end
 
+  G.FUNCS.can_select_consumeable = function(e)
+    if e.config.ref_table.ability.set == 'Polygon' then
+      if #G.consumeables < G.consumeables.config.card_limit then
+        e.config.colour = G.C.GREEN
+        e.config.button = 'use_card'
+      else
+        e.config.colour = G.C.UI.BACKGROUND_INACTIVE
+        e.config.button = nil
+      end
+    end
+  end
+
   G.FUNCS.can_select_card = function(e)
     if e.config.ref_table.ability.set ~= 'Joker' or (e.config.ref_table.edition and e.config.ref_table.edition.negative) or #G.jokers.cards < G.jokers.config.card_limit then 
         e.config.colour = G.C.GREEN
@@ -2193,8 +2205,25 @@ end
     if card.children.price then card.children.price:remove(); card.children.price = nil end
 
     if card.area then card.area:remove_card(card) end
-    
-    if card.ability.consumeable then
+
+    if card.ability.set == 'Polygon' then
+      if e.config.ref_table:can_use_consumeable(1) then
+        if G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.PLANET_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.POLYGON_PACK then
+        card.T.x = G.hand.T.x + G.hand.T.w/2 - card.T.w/2
+        card.T.y = G.hand.T.y + G.hand.T.h/2 - card.T.h/2 - 0.5
+        discover_card(card.config.center)
+        else draw_card(G.hand, G.play, 1, 'up', true, card, nil, mute) end
+      delay(0.2)
+      e.config.ref_table:use_consumeable(area)
+      else
+        card:add_to_deck()
+        G.consumeables:emplace(card)
+        play_sound('card1', 0.8, 0.6)
+        play_sound('generic1')
+        dont_dissolve = true
+        delay_fac = 0.2
+      end
+    elseif card.ability.consumeable then
       if G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.PLANET_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.POLYGON_PACK then
         card.T.x = G.hand.T.x + G.hand.T.w/2 - card.T.w/2
         card.T.y = G.hand.T.y + G.hand.T.h/2 - card.T.h/2 - 0.5
