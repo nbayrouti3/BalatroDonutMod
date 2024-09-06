@@ -1550,7 +1550,6 @@ function Card:use_consumeable(area, copier)
         end
         delay(0.6)
     end
-<<<<<<< HEAD
     if self.ability.name == 'Tri-Eyed Cat' or self.ability.name == 'Ouija' then
         G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
             play_sound('tarot1')
@@ -1593,8 +1592,6 @@ function Card:use_consumeable(area, copier)
         end
         delay(0.5)
     end
-=======
->>>>>>> main
 end
 
 function Card:can_use_consumeable(any_state, skip_check)
@@ -1638,11 +1635,7 @@ function Card:can_use_consumeable(any_state, skip_check)
                 return false
             end
         end
-<<<<<<< HEAD
         if G.STATE == G.STATES.SELECTING_HAND or G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.PLANET_PACK or G.STATE == G.STATES.POLYGON_PACK then
-=======
-        if G.STATE == G.STATES.SELECTING_HAND or G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.PLANET_PACK then
->>>>>>> main
             if self.ability.consumeable.max_highlighted then
                 if self.ability.consumeable.mod_num >= #G.hand.highlighted and #G.hand.highlighted >= (self.ability.consumeable.min_highlighted or 1) then
                     return true
@@ -2535,7 +2528,6 @@ function Card:calculate_joker(context)
                     G.GAME.blind:disable()
                 end
             end
-<<<<<<< HEAD
             -- Sacrificial Joker does not work properly, You'd still have to play a hand in order to 'win'; not sure how to fix.
             if self.ability.name == 'Sacrificial Joker' then
                 if G.GAME.blind and (not G.GAME.blind.disabled) then
@@ -2550,8 +2542,6 @@ function Card:calculate_joker(context)
                     card_eval_status_text(self, 'extra', nil, nil, nil, {message = localize('k_sacrificed_ex'), colour = G.C.RED})
                 end
             end
-=======
->>>>>>> main
             if self.ability.name == 'Diet Cola' then
                 G.E_MANAGER:add_event(Event({
                     func = (function()
@@ -2640,7 +2630,7 @@ function Card:calculate_joker(context)
         elseif context.skipping_booster then
             if self.ability.name == 'Red Card' and not context.blueprint then
                 self.ability.mult = self.ability.mult + self.ability.extra
-                                G.E_MANAGER:add_event(Event({
+                G.E_MANAGER:add_event(Event({
                     func = function() 
                         card_eval_status_text(self, 'extra', nil, nil, nil, {
                             message = localize{type = 'variable', key = 'a_mult', vars = {self.ability.extra}},
@@ -3327,24 +3317,23 @@ function Card:calculate_joker(context)
                         }
                     end
                 end
-<<<<<<< HEAD
                 if self.ability.name == 'Haunted Joker' and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit + 1 then
-                     if context.scoring_hand[1]
+                    if context.scoring_hand[1]
                         and #G.consumeables.cards > 0
                         and (pseudorandom('Haunted') < G.GAME.probabilities.normal/self.ability.extra) then
                         local destroyed_cards = {}
-                            destroyed_cards[#destroyed_cards+1] = pseudorandom_element(G.consumeables.cards, pseudoseed('Haunted'))
-                            G.E_MANAGER:add_event(Event({
-                                trigger = 'immediate',
-                                delay = 0,
-                                func = function() 
-                                    for i=#destroyed_cards, 1, -1 do
-                                        local card = destroyed_cards[i]
-                                        if card:start_dissolve(nil, i ~= #destroyed_cards) then
-                                        end
+                        destroyed_cards[#destroyed_cards+1] = pseudorandom_element(G.consumeables.cards, pseudoseed('Haunted'))
+                        G.E_MANAGER:add_event(Event({
+                            trigger = 'immediate',
+                            delay = 0,
+                            func = function() 
+                                for i=#destroyed_cards, 1, -1 do
+                                    local card = destroyed_cards[i]
+                                    if card:start_dissolve(nil, i ~= #destroyed_cards) then
                                     end
-                     return true end }))
-                            G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+                                end
+                                return true end }))
+                        G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
                         return {
                             extra = {focus = self, message = localize('k_plus_spectral'), func = function()
                                 G.E_MANAGER:add_event(Event({
@@ -3361,44 +3350,8 @@ function Card:calculate_joker(context)
                             end},
                             colour = G.C.SECONDARY_SET.Spectral,
                             card = self
-                    }
-                    end
-=======
-                    if self.ability.name == 'Haunted Joker' and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
-                        if context.scoring_hand[1]
-                            and #G.consumeables.cards > 0
-                            and (pseudorandom('Haunted') < G.GAME.probabilities.normal/self.ability.extra) then
-                            local destroyed_cards = {}
-                                destroyed_cards[#destroyed_cards+1] = pseudorandom_element(G.consumeables.cards, pseudoseed('Haunted'))
-                                G.E_MANAGER:add_event(Event({
-                                    trigger = 'after',
-                                    delay = 0.4,
-                                    func = function() 
-                                        for i=#destroyed_cards, 1, -1 do
-                                            local card = destroyed_cards[i]
-                                            if card:start_dissolve(nil, i ~= #destroyed_cards) then
-                                            end
-                                        end
-                        return true end }))
-                                G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
-                            return {
-                                extra = {focus = self, message = localize('k_plus_spectral'), func = function()
-                                    G.E_MANAGER:add_event(Event({
-                                        trigger = 'after',
-                                        delay = 0.7,
-                                        func = (function()
-                                                local card = create_card('Spectral',G.consumeables, nil, nil, nil, nil, nil, 'sixth')
-                                                card:add_to_deck()
-                                                G.consumeables:emplace(card)
-                                                G.GAME.consumeable_buffer = 0
-                                            return true
-                                        end)}))
-                                end},
-                                colour = G.C.SECONDARY_SET.Spectral,
-                                card = self
                         }
-                        end
->>>>>>> main
+                    end
                 end
                 if self.ability.name == 'The Idol' and
                     context.other_card:get_id() == G.GAME.current_round.idol_card.id and 
@@ -3681,7 +3634,6 @@ function Card:calculate_joker(context)
                         card = self
                     }
                 end
-<<<<<<< HEAD
                 -- Does NOT like being in the same if statement (Please keep them seperate <3)
                 if self.ability.name == 'Meta Joker' and (
                     context.other_card:get_id() == 4) then
@@ -4427,6 +4379,7 @@ function Card:calculate_joker(context)
                 end
             end
         end
+    end
 
 function Card:is_suit(suit, bypass_debuff, flush_calc)
     if flush_calc then

@@ -1504,13 +1504,6 @@
                     "{C:inactive}(Must have consumables)",
                 }
             },
-            j_camou = {
-                name = "Camou",
-                text = {
-                    "Copies ability of",
-                    "{C:attention}Joker{} to the left and right"
-                }
-            },
             j_singularity = {
                 name = "The Singularity",
                 text = {
@@ -1525,13 +1518,6 @@
                     "{C:inactive}(Sells for $0 after first shop)"
                 }
             },
-            j_lion = {
-                name = "Lion Joker",
-                text = {
-                    "When sold, all cards in your",
-                    "hand become {C:attention}Steel{} cards"
-                }
-            },
             j_metajoker = {
                 name = "Meta Joker",
                 text = {
@@ -1540,6 +1526,8 @@
                     "6E 64 20 {C:attention}8{} 20 74 6F",
                     "6D 61 6B 65 20 {C:attention}16",
                     "{C:inactive}It's Gomez Time!"
+                }
+            },
             j_twin = {
                 name = "Joker Twin",
                 text = {
@@ -2348,12 +2336,6 @@
                     "by {C:attention}1{} level"
                 }
             },
-            c_cat_toy = {
-                name = "Cat Toy",
-                text = {"Add a {C:attention}Biscuit Seal{}",
-                    "to {C:attention}1{} selected",
-                    "card in your hand"
-                }
             c_cat_toy = {
                 name = "Cat Toy",
                 text = {"Add a {C:attention}Biscuit Seal{}",
