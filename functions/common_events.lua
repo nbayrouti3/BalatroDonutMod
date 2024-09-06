@@ -323,7 +323,7 @@ function ease_background_colour_blind(state, blind_override)
         ease_colour(G.C.DYN_UI.MAIN, mix_colours(G.C.SECONDARY_SET.Polygon, G.C.BLACK, 0.9))
     elseif state == G.STATES.STANDARD_PACK then
         ease_colour(G.C.DYN_UI.MAIN, G.C.RED)
-    elseif state == G.STATES.BUFFOON_PACK then
+    elseif state == G.STATES.BUFFOON_PACK or state == G.STATES.FRIENDLY_BUFFOON_PACK then
         ease_colour(G.C.DYN_UI.MAIN, G.C.FILTER)
     elseif state == G.STATES.PLANET_PACK then
         ease_colour(G.C.DYN_UI.MAIN, mix_colours(G.C.SECONDARY_SET.Planet, G.C.BLACK, 0.9))
@@ -339,7 +339,7 @@ function ease_background_colour_blind(state, blind_override)
         ease_background_colour{new_colour = G.C.SECONDARY_SET.Polygon, special_colour = darken(G.C.BLACK, 0.2), contrast = 2}
     elseif state == G.STATES.STANDARD_PACK then
         ease_background_colour{new_colour = darken(G.C.BLACK, 0.2), special_colour = G.C.RED, contrast = 3}
-    elseif state == G.STATES.BUFFOON_PACK then
+    elseif state == G.STATES.BUFFOON_PACK  or state == G.STATES.FRIENDLY_BUFFOON_PACK then
         ease_background_colour{new_colour = G.C.FILTER, special_colour = G.C.BLACK, contrast = 2}
     elseif state == G.STATES.PLANET_PACK then
         ease_background_colour{new_colour = G.C.BLACK, contrast = 3}
@@ -719,6 +719,7 @@ function set_alerts()
         G.ARGS.set_alerts_alertables[10].should_alert = alert_seal
         G.ARGS.set_alerts_alertables[11].should_alert = alert_booster
         G.ARGS.set_alerts_alertables[12].should_alert = alert_polygon
+
 
         for k, v in ipairs(G.ARGS.set_alerts_alertables) do
             if G.OVERLAY_MENU and G.OVERLAY_MENU:get_UIE_by_ID(v.id) then
@@ -1953,6 +1954,10 @@ function get_pack(_key, _type)
         G.GAME.first_shop_buffoon = true
         return G.P_CENTERS['p_buffoon_normal_'..(math.random(1, 2))]
     end
+    if not G.GAME.first_shop_friendly_buffoon and not G.GAME.banned_keys['p_friendly_buffoon_normal_1'] then
+        G.GAME.first_shop_friendly_buffoon = true
+        return G.P_CENTERS['p_friendly_buffoon_normal_'..(math.random(1, 2))]
+    end
     local cume, it, center = 0, 0, nil
     for k, v in ipairs(G.P_CENTER_POOLS['Booster']) do
         if (not _type or _type == v.kind) and not G.GAME.banned_keys[v.key] then cume = cume + (v.weight or 1 ) end
@@ -1975,7 +1980,11 @@ function get_current_pool(_type, _rarity, _legendary, _append)
         if _type == 'Joker' then 
             local rarity = _rarity or pseudorandom('rarity'..G.GAME.round_resets.ante..(_append or '')) 
             rarity = (_legendary and 4) or (rarity > 0.95 and 3) or (rarity > 0.7 and 2) or 1
-            _starting_pool, _pool_key = G.P_JOKER_RARITY_POOLS[rarity], 'Joker'..rarity..((not _legendary and _append) or '')
+            if _append == 'frb' then
+                _starting_pool, _pool_key = G.P_FRIENDLY_JOKER_RARITY_POOLS[rarity], 'Friendly Joker'..rarity..((not _legendary and _append) or '')
+            else
+                _starting_pool, _pool_key = G.P_JOKER_RARITY_POOLS[rarity], 'Joker'..rarity..((not _legendary and _append) or '')
+            end
         else _starting_pool, _pool_key = G.P_CENTER_POOLS[_type], _type..(_append or '')
         end
     
@@ -2126,8 +2135,6 @@ function create_card(_type, area, legendary, _rarity, skip_materialize, soulable
     if _type == 'Base' then 
         forced_key = 'c_base'
     end
-
-
 
     if forced_key and not G.GAME.banned_keys[forced_key] then 
         center = G.P_CENTERS[forced_key]
@@ -2370,7 +2377,11 @@ function get_new_boss()
     if G.FORCE_BOSS then return G.FORCE_BOSS end
     
     local eligible_bosses = {}
+    local smothering_tithe = nil
     for k, v in pairs(G.P_BLINDS) do
+        if v.name == "Smothering Tithe" then
+            smothering_tithe = k
+        end
         if not v.boss then
 
         elseif not v.boss.showdown and (v.boss.min <= math.max(1, G.GAME.round_resets.ante) and ((math.max(1, G.GAME.round_resets.ante))%G.GAME.win_ante ~= 0 or G.GAME.round_resets.ante < 2)) then
@@ -2400,6 +2411,7 @@ function get_new_boss()
         end
     end
     local _, boss = pseudorandom_element(eligible_bosses, pseudoseed('boss'))
+    boss = smothering_tithe or boss
     G.GAME.bosses_used[boss] = G.GAME.bosses_used[boss] + 1
     
     return boss
@@ -2578,6 +2590,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
         elseif _c.name == 'Polygonal Tag' then info_queue[#info_queue + 1] = G.P_CENTERS.p_polygon_jumbo_1
         elseif _c.name == 'Standard Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_standard_mega_1 
         elseif _c.name == 'Buffoon Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_buffoon_mega_1 
+        elseif _c.name == 'Friendly Buffoon Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_friendly_buffoon_mega_1
         end
         localize{type = 'descriptions', key = _c.key, set = 'Tag', nodes = desc_nodes, vars = specific_vars or {}}
     elseif _c.set == 'Voucher' then
@@ -2646,6 +2659,9 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
         elseif _c.name == 'Polygon Pack' then desc_override = 'p_polygon_normal'; loc_vars = {_c.config.choose, _c.config.extra}
         elseif _c.name == 'Jumbo Polygon Pack' then desc_override = 'p_polygon_jumbo'; loc_vars = {_c.config.choose, _c.config.extra}
         elseif _c.name == 'Mega Polygon Pack' then desc_override = 'p_polygon_mega'; loc_vars = {_c.config.choose, _c.config.extra}
+        elseif _c.name == 'Friendly Buffoon Pack' then desc_override = 'p_friendly_buffoon_normal'; loc_vars = {_c.config.choose, _c.config.extra}
+        elseif _c.name == 'Jumbo Friendly Buffoon Pack' then desc_override = 'p_friendly_buffoon_jumbo'; loc_vars = {_c.config.choose, _c.config.extra}
+        elseif _c.name == 'Mega Friendly Buffoon Pack' then desc_override = 'p_friendly_buffoon_mega'; loc_vars = {_c.config.choose, _c.config.extra}
         end
         name_override = desc_override
         if not full_UI_table.name then full_UI_table.name = localize{type = 'name', set = 'Other', key = name_override, nodes = full_UI_table.name} end
@@ -2658,6 +2674,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
         elseif _c.name == 'Deja Vu' then info_queue[#info_queue+1] = {key = 'red_seal', set = 'Other'}
         elseif _c.name == 'Trance' then info_queue[#info_queue+1] = {key = 'blue_seal', set = 'Other'}
         elseif _c.name == 'Medium' then info_queue[#info_queue+1] = {key = 'purple_seal', set = 'Other'}
+        elseif _c.name == 'Cat Toy' then info_queue[#info_queue+1] = {key= 'biscuit_seal', set = 'Other'}
         elseif _c.name == 'Ankh' then
             if G.jokers and G.jokers.cards then
                 for k, v in ipairs(G.jokers.cards) do
@@ -2777,6 +2794,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
             if v == 'blue_seal' then info_queue[#info_queue+1] = {key = 'blue_seal', set = 'Other'} end
             if v == 'red_seal' then info_queue[#info_queue+1] = {key = 'red_seal', set = 'Other'} end
             if v == 'purple_seal' then info_queue[#info_queue+1] = {key = 'purple_seal', set = 'Other'} end
+            if v == 'biscuit_seal' then info_queue[#info_queue+1] = {key = 'biscuit_seal', set = 'Other'} end
             if v == 'eternal' then info_queue[#info_queue+1] = {key = 'eternal', set = 'Other'} end
             if v == 'perishable' then info_queue[#info_queue+1] = {key = 'perishable', set = 'Other', vars = {G.GAME.perishable_rounds or 1, specific_vars.perish_tally or G.GAME.perishable_rounds}} end
             if v == 'rental' then info_queue[#info_queue+1] = {key = 'rental', set = 'Other', vars = {G.GAME.rental_rate or 1}} end

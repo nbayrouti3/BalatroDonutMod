@@ -762,7 +762,6 @@ end
           end
         end
           G.GAME.spectral_rate = G.GAME.spectral_rate or 0
-          local total_rate = G.GAME.joker_rate + G.GAME.tarot_rate + G.GAME.planet_rate + G.GAME.playing_card_rate + G.GAME.spectral_rate + G.GAME.polygon_rate
           local polled_rate = pseudorandom(pseudoseed('cdt'..G.GAME.round_resets.ante))*total_rate
           local check_rate = 0
           for _, v in ipairs({
@@ -1728,7 +1727,7 @@ function create_UIBox_polygon_pack()
     1.05*G.CARD_H, 
     {card_limit = _size, type = 'consumeable', highlight_limit = 1})
 
-    local t = {n=G.UIT.ROOT, config = {align = 'tm', r = 0.15, colour = G.C.CLEAR, padding = 0.15}, nodes={
+  local t = {n=G.UIT.ROOT, config = {align = 'tm', r = 0.15, colour = G.C.CLEAR, padding = 0.15}, nodes={
       {n=G.UIT.R, config={align = "cl", colour = G.C.CLEAR,r=0.15, padding = 0.1, minh = 2, shadow = true}, nodes={
         {n=G.UIT.R, config={align = "cm"}, nodes={
         {n=G.UIT.C, config={align = "cm", padding = 0.1}, nodes={
@@ -1838,6 +1837,52 @@ function create_UIBox_buffoon_pack()
           {n=G.UIT.C, config={align = "cm", padding = 0.05, minw = 4}, nodes={
             {n=G.UIT.R,config={align = "bm", padding = 0.05}, nodes={
               {n=G.UIT.O, config={object = DynaText({string = localize('k_buffoon_pack'), colours = {G.C.WHITE},shadow = true, rotate = true, bump = true, spacing =2, scale = 0.7, maxw = 4, pop_in = 0.5})}}
+            }},
+            {n=G.UIT.R,config={align = "bm", padding = 0.05}, nodes={
+              {n=G.UIT.O, config={object = DynaText({string = {localize('k_choose')..' '}, colours = {G.C.WHITE},shadow = true, rotate = true, bump = true, spacing =2, scale = 0.5, pop_in = 0.7})}},
+              {n=G.UIT.O, config={object = DynaText({string = {{ref_table = G.GAME, ref_value = 'pack_choices'}}, colours = {G.C.WHITE},shadow = true, rotate = true, bump = true, spacing =2, scale = 0.5, pop_in = 0.7})}}
+            }},
+          }}
+        }),
+      }},
+        {n=G.UIT.C,config={align = "tm", padding = 0.05, minw = 2.4}, nodes={
+          {n=G.UIT.R,config={minh =0.2}, nodes={}},
+          {n=G.UIT.R,config={align = "tm",padding = 0.2, minh = 1.2, minw = 1.8, r=0.15,colour = G.C.GREY, one_press = true, button = 'skip_booster', hover = true,shadow = true, func = 'can_skip_booster'}, nodes = {
+            {n=G.UIT.T, config={text = localize('b_skip'), scale = 0.5, colour = G.C.WHITE, shadow = true, focus_args = {button = 'y', orientation = 'bm'}, func = 'set_button_pip'}}
+          }}
+        }}
+      }}
+    }}
+  }}
+  return t
+end
+
+function create_UIBox_friendly_buffoon_pack()
+  local _size = G.GAME.pack_size
+  G.pack_cards = CardArea(
+    G.ROOM.T.x + 9 + G.hand.T.x, G.hand.T.y,
+    _size*G.CARD_W*1.1,
+    1.05*G.CARD_H, 
+    {card_limit = _size, type = 'consumeable', highlight_limit = 1})
+
+    local t = {n=G.UIT.ROOT, config = {align = 'tm', r = 0.15, colour = G.C.CLEAR, padding = 0.15}, nodes={
+      {n=G.UIT.R, config={align = "cl", colour = G.C.CLEAR,r=0.15, padding = 0.1, minh = 2, shadow = true}, nodes={
+        {n=G.UIT.R, config={align = "cm"}, nodes={
+        {n=G.UIT.C, config={align = "cm", padding = 0.1}, nodes={
+          {n=G.UIT.C, config={align = "cm", r=0.2, colour = G.C.CLEAR, shadow = true}, nodes={
+            {n=G.UIT.O, config={object = G.pack_cards}},
+          }}
+        }}
+      }},
+      {n=G.UIT.R, config={align = "cm"}, nodes={
+      }},
+      {n=G.UIT.R, config={align = "tm"}, nodes={
+        {n=G.UIT.C,config={align = "tm", padding = 0.05, minw = 2.4}, nodes={}},
+        {n=G.UIT.C,config={align = "tm", padding = 0.05}, nodes={
+        UIBox_dyn_container({
+          {n=G.UIT.C, config={align = "cm", padding = 0.05, minw = 4}, nodes={
+            {n=G.UIT.R,config={align = "bm", padding = 0.05}, nodes={
+              {n=G.UIT.O, config={object = DynaText({string = localize('k_friendly_buffoon_pack'), colours = {G.C.WHITE},shadow = true, rotate = true, bump = true, spacing =2, scale = 0.7, maxw = 4, pop_in = 0.5})}}
             }},
             {n=G.UIT.R,config={align = "bm", padding = 0.05}, nodes={
               {n=G.UIT.O, config={object = DynaText({string = {localize('k_choose')..' '}, colours = {G.C.WHITE},shadow = true, rotate = true, bump = true, spacing =2, scale = 0.5, pop_in = 0.7})}},
@@ -3754,8 +3799,8 @@ function create_UIBox_your_collection_spectrals()
   end
 
   local spectral_options = {}
-  for i = 1, math.floor(#G.P_CENTER_POOLS.Tarot/9) do
-    table.insert(spectral_options, localize('k_page')..' '..tostring(i)..'/'..tostring(math.floor(#G.P_CENTER_POOLS.Spectral/9)))
+  for i = 1, math.ceil(#G.P_CENTER_POOLS.Spectral/9) do
+    table.insert(spectral_options, localize('k_page')..' '..tostring(i)..'/'..tostring(math.ceil(#G.P_CENTER_POOLS.Spectral/9)))
   end
 
   INIT_COLLECTION_CARD_ALERTS()

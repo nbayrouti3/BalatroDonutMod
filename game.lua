@@ -191,6 +191,7 @@ function Game:start_up()
         Purple = Sprite(0, 0, self.CARD_W, self.CARD_H, self.ASSET_ATLAS["centers"], {x = 4,y = 4}),
         Red = Sprite(0, 0, self.CARD_W, self.CARD_H, self.ASSET_ATLAS["centers"], {x = 5,y = 4}),
         Blue = Sprite(0, 0, self.CARD_W, self.CARD_H, self.ASSET_ATLAS["centers"], {x = 6,y = 4}),
+        Biscuit = Sprite(0, 0, self.CARD_W, self.CARD_H, self.ASSET_ATLAS["centers"], {x = 6, y = 5}),
     }
     self.sticker_map = {
         'White','Red','Green','Black','Blue','Purple','Orange','Gold'
@@ -220,6 +221,7 @@ function Game:init_item_prototypes()
         Red =       {order = 2,  discovered = false, set = "Seal"},
         Blue =      {order = 3,  discovered = false, set = "Seal"},
         Purple =    {order = 4,  discovered = false, set = "Seal"},
+        Biscuit =   {order = 5,  discovered = true,  set = "Seal"},
     }
     self.P_TAGS = {
         tag_uncommon =      {name = 'Uncommon Tag',     set = 'Tag', discovered = false, min_ante = nil, order = 1, config = {type = 'store_joker_create'}, pos = {x = 0,y = 0}},
@@ -267,7 +269,7 @@ function Game:init_item_prototypes()
         bl_small =           {name = 'Small Blind',  defeated = false, order = 1, dollars = 3, mult = 1,  vars = {}, debuff_text = '', debuff = {}, pos = {x=0, y=0}},
         bl_big =             {name = 'Big Blind',    defeated = false, order = 2, dollars = 4, mult = 1.5,vars = {}, debuff_text = '', debuff = {}, pos = {x=0, y=1}},
         bl_ox =              {name = 'The Ox',       defeated = false, order = 4, dollars = 5, mult = 2,  vars = {localize('ph_most_played')}, debuff = {}, pos = {x=0, y=2}, boss = {min = 6, max = 10}, boss_colour = HEX('b95b08')},
-        bl_hook =            {name = 'The Hook',     defeated = false, order = 3, dollars = 5, mult = 2,  vars = {}, debuff = {}, pos = {x=0, y=7}, boss = {min = 1, max = 10}, boss_colour = HEX('a84024')},
+        bl_hook =            {name = 'The Hook',     defeated = false, order = 31, dollars = 5, mult = 2,  vars = {}, debuff = {}, pos = {x=0, y=7}, boss = {min = 1, max = 10}, boss_colour = HEX('a84024')},
         bl_mouth =           {name = 'The Mouth',    defeated = false, order = 17, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=18}, boss = {min = 2, max = 10}, boss_colour = HEX('ae718e')},
         bl_fish =            {name = 'The Fish',     defeated = false, order = 10, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=5}, boss = {min = 2, max = 10}, boss_colour = HEX('3e85bd')},
         bl_club =            {name = 'The Club',     defeated = false, order = 9, dollars = 5, mult = 2,  vars = {}, debuff = {suit = 'Clubs'}, pos = {x=0, y=4}, boss = {min = 1, max = 10}, boss_colour = HEX('b9cb92')},
@@ -528,7 +530,7 @@ function Game:init_item_prototypes()
         j_yorick=           {order = 148,  unlocked = false, discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Yorick", pos = {x=5,y=8}, soul_pos = {x=5, y=9}, set = "Joker", effect = "", config = {extra = {xmult = 1, discards = 23}}, unlock_condition = {type = '', extra = '', hidden = true}},
         j_chicot=           {order = 149,  unlocked = false, discovered = false, blueprint_compat = false, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Chicot", pos = {x=6,y=8}, soul_pos = {x=6, y=9}, set = "Joker", effect = "", config = {}, unlock_condition = {type = '', extra = '', hidden = true}},
         j_perkeo=           {order = 150,  unlocked = false, discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Perkeo", pos = {x=7,y=8}, soul_pos = {x=7, y=9}, set = "Joker", effect = "", config = {}, unlock_condition = {type = '', extra = '', hidden = true}},
-
+        
         --Custom Jokers
         j_hauntedjoker=     {order = 151,  unlocked = true,  discovered = true,  blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = "Haunted Joker", pos = {x=0,y=16}, set = "Joker", effect = "Spawn Tarot", cost_mult = 1.0, config = {extra=10}, friendly = true},
         j_camou=            {order = 152, unlocked = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Camou", pos = {x=3,y=16}, soul_pos = {x=4,y=16}, set = "Joker", effect = "Copycat", cost_mult = 1.0, config = {}, friendly = true},
@@ -764,6 +766,10 @@ function Game:init_item_prototypes()
         {},{},{},{}
     }
 
+    self.P_FRIENDLY_JOKER_RARITY_POOLS = {
+        {},{},{},{}
+    }
+
     self.P_LOCKED = {}
 
     self:save_progress()
@@ -859,7 +865,10 @@ function Game:init_item_prototypes()
             if v.set and v.set ~= 'Joker' and not v.skip_pool and not v.omit then table.insert(self.P_CENTER_POOLS[v.set], v) end
             if v.set == 'Tarot' or v.set == 'Planet' then table.insert(self.P_CENTER_POOLS['Tarot_Planet'], v) end
             if v.consumeable then table.insert(self.P_CENTER_POOLS['Consumeables'], v) end
-            if v.rarity and v.set == 'Joker' and not v.demo then table.insert(self.P_JOKER_RARITY_POOLS[v.rarity], v) end
+            if v.rarity and v.set == 'Joker' and not v.demo then 
+                table.insert(self.P_JOKER_RARITY_POOLS[v.rarity], v) 
+                if v.friendly then table.insert(self.P_FRIENDLY_JOKER_RARITY_POOLS[v.rarity], v) end
+            end
         end
     end
 
@@ -881,6 +890,7 @@ function Game:init_item_prototypes()
     table.sort(self.P_CENTER_POOLS["Demo"], function (a, b) return a.order + (a.set == 'Joker' and 1000 or 0) < b.order + (b.set == 'Joker' and 1000 or 0) end)
     for i = 1, 4 do 
         table.sort(self.P_JOKER_RARITY_POOLS[i], function (a, b) return a.order < b.order end)
+        table.sort(self.P_FRIENDLY_JOKER_RARITY_POOLS[i], function(a, b) return a.order < b.order end)
     end
 end
 
@@ -1050,7 +1060,8 @@ function Game:set_render_settings()
     --spritesheets
     self.animation_atli = {
         {name = "blind_chips", path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/BlindChips.png",px=34,py=34, frames = 21},
-        {name = "shop_sign", path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/ShopSignAnimation.png",px=113,py=57, frames = 4}
+        {name = "shop_sign", path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/ShopSignAnimation.png",px=113,py=57, frames = 4},
+        {name = "dancing_dunc", path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/dunk_anim_full.png", px=32,py=32, frames = 20}
     }
     self.asset_atli = {
         {name = "cards_1", path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/8BitDeck.png",px=71,py=95},
@@ -3442,7 +3453,7 @@ function Game:update_polygon_pack(dt)
                     speed = 0.2,
                     padding = -1,
                     attach = G.ROOM_ATTACH,
-                    colours = {G.C.WHITE, lighten(G.C.GOLD, 0.2)},
+                    colours = {G.C.RED, lighten(G.C.GOLD, 0.2)},
                     fill = true
                 })
                 G.booster_pack_sparkles.fade_alpha = 1
@@ -3539,6 +3550,42 @@ function Game:update_buffoon_pack(dt)
                 G.booster_pack.alignment.offset.y = -2.2
                         G.ROOM.jiggle = G.ROOM.jiggle + 3
                 ease_background_colour_blind(G.STATES.BUFFOON_PACK)
+                G.E_MANAGER:add_event(Event({
+                    trigger = 'immediate',
+                    func = function()
+                        G.E_MANAGER:add_event(Event({
+                            trigger = 'after',
+                            delay = 0.5,
+                            func = function()
+                                G.CONTROLLER:recall_cardarea_focus('pack_cards')
+                                return true
+                            end}))
+                        return true
+                    end
+                }))  
+                return true
+            end
+        }))  
+    end
+end
+
+function Game:update_friendly_buffoon_pack(dt)
+    if self.buttons then self.buttons:remove(); self.buttons = nil end
+    if self.shop then G.shop.alignment.offset.y = G.ROOM.T.y+11 end
+
+    if not G.STATE_COMPLETE then
+        G.STATE_COMPLETE = true
+        G.CONTROLLER.interrupt.focus = true
+        G.E_MANAGER:add_event(Event({
+            trigger = 'immediate',
+            func = function()
+                G.booster_pack = UIBox{
+                    definition = create_UIBox_friendly_buffoon_pack(),
+                    config = {align="tmi", offset = {x=0,y=G.ROOM.T.y + 9},major = G.hand, bond = 'Weak'}
+                }
+                G.booster_pack.alignment.offset.y = -2.2
+                        G.ROOM.jiggle = G.ROOM.jiggle + 3
+                ease_background_colour_blind(G.STATES.FRIENDLY_BUFFOON_PACK)
                 G.E_MANAGER:add_event(Event({
                     trigger = 'immediate',
                     func = function()
