@@ -944,7 +944,7 @@ function Card:generate_UIBox_ability_table()
         elseif self.ability.name == 'Joker Twin' then loc_vars = self.ability.extra
         elseif self.ability.name == "Gambler's Phallussy" then loc_vars = {2, 0.5}
         elseif self.ability.name == 'Dancing Duncan' then loc_vars = {2, 4, self.ability.mult}
-        elseif self.ability.name == 'Freeze Dried Strawberry' then loc_vars = {self.ability.extra.chips, 1, self.ability.extra.chance}
+        elseif self.ability.name == 'Freeze Dried Strawberry' then loc_vars = {self.ability.extra.chips, ''..(G.GAME and G.GAME.probabilities.normal or 1), self.ability.extra.odds}
         elseif self.ability.name == 'Part of You' then loc_vars = {self.ability.x_mult, self.ability.extra + self.ability.x_mult*(self.ability.dupe_tally or 0)}
         elseif self.ability.name == 'The Singularity' then loc_vars = {self.ability.extra}
         elseif self.ability.name == 'Sacrificial Joker' then
@@ -1561,7 +1561,7 @@ function Card:use_consumeable(area, copier)
         end
         delay(0.6)
     end
-    if self.ability.name == 'Tri-Eyed Cat' or self.ability.name == 'Ouija' then
+    if self.ability.name == 'Ouija' then
         G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
             play_sound('tarot1')
             used_tarot:juice_up(0.3, 0.5)
@@ -1571,20 +1571,7 @@ function Card:use_consumeable(area, copier)
             G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function() G.hand.cards[i]:flip();play_sound('card1', percent);G.hand.cards[i]:juice_up(0.3, 0.3);return true end }))
         end
         delay(0.2)
-        if self.ability.name == 'Tri-Eyed Cat' then
-            local _suit = pseudorandom_element({'S','H','D','C'}, pseudoseed('sigil'))
-            for i=1, #G.hand.cards do
-                G.E_MANAGER:add_event(Event({func = function()
-                    local card = G.hand.cards[i]
-                    local suit_prefix = _suit..'_'
-                    local rank_suffix = card.base.id < 10 and tostring(card.base.id) or
-                                        card.base.id == 10 and 'T' or card.base.id == 11 and 'J' or
-                                        card.base.id == 12 and 'Q' or card.base.id == 13 and 'K' or
-                                        card.base.id == 14 and 'A'
-                    card:set_base(G.P_CARDS[suit_prefix..rank_suffix])
-                return true end }))
-            end  
-        end
+        
         if self.ability.name == 'Ouija' then
             local _rank = pseudorandom_element({'2','3','4','5','6','7','8','9','T','J','Q','K','A'}, pseudoseed('ouija'))
             for i=1, #G.hand.cards do
@@ -3248,6 +3235,35 @@ function Card:calculate_joker(context)
                         }
                     end
                 end
+                if self.ability.name == 'Freeze Dried Strawberry' then
+                    if pseudorandom('freezedried') < G.GAME.probabilities.normal/self.ability.extra.odds then 
+                        G.E_MANAGER:add_event(Event({
+                            func = function()
+                                play_sound('tarot1')
+                                self.T.r = -0.2
+                                self:juice_up(0.3, 0.4)
+                                self.states.drag.is = true
+                                self.children.center.pinch.x = true
+                                G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
+                                    func = function()
+                                            G.jokers:remove_card(self)
+                                            self:shatter()
+                                            self = nil
+                                        return true; end})) 
+                                return true
+                            end
+                        })) 
+                        if self.ability.name == 'Freeze Dried Strawberry' then G.GAME.pool_flags.freeze_dried_broke = true end
+                        return {
+                            message = localize('k_shattered_ex'),
+                            colour = G.C.RED
+                        }
+                    else
+                        return {
+                            message = localize('k_safe_ex')
+                        }
+                    end
+                end
                 if self.ability.name == 'Mr. Bones' and context.game_over and 
                 G.GAME.chips/G.GAME.blind.chips >= 0.25 then
                     G.E_MANAGER:add_event(Event({
@@ -4018,15 +4034,9 @@ function Card:calculate_joker(context)
                             }
                         end
                         if self.ability.name == 'Freeze Dried Strawberry' then
-                            local break_chance = math.random(1, self.ability.extra.chance)
-                            if break_chance == 1 then
-                                self:shatter()
-                                return
-                            end
-
                             return {
                                 message = localize{type='variable', key='a_chips', vars={self.ability.extra.chips}},
-                                chip_mod = self.ability.extra.chips
+                                chip_mod = self.ability.extra.chips,
                             }
                         end
                         if self.ability.name == 'Stuntman' then
