@@ -2752,7 +2752,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
        localize{type = 'descriptions', key = _c.key, set = _c.set, nodes = desc_nodes, vars = loc_vars}
 
     elseif _c.set == 'Polygon' then
-        if _c.name == "Tri-Eyed Cat" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
+        if _c.name == "Tri-Eyed Cat" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
         elseif _c.name == "Quadra Beast" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
         elseif _c.name == "Penta Hand" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
         elseif _c.name == "Hexwing Angel" then loc_vars = {_c.config.extra, _c.config.polygon_rounds}
