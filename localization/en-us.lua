@@ -1491,8 +1491,8 @@
             j_strawberry = {
                 name = "Freeze Dried Strawberry",
                 text = {
-                    "Gives {C:chips}+#1#{}",
-                    "Has a {C:green}#2# in #3#{} chance to break"
+                    "{C:chips}+#1#{} Chips {C:green}#2# in #3#{} chance this",
+                    "card is destroyed at end of round"
                 }
             },
             j_part_of_you = {
@@ -1551,13 +1551,6 @@
                     "for every Pair played and {X:mult,C:white} +#2# {} Mult",
                     "for every Two Pair played",
                     "{C:inactive}(Currently {X:mult,C:white} +#3# {C:inactive} Mult)"
-                }
-            },
-            j_strawberry = {
-                name = "Freeze Dried Strawberry",
-                text = {
-                    "Gives {C:chips}+#1#{}",
-                    "Has a {C:green}#2# in #3#{} chance to break"
                 }
             },
             j_part_of_you = {
@@ -4213,6 +4206,7 @@
             k_val_up = "Value Up!",
             k_reset = "Reset",
             k_extinct_ex = "Extinct!",
+            k_shattered_ex = "Shattered!",
             k_disabled_ex = "Disabled!",
             k_poly_ready = "Ready!",
             k_safe_ex = "Safe!",
