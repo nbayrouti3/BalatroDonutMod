@@ -948,6 +948,7 @@ function Card:generate_UIBox_ability_table()
         elseif self.ability.name == 'Part of You' then loc_vars = {self.ability.x_mult, self.ability.extra + self.ability.x_mult*(self.ability.dupe_tally or 0)}
         elseif self.ability.name == 'The Singularity' then loc_vars = {self.ability.extra}
         elseif self.ability.name == 'Sacrificial Joker' then
+        elseif self.ability.name == 'Monochromatic Joker' then loc_vars = {self.ability.extra, 1 + self.ability.extra*(self.ability.mono_tally or 0)}
         end
     end
     local badges = {}
@@ -4247,6 +4248,13 @@ function Card:calculate_joker(context)
                                 colour = G.C.MULT
                             }
                         end
+                        if self.ability.name == 'Monochromatic Joker' and self.ability.mono_tally > 0 then
+                            return {
+                                message = localize{type='variable',key='a_xmult',vars={1 + (self.ability.extra*self.ability.mono_tally)}},
+                                Xmult_mod = 1 + (self.ability.extra*self.ability.mono_tally),
+                                colour = G.C.MULT
+                            }
+                        end    
                         if self.ability.name == 'Bull' and (G.GAME.dollars + (G.GAME.dollar_buffer or 0)) > 0 then
                             return {
                                 message = localize{type='variable',key='a_chips',vars={self.ability.extra*math.max(0,(G.GAME.dollars + (G.GAME.dollar_buffer or 0))) }},
@@ -4497,6 +4505,20 @@ function Card:update(dt)
             for k, v in pairs(G.playing_cards) do
                 if v.config.center ~= G.P_CENTERS.c_base then self.ability.driver_tally = self.ability.driver_tally+1 end
             end
+        end
+        if self.ability.name == "Monochromatic Joker" then
+            local hearts_suit, clubs_suit, diamonds_suit, spades_suit = 0, 0, 0, 0
+                for k, v in pairs(G.playing_cards) do
+                    if v:is_suit('Clubs', nil, true) then clubs_suit = clubs_suit + 1 end
+                    if v:is_suit('Diamonds', nil, true) then diamonds_suit = diamonds_suit + 1 end
+                    if v:is_suit('Hearts', nil, true) then hearts_suit = hearts_suit + 1 end
+                    if v:is_suit('Spades', nil, true) then spades_suit = spades_suit + 1 end
+                end
+            if clubs_suit > 1 then clubs_suit = 1 end
+            if diamonds_suit > 1 then diamonds_suit = 1 end
+            if hearts_suit > 1 then hearts_suit = 1 end
+            if spades_suit > 1 then spades_suit = 1 end
+            self.ability.mono_tally = 4 - clubs_suit - diamonds_suit - hearts_suit - spades_suit
         end
         if self.ability.name == "Steel Joker" then 
             self.ability.steel_tally = 0

@@ -1567,6 +1567,15 @@
                     "duplicate card in your {C:attention}full deck",
                     "{C:inactive}(Currently {X:mult,C:white} x#2# {C:inactive} Mult)",
                 }
+            },
+            j_monojoker = {
+                name = "Monochromatic Joker",
+                text = {
+                    "Gives {X:mult,C:white} X#1# {} Mult",
+                    "for each {C:attention}Suit Removed",
+                    "in your {C:attention}full deck",
+                    "{C:inactive}(Currently {X:mult,C:white} X#2# {C:inactive} Mult)",
+                }
             }
         },
         Voucher = {
@@ -2351,7 +2360,7 @@
                     "After {C:attention}#1#{} hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_tetragon = {
@@ -2360,7 +2369,7 @@
                     "After {C:attention}#1#{} hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_pentagon = {
@@ -2369,7 +2378,7 @@
                     "After {C:attention}#1#{} hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_hexagon = {
@@ -2378,7 +2387,7 @@
                     "After {C:attention}#1#{} hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_septagon = {
@@ -2387,7 +2396,7 @@
                     "After {C:attention}#1#{} hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_octagon = {
@@ -2396,7 +2405,7 @@
                     "After {C:attention}#1#{} hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_nonagon = {
@@ -2405,7 +2414,7 @@
                     "After {C:attention}#1#{} hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_decagon = {
@@ -2414,7 +2423,7 @@
                     "After {C:attention}#1#{} hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_hendecagon = {
@@ -2423,7 +2432,7 @@
                     "After {C:attention}#1#{} hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_dodecagon = {
@@ -2432,7 +2441,7 @@
                     "After {C:attention}#1#{} hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_hectogon = {
@@ -2441,7 +2450,7 @@
                     "After {C:attention}#1#{} hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_myriagon = {
@@ -2450,7 +2459,7 @@
                     "After {C:attention}#1#{} hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_apeirogon = {
@@ -2459,7 +2468,7 @@
                     "After {C:attention}#1#{} hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             }
         },
