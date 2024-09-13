@@ -1231,6 +1231,16 @@ function Card:use_consumeable(area, copier)
             used_tarot:juice_up(0.3, 0.5)
         return true end }))
     end
+    if self.ability.name == 'Infinity' then
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+            play_sound('polyuse')
+            used_tarot:juice_up(0.3, 0.5)
+            self.hands_sub = G.GAME.current_round.hands_played
+            ease_hands_played(self.hands_sub*2)
+            self.discards_sub = G.GAME.current_round.discards_used
+            ease_discard(self.discards_sub*2)
+        return true end }))
+    end
     if self.ability.name == 'Cryptid' then
         G.E_MANAGER:add_event(Event({
             func = function()
