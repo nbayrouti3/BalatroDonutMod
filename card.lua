@@ -4779,6 +4779,7 @@ function Card:draw(layer)
         self.ARGS.send_to_shader = self.ARGS.send_to_shader or {}
         self.ARGS.send_to_shader[1] = math.min(self.VT.r*3, 1) + G.TIMERS.REAL/(28) + (self.juice and self.juice.r*20 or 0) + self.tilt_var.amt
         self.ARGS.send_to_shader[2] = G.TIMERS.REAL
+       
 
         for k, v in pairs(self.children) do
             v.VT.scale = self.VT.scale
@@ -4878,6 +4879,9 @@ function Card:draw(layer)
                 end
                 if self.ability.set == 'Booster' or self.ability.set == 'Spectral' or self.ability.name == 'Parallax' or self.ability.name == 'Fractal' or self.ability.name == 'Infinity' then
                     self.children.center:draw_shader('booster', nil, self.ARGS.send_to_shader)
+                end
+                if self.ability.set == 'Polygon' then
+                    self.children.center:draw_shader('smoke', nil, self.ARGS.send_to_shader)
                 end
                 if self.edition and self.edition.holo then
                     self.children.center:draw_shader('holo', nil, self.ARGS.send_to_shader)

@@ -103,7 +103,10 @@ function Sprite:draw_shader(_shader, _shadow_height, _send, _no_tilt, other_obj,
         G.SHADERS[_shader or 'dissolve']:send("burn_colour_1",_draw_major.dissolve_colours and _draw_major.dissolve_colours[1] or G.C.CLEAR)
         G.SHADERS[_shader or 'dissolve']:send("burn_colour_2",_draw_major.dissolve_colours and _draw_major.dissolve_colours[2] or G.C.CLEAR)
         G.SHADERS[_shader or 'dissolve']:send("shadow",(not not _shadow_height))
-        if _send then G.SHADERS[_shader or 'dissolve']:send(_shader,_send) end
+        if _send and _shader ~= "smoke" then G.SHADERS[_shader or 'dissolve']:send(_shader,_send) end
+        if _send and _shader == "smoke" then 
+            G.SHADERS[_shader or 'dissolve']:send("real_time", love.timer.getTime()) 
+        end
     end
 
     love.graphics.setShader( G.SHADERS[_shader or 'dissolve'],  G.SHADERS[_shader or 'dissolve'])
