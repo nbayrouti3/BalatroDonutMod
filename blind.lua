@@ -349,7 +349,7 @@ function Blind:defeat(silent)
         G.hand:change_size(1)
     end
     if self.name == 'Smothering Tithe' and not self.disabled then
-        G.GAME.modifiers.discard_cost = G.GAME.modifiers.discard_cost - 2
+        G.GAME.modifiers.discard_cost = nil
     end
 end
 
@@ -405,7 +405,7 @@ function Blind:disable()
         self.chip_text = number_format(self.chips)
     end
     if self.name == 'Smothering Tithe' then
-        G.GAME.modifiers.discard_cost = G.GAME.modifiers.discard_cost - 2
+        G.GAME.modifiers.discard_cost = nil
     end
     G.E_MANAGER:add_event(Event({
         trigger = 'immediate',

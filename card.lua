@@ -949,6 +949,9 @@ function Card:generate_UIBox_ability_table()
         elseif self.ability.name == 'The Singularity' then loc_vars = {self.ability.extra}
         elseif self.ability.name == 'Sacrificial Joker' then
         elseif self.ability.name == 'Monochromatic Joker' then loc_vars = {self.ability.extra, 1 + self.ability.extra*(self.ability.mono_tally or 0)}
+        elseif self.ability.name == 'Moist Chan' then loc_vars = {self.ability.extra.chips, self.ability.extra.mult}
+        elseif self.ability.name == 'Stonks' then loc_vars = {self.ability.extra}
+        elseif self.ability.name == 'The Perfect Loaf' then
         end
     end
     local badges = {}
@@ -2339,7 +2342,14 @@ function Card:calculate_seal(context)
                 }
         end
 
-        if self.seal == 'Biscuit'then
+        local in_scoring_hand = false
+        if context.scoring_hand then
+            for i = 1, #context.scoring_hand do
+                if context.scoring_hand[i] == self then in_scoring_hand = true end
+            end
+        end
+        
+        if self.seal == 'Biscuit' and in_scoring_hand == false then
             G.E_MANAGER:add_event(Event({ func = function()
                 G.hand:add_to_highlighted(self, true)
                 play_sound('card1', 1)
@@ -3422,6 +3432,14 @@ function Card:calculate_joker(context)
                     end
                 if self.ability.name == 'Walkie Talkie' and
                 (context.other_card:get_id() == 10 or context.other_card:get_id() == 4) then
+                    return {
+                        chips = self.ability.extra.chips,
+                        mult = self.ability.extra.mult,
+                        card = self
+                    }
+                end
+                if self.ability.name == 'Moist Chan' and
+                (context.other_card:get_id() == 6 or context.other_card:get_id() == 9) then
                     return {
                         chips = self.ability.extra.chips,
                         mult = self.ability.extra.mult,
@@ -4598,6 +4616,24 @@ function Card:update(dt)
                 self.ability.blueprint_compat = 'incompatible'
             end
         end
+        if self.ability.name == 'Camou' then
+            local left_joker = nil
+            local right_joker = nil
+            for i = 1, #G.jokers.cards do
+                if G.jokers.cards[i] == self then 
+                    left_joker = G.jokers.cards[i-1]
+                    right_joker = G.jokers.cards[i+1]
+                end
+            end
+            
+            if left_joker and right_joker then
+                if left_joker.config.center.blueprint_compat and right_joker.config.center.blueprint_compat then
+                    self.ability.blueprint_compat = 'compatible'
+                else
+                    self.ability.blueprint_compat = 'incompatible'
+                end
+            end
+        end
         if self.ability.name == 'Swashbuckler' then
             local sell_cost = 0
             for i = 1, #G.jokers.cards do
@@ -4606,6 +4642,40 @@ function Card:update(dt)
                 end
             end
             self.ability.mult = sell_cost
+        end
+        if self.ability.name == "The Perfect Loaf" then
+            local left_joker = nil
+            local right_joker = nil
+            for i = 1, #G.jokers.cards do
+                if G.jokers.cards[i] == self then 
+                    left_joker = G.jokers.cards[i-1]
+                    right_joker = G.jokers.cards[i+1] 
+                end
+            end
+            
+            local activated = self.config.center.config.activated
+            --clean up polychrome from previous Duncan Jokers that were moved
+            for i = 1, #activated do
+                local curr_joker = activated[i]
+                local still_active = false
+                if left_joker and curr_joker == left_joker then
+                    still_active = true
+                elseif right_joker and curr_joker == right_joker then
+                    still_active = true
+                end
+    
+                if still_active == false then curr_joker:set_edition(nil) end
+            end
+    
+            if left_joker and left_joker.config.center.config.duncan and (not left_joker.edition or not left_joker.edition.polychrome)then
+                left_joker:set_edition({polychrome = true}, true)
+                activated[#activated+1] = left_joker
+            end
+    
+            if right_joker and right_joker.config.center.config.duncan and (not right_joker.edition or not right_joker.edition.polychrome) then
+                right_joker:set_edition({polychrome = true}, true)
+                activated[#activated+1] = right_joker
+            end
         end
     else
         if self.ability.name == 'Temperance' then
