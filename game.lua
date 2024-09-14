@@ -533,17 +533,18 @@ function Game:init_item_prototypes()
         
         --Custom Jokers
         j_hauntedjoker=     {order = 151,  unlocked = true,  discovered = true,  blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = "Haunted Joker", pos = {x=0,y=16}, set = "Joker", effect = "Spawn Tarot", cost_mult = 1.0, config = {extra=10}, friendly = true},
-        j_camou=            {order = 152, unlocked = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Camou", pos = {x=3,y=16}, soul_pos = {x=4,y=16}, set = "Joker", effect = "Copycat", cost_mult = 1.0, config = {}, friendly = true},
-        j_lion=             {order = 153, unlocked = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 4, name = "Lion Joker", pos = {x=8, y=16}, set = "Joker", effect = "Steel Card", cost_mult = 1.0, config = {}, friendly = true},
-        j_twin=             {order = 154, unlocked = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = "Joker Twin", pos = {x=5, y=10}, set = "Joker", effect = "Copycat", cost_mult = 1.0, config = {}, friendly = true},
-        j_phallussy=        {order = 155, unlocked = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Gambler's Phallussy", pos = {x=0, y=17}, set = "Joker", effect = "", cost_mult = 1.0, config = {}, friendly = true},
-        j_dancing_dunc=     {order = 156, unlocked = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 4, name = "Dancing Duncan", pos = {x=4, y=12}, soul_anim_pos = {x=0, y=0}, set = "Joker", effect = "Type Mult", cost_mult = 1.0, config = {}, friendly = true},
-        j_strawberry=       {order = 157, unlocked = true, discovered = true, bluepring_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 3, name = "Freeze Dried Strawberry", pos = {x=5, y=11}, set = "Joker", effect = "", cost_mult = 1.0, config = {extra = {chips = 50, chance = 4}}, friendly = true},
-        j_part_of_you=      {order = 158, unlocked = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 8, name = "Part of You", pos = {x=1, y=17}, set = "Joker", effect = "", cost_mult = 1.0, config = {extra = 1, Xmult = 0.15}, friendly = true},
+        j_camou=            {order = 152, unlocked = true, discovered = true,    blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Camou", pos = {x=3,y=16}, soul_pos = {x=4,y=16}, set = "Joker", effect = "Copycat", cost_mult = 1.0, config = {}, friendly = true},
+        j_lion=             {order = 153, unlocked = true, discovered = true,    blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 4, name = "Lion Joker", pos = {x=8, y=16}, set = "Joker", effect = "Steel Card", cost_mult = 1.0, config = {}, friendly = true},
+        j_twin=             {order = 154, unlocked = true, discovered = true,    blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = "Joker Twin", pos = {x=5, y=10}, set = "Joker", effect = "Copycat", cost_mult = 1.0, config = {}, friendly = true},
+        j_phallussy=        {order = 155, unlocked = true, discovered = true,    blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Gambler's Phallussy", pos = {x=0, y=17}, set = "Joker", effect = "", cost_mult = 1.0, config = {}, friendly = true},
+        j_dancing_dunc=     {order = 156, unlocked = true, discovered = true,    blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 4, name = "Dancing Duncan", pos = {x=4, y=12}, soul_anim_pos = {x=0, y=0}, set = "Joker", effect = "Type Mult", cost_mult = 1.0, config = {}, friendly = true},
+        j_strawberry=       {order = 157, unlocked = true, discovered = true,    bluepring_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 3, name = "Freeze Dried Strawberry", pos = {x=5, y=11}, set = "Joker", effect = "", cost_mult = 1.0, config = {extra = {odds = 4, chips = 50}}, no_pool_flag = 'freeze_dried_broke', friendly = true},
+        j_part_of_you=      {order = 158, unlocked = true, discovered = true,    blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 8, name = "Part of You", pos = {x=1, y=17}, set = "Joker", effect = "", cost_mult = 1.0, config = {extra = 1, Xmult = 0.15}, friendly = true},
         j_singularity=      {order = 159,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = 'The Singularity', pos = {x=5, y=16}, set = 'Joker', effect = "Retrigger", cost_mult = 1.0, config = {extra = 4}, friendly = true},
         j_sacrificial=      {order = 160,  unlocked = true,  discovered = false, blueprint_compat = false, perishable_compat = true, eternal_compat = false, rarity = 1, cost = 20, name = 'Sacrificial Joker', pos = {x=2, y=16}, set = 'Joker', effect = "", cost_mult = 1.0, config = {}, friendly = true},
         j_metajoker=        {order = 161,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = 'Meta Joker', pos ={x=6, y=16}, soul_pos = {x=7, y=16}, set = 'Joker', effect = "4 And 8 Retrigger", cost_mult = 1.0, config = {extra = {four = 3, eight = 1, two = 7}}, friendly = true},
-        j_moist_chan=    {order = 162,  unlocked = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 4, name = "Moist Chan", set = "Joker", config = {extra = {chips = 10, mult = 4}}, pos = {x=8,y=15}},
+        j_monojoker=        {order = 162,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 6, name = "Monochromatic Joker", pos = {x=1,y=16}, set = "Joker", effect = 'Inverted Suit Multi', cost_mult = 1.0, config = {extra = 2}, friendly = true},
+        j_moist_chan=    {order = 163,  unlocked = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 4, name = "Moist Chan", set = "Joker", config = {extra = {chips = 10, mult = 4}}, pos = {x=8,y=15}},
 
         --All Consumeables
 
@@ -607,19 +608,19 @@ function Game:init_item_prototypes()
         c_cat_toy=          {order = 19,   discovered = false,  cost = 4, consumeable = true, name = "Cat Toy", pos = {x=9, y=3}, set = "Spectral", config = {extra = 'Biscuit', max_highlighted = 1}},
         
         --Polygonal
-        c_trigon=           {order = 1,    discovered = true,  cost = 4, consumeable = true, name = "Tri-Eyed Cat", pos = {x=6,y=5}, set = "Polygon", config = {extra = 3, polygon_rounds = 0}},
-        c_tetragon=         {order = 2,    discovered = true,  cost = 4, consumeable = true, name = "Quadra Beast", pos = {x=7,y=5}, set = "Polygon", config = {extra = 4, polygon_rounds = 0}},
-        c_pentagon=         {order = 3,    discovered = true,  cost = 4, consumeable = true, name = "Penta Hand", pos = {x=8,y=5}, set = "Polygon", config = {extra = 5, polygon_rounds = 0}},
-        c_hexagon=          {order = 4,    discovered = true,  cost = 4, consumeable = true, name = "Hexwing Angel", pos = {x=9,y=5}, set = "Polygon", config = {extra = 6, polygon_rounds = 0}},
-        c_septagon=         {order = 5,    discovered = true,  cost = 4, consumeable = true, name = "Septabug", pos = {x=0,y=6}, set = "Polygon", config = {extra = 7, polygon_rounds = 0}},
-        c_octagon=          {order = 6,    discovered = true,  cost = 4, consumeable = true, name = "Octoclops", pos = {x=1,y=6}, set = "Polygon", config = {extra = 8, polygon_rounds = 0}},
-        c_nonagon=          {order = 7,    discovered = true,  cost = 4, consumeable = true, name = "Nonagon Lion", pos = {x=2,y=6}, set = "Polygon", config = {extra = 9, polygon_rounds = 0}},
-        c_decagon=          {order = 8,    discovered = true,  cost = 4, consumeable = true, name = "Charybdis", pos = {x=3,y=6}, set = "Polygon", config = {extra = 10, polygon_rounds = 0}},
-        c_hendecagon=       {order = 9,    discovered = true,  cost = 4, consumeable = true, name = "Echidna", pos = {x=4,y=6}, set = "Polygon", config = {extra = 11, polygon_rounds = 0}},
-        c_dodecagon=        {order = 10,   discovered = true,  cost = 4, consumeable = true, name = "Typhon", pos = {x=5,y=6}, set = "Polygon", config = {extra = 12, polygon_rounds = 0}},
-        c_hectogon=         {order = 11,   discovered = true,  cost = 4, consumeable = true, name = "Parallax", pos = {x=6,y=6}, set = "Polygon", config = {extra = 13, polygon_rounds = 0}, hidden = true},
-        c_myriagon=         {order = 12,   discovered = true,  cost = 4, consumeable = true, name = "Fractal", pos = {x=7,y=6}, set = "Polygon", config = {extra = 14, polygon_rounds = 0}, hidden = true},
-        c_apeirogon=        {order = 13,   discovered = true,  cost = 4, consumeable = true, name = "Infinity", pos = {x=8,y=6}, set = "Polygon", config = {extra = 15, polygon_rounds = 0}, hidden = true},
+        c_trigon=           {order = 1,    discovered = true,  cost = 4, consumeable = true, name = "Tri-Eyed Cat", pos = {x=6,y=5}, set = "Polygon", config = {extra = 3, max_highlighted = 1}},
+        c_tetragon=         {order = 2,    discovered = true,  cost = 4, consumeable = true, name = "Quadra Beast", pos = {x=7,y=5}, set = "Polygon", config = {extra = 4}},
+        c_pentagon=         {order = 3,    discovered = true,  cost = 4, consumeable = true, name = "Penta Hand", pos = {x=8,y=5}, set = "Polygon", config = {extra = 5}},
+        c_hexagon=          {order = 4,    discovered = true,  cost = 4, consumeable = true, name = "Hexwing Angel", pos = {x=9,y=5}, set = "Polygon", config = {extra = 6}},
+        c_septagon=         {order = 5,    discovered = true,  cost = 4, consumeable = true, name = "Septabug", pos = {x=0,y=6}, set = "Polygon", config = {extra = 7}},
+        c_octagon=          {order = 6,    discovered = true,  cost = 4, consumeable = true, name = "Octoclops", pos = {x=1,y=6}, set = "Polygon", config = {extra = 8}},
+        c_nonagon=          {order = 7,    discovered = true,  cost = 4, consumeable = true, name = "Nonagon Lion", pos = {x=2,y=6}, set = "Polygon", config = {extra = 9}},
+        c_decagon=          {order = 8,    discovered = true,  cost = 4, consumeable = true, name = "Charybdis", pos = {x=3,y=6}, set = "Polygon", config = {extra = 10}},
+        c_hendecagon=       {order = 9,    discovered = true,  cost = 4, consumeable = true, name = "Echidna", pos = {x=4,y=6}, set = "Polygon", config = {extra = 11}},
+        c_dodecagon=        {order = 10,   discovered = true,  cost = 4, consumeable = true, name = "Typhon", pos = {x=5,y=6}, set = "Polygon", config = {extra = 12}},
+        c_hectogon=         {order = 11,   discovered = true,  cost = 4, consumeable = true, name = "Parallax", pos = {x=6,y=6}, set = "Polygon", config = {extra = 13}, hidden = true},
+        c_myriagon=         {order = 12,   discovered = true,  cost = 4, consumeable = true, name = "Fractal", pos = {x=7,y=6}, set = "Polygon", config = {extra = 14}, hidden = true},
+        c_apeirogon=        {order = 13,   discovered = true,  cost = 4, consumeable = true, name = "Infinity", pos = {x=8,y=6}, set = "Polygon", config = {extra = 2}, hidden = true},
 
         --Vouchers
 

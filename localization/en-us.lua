@@ -1491,8 +1491,8 @@
             j_strawberry = {
                 name = "Freeze Dried Strawberry",
                 text = {
-                    "Gives {C:chips}+#1#{}",
-                    "Has a {C:green}#2# in #3#{} chance to break"
+                    "{C:chips}+#1#{} Chips {C:green}#2# in #3#{} chance this",
+                    "card is destroyed at end of round"
                 }
             },
             j_part_of_you = {
@@ -1526,6 +1526,15 @@
                     "6E 64 20 {C:attention}8{} 20 74 6F",
                     "6D 61 6B 65 20 {C:attention}16",
                     "{C:inactive}It's Gomez Time!"
+                }
+            },
+            j_monojoker = {
+                name = "Monochromatic Joker",
+                text = {
+                    "Gives {X:mult,C:white} X#1# {} Mult",
+                    "for each {C:attention}Suit Removed",
+                    "in your {C:attention}full deck",
+                    "{C:inactive}(Currently {X:mult,C:white} X#2# {C:inactive} Mult)",
                 }
             },
             j_moist_chan = {
@@ -2316,118 +2325,119 @@
             c_trigon = {
                 name = "Tri-Eyed Cat",
                 text = {
-                    "After {C:attention}#1#{} hands played,",
+                    "After {C:attention}#1#{} Hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_tetragon = {
                 name = "Quadruped Beast",
                 text = {
-                    "After {C:attention}#1#{} hands played,",
+                    "After {C:attention}#1#{} Hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_pentagon = {
                 name = "Pentastar Hand",
                 text = {
-                    "After {C:attention}#1#{} hands played,",
+                    "After {C:attention}#1#{} Hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_hexagon = {
                 name = "Hex-winged Angel",
                 text = {
-                    "After {C:attention}#1#{} hands played,",
+                    "After {C:attention}#1#{} Hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_septagon = {
                 name = "Septabug",
                 text = {
-                    "After {C:attention}#1#{} hands played,",
+                    "After {C:attention}#1#{} Hhands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_octagon = {
                 name = "Octoclops",
                 text = {
-                    "After {C:attention}#1#{} hands played,",
+                    "After {C:attention}#1#{} Hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_nonagon = {
                 name = "Nonagon Lion",
                 text = {
-                    "After {C:attention}#1#{} hands played,",
+                    "After {C:attention}#1#{} Hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_decagon = {
                 name = "Charybdis",
                 text = {
-                    "After {C:attention}#1#{} hands played,",
+                    "After {C:attention}#1#{} Hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_hendecagon = {
                 name = "Echidna",
                 text = {
-                    "After {C:attention}#1#{} hands played,",
+                    "After {C:attention}#1#{} Hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_dodecagon = {
                 name = "Typhon",
                 text = {
-                    "After {C:attention}#1#{} hands played,",
+                    "After {C:attention}#1#{} Hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_hectogon = {
                 name = "Parallax",
                 text = {
-                    "After {C:attention}#1#{} hands played,",
+                    "After {C:attention}#1#{} Hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_myriagon = {
                 name = "Fractal",
                 text = {
-                    "After {C:attention}#1#{} hands played,",
+                    "After {C:attention}#1#{} Hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_apeirogon = {
                 name = "Infinity",
                 text = {
-                    "After {C:attention}#1#{} hands played,",
-                    "use this card to",
-                    "{C:attention}PLACEHOLDER",
-                    "{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    "After {C:attention}#1#{} Hands played,",
+                    "use this card to Return",
+                    "{C:blue}Hands{} and {C:red}Discards{} Equal to",
+                    "{C:attention}Double{} the amount used this round",
+                    "{C:inactive}(Currently {C:blue}#2#{}/{C:red}#3#{})"
                 }
             }
         },
@@ -4171,6 +4181,7 @@
             k_val_up = "Value Up!",
             k_reset = "Reset",
             k_extinct_ex = "Extinct!",
+            k_shattered_ex = "Shattered!",
             k_disabled_ex = "Disabled!",
             k_poly_ready = "Ready!",
             k_safe_ex = "Safe!",

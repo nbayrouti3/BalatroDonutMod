@@ -944,10 +944,11 @@ function Card:generate_UIBox_ability_table()
         elseif self.ability.name == 'Joker Twin' then loc_vars = self.ability.extra
         elseif self.ability.name == "Gambler's Phallussy" then loc_vars = {2, 0.5}
         elseif self.ability.name == 'Dancing Duncan' then loc_vars = {2, 4, self.ability.mult}
-        elseif self.ability.name == 'Freeze Dried Strawberry' then loc_vars = {self.ability.extra.chips, 1, self.ability.extra.chance}
+        elseif self.ability.name == 'Freeze Dried Strawberry' then loc_vars = {self.ability.extra.chips, ''..(G.GAME and G.GAME.probabilities.normal or 1), self.ability.extra.odds}
         elseif self.ability.name == 'Part of You' then loc_vars = {self.ability.x_mult, self.ability.extra + self.ability.x_mult*(self.ability.dupe_tally or 0)}
         elseif self.ability.name == 'The Singularity' then loc_vars = {self.ability.extra}
         elseif self.ability.name == 'Sacrificial Joker' then
+        elseif self.ability.name == 'Monochromatic Joker' then loc_vars = {self.ability.extra, 1 + self.ability.extra*(self.ability.mono_tally or 0)}
         elseif self.ability.name == 'Moist Chan' then loc_vars = {self.ability.extra.chips, self.ability.extra.mult}
         end
     end
@@ -1229,6 +1230,16 @@ function Card:use_consumeable(area, copier)
             local aura_card = G.hand.highlighted[1]
             aura_card:set_edition(edition, true)
             used_tarot:juice_up(0.3, 0.5)
+        return true end }))
+    end
+    if self.ability.name == 'Infinity' then
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+            play_sound('polyuse')
+            used_tarot:juice_up(0.3, 0.5)
+            self.hands_sub = G.GAME.current_round.hands_played
+            ease_hands_played(self.hands_sub*2)
+            self.discards_sub = G.GAME.current_round.discards_used
+            ease_discard(self.discards_sub*2)
         return true end }))
     end
     if self.ability.name == 'Cryptid' then
@@ -1551,7 +1562,7 @@ function Card:use_consumeable(area, copier)
         end
         delay(0.6)
     end
-    if self.ability.name == 'Tri-Eyed Cat' or self.ability.name == 'Ouija' then
+    if self.ability.name == 'Ouija' then
         G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
             play_sound('tarot1')
             used_tarot:juice_up(0.3, 0.5)
@@ -1561,20 +1572,7 @@ function Card:use_consumeable(area, copier)
             G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function() G.hand.cards[i]:flip();play_sound('card1', percent);G.hand.cards[i]:juice_up(0.3, 0.3);return true end }))
         end
         delay(0.2)
-        if self.ability.name == 'Tri-Eyed Cat' then
-            local _suit = pseudorandom_element({'S','H','D','C'}, pseudoseed('sigil'))
-            for i=1, #G.hand.cards do
-                G.E_MANAGER:add_event(Event({func = function()
-                    local card = G.hand.cards[i]
-                    local suit_prefix = _suit..'_'
-                    local rank_suffix = card.base.id < 10 and tostring(card.base.id) or
-                                        card.base.id == 10 and 'T' or card.base.id == 11 and 'J' or
-                                        card.base.id == 12 and 'Q' or card.base.id == 13 and 'K' or
-                                        card.base.id == 14 and 'A'
-                    card:set_base(G.P_CARDS[suit_prefix..rank_suffix])
-                return true end }))
-            end  
-        end
+        
         if self.ability.name == 'Ouija' then
             local _rank = pseudorandom_element({'2','3','4','5','6','7','8','9','T','J','Q','K','A'}, pseudoseed('ouija'))
             for i=1, #G.hand.cards do
@@ -3238,6 +3236,35 @@ function Card:calculate_joker(context)
                         }
                     end
                 end
+                if self.ability.name == 'Freeze Dried Strawberry' then
+                    if pseudorandom('freezedried') < G.GAME.probabilities.normal/self.ability.extra.odds then 
+                        G.E_MANAGER:add_event(Event({
+                            func = function()
+                                play_sound('tarot1')
+                                self.T.r = -0.2
+                                self:juice_up(0.3, 0.4)
+                                self.states.drag.is = true
+                                self.children.center.pinch.x = true
+                                G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
+                                    func = function()
+                                            G.jokers:remove_card(self)
+                                            self:shatter()
+                                            self = nil
+                                        return true; end})) 
+                                return true
+                            end
+                        })) 
+                        if self.ability.name == 'Freeze Dried Strawberry' then G.GAME.pool_flags.freeze_dried_broke = true end
+                        return {
+                            message = localize('k_shattered_ex'),
+                            colour = G.C.RED
+                        }
+                    else
+                        return {
+                            message = localize('k_safe_ex')
+                        }
+                    end
+                end
                 if self.ability.name == 'Mr. Bones' and context.game_over and 
                 G.GAME.chips/G.GAME.blind.chips >= 0.25 then
                     G.E_MANAGER:add_event(Event({
@@ -4016,15 +4043,9 @@ function Card:calculate_joker(context)
                             }
                         end
                         if self.ability.name == 'Freeze Dried Strawberry' then
-                            local break_chance = math.random(1, self.ability.extra.chance)
-                            if break_chance == 1 then
-                                self:shatter()
-                                return
-                            end
-
                             return {
                                 message = localize{type='variable', key='a_chips', vars={self.ability.extra.chips}},
-                                chip_mod = self.ability.extra.chips
+                                chip_mod = self.ability.extra.chips,
                             }
                         end
                         if self.ability.name == 'Stuntman' then
@@ -4256,6 +4277,13 @@ function Card:calculate_joker(context)
                                 colour = G.C.MULT
                             }
                         end
+                        if self.ability.name == 'Monochromatic Joker' and self.ability.mono_tally > 0 then
+                            return {
+                                message = localize{type='variable',key='a_xmult',vars={1 + (self.ability.extra*self.ability.mono_tally)}},
+                                Xmult_mod = 1 + (self.ability.extra*self.ability.mono_tally),
+                                colour = G.C.MULT
+                            }
+                        end    
                         if self.ability.name == 'Bull' and (G.GAME.dollars + (G.GAME.dollar_buffer or 0)) > 0 then
                             return {
                                 message = localize{type='variable',key='a_chips',vars={self.ability.extra*math.max(0,(G.GAME.dollars + (G.GAME.dollar_buffer or 0))) }},
@@ -4506,6 +4534,20 @@ function Card:update(dt)
             for k, v in pairs(G.playing_cards) do
                 if v.config.center ~= G.P_CENTERS.c_base then self.ability.driver_tally = self.ability.driver_tally+1 end
             end
+        end
+        if self.ability.name == "Monochromatic Joker" then
+            local hearts_suit, clubs_suit, diamonds_suit, spades_suit = 0, 0, 0, 0
+                for k, v in pairs(G.playing_cards) do
+                    if v:is_suit('Clubs', nil, true) then clubs_suit = clubs_suit + 1 end
+                    if v:is_suit('Diamonds', nil, true) then diamonds_suit = diamonds_suit + 1 end
+                    if v:is_suit('Hearts', nil, true) then hearts_suit = hearts_suit + 1 end
+                    if v:is_suit('Spades', nil, true) then spades_suit = spades_suit + 1 end
+                end
+            if clubs_suit > 1 then clubs_suit = 1 end
+            if diamonds_suit > 1 then diamonds_suit = 1 end
+            if hearts_suit > 1 then hearts_suit = 1 end
+            if spades_suit > 1 then spades_suit = 1 end
+            self.ability.mono_tally = 4 - clubs_suit - diamonds_suit - hearts_suit - spades_suit
         end
         if self.ability.name == "Steel Joker" then 
             self.ability.steel_tally = 0
