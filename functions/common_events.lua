@@ -95,6 +95,17 @@ function ease_dollars(mod, instant)
         --Play a chip sound
         play_sound('coin1')
     end
+    
+    if G.jokers and G.jokers.cards then
+        for k, v in ipairs(G.jokers.cards) do
+            if v.ability.name == "Stonks" then
+                local decimal_add = math.random()
+                local percent_effect = math.floor( math.random(0, v.ability.extra) + decimal_add )
+                mod = mod * percent_effect
+            end
+        end
+    end
+
     if instant then
         _mod(mod)
     else

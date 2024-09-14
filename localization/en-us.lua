@@ -1482,10 +1482,10 @@
             j_dancing_dunc = {
                 name = "Dancing Duncan",
                 text = {
-                    "This Joker gains {X:mult,C:white} +#1# {} Mult",
-                    "for every Pair played and {X:mult,C:white} +#2# {} Mult",
+                    "This Joker gains {C:red} +#1# {} Mult",
+                    "for every Pair played and {C:red} +#2# {} Mult",
                     "for every Two Pair played",
-                    "{C:inactive}(Currently {X:mult,C:white} +#3# {C:inactive} Mult)"
+                    "{C:inactive}(Currently {C:red} +#3# {C:inactive} Mult)"
                 }
             },
             j_strawberry = {
@@ -1544,6 +1544,21 @@
                     "gives {C:chips}+#1#{} Chips and", 
                     "{C:mult}+#2#{} Mult when scored"
                 },
+            },
+            j_stonks = {
+                name = "Stonks",
+                text = {
+                    "Whenever you gain money, gain more.",
+                    "Whenever you lose money, lose more", 
+                    "Up to {X:mult,C:white}x#1#{} the original amount!"
+                },
+            },
+            j_perfect_loaf = {
+                name = "The Perfect Loaf",
+                text = {
+                    "Gives {C:dark_edition}Polychrome{} to any",
+                    "Duncan Jokers adjacent to it"
+                }
             },
         },
         Voucher = {
