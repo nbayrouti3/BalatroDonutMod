@@ -2067,6 +2067,16 @@
                     "{C:attention}#1#{} selected cards",
                     "to {V:1}#2#{}"
                 }
+            },
+            c_clown = {
+                name = "The Clown",
+                text = {
+                    "Select up to {C:attention}#1#{} cards; trigger the following:",
+                    "{C:attention}1 in 8 chance{} to {C:red}destroy a random joker",
+                    "{C:attention}5 in 8 chance{} to {C:blue}destroy selected cards",
+                    "{C:attention}2 in 8 chance{} to {C:green}convert selected cards",
+                    "{C:green}into glass cards"
+                }
             }
         },
         Planet = {
@@ -4208,6 +4218,9 @@
             k_drank_ex = "Drank!",
             k_eroded_ex = "Eroded!",
             k_sacrificed_ex = "Sacrificed!",
+            k_no_jokers = "No Joker Found",
+            k_destroyed = "Destroyed!",
+            k_glass = "Glass!",
         },
         v_dictionary = {
             a_xmult = "X#1# Mult",
