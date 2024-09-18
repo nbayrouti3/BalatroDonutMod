@@ -816,7 +816,7 @@ function card_eval_status_text(card, eval_type, amt, percent, dir, extra)
     elseif card.area == G.play then
         y_off = -0.05*G.CARD_H
         card_aligned = 'tm'
-    elseif card.jimbo  then
+    elseif card.jimbo then
         y_off = -0.05*G.CARD_H
         card_aligned = 'tm'
     end
@@ -869,6 +869,12 @@ function card_eval_status_text(card, eval_type, amt, percent, dir, extra)
         amt = amt
         text = localize('k_swapped_ex')
         colour = G.C.PURPLE
+    elseif eval_type == 'above_consumeable' then
+        sound = 'generic1'
+        y_off = -0.05*G.CARD_H
+        card_aligned = 'tm'
+        text = extra.message or text
+        amt = 0.5
     elseif eval_type == 'extra' or eval_type == 'jokers' then 
         sound = extra.edition and 'foil2' or extra.mult_mod and 'multhit1' or extra.Xmult_mod and 'multhit2' or 'generic1'
         if extra.edition then 
@@ -2759,6 +2765,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
        elseif _c.name == "The Sun" then loc_vars = {_c.config.max_highlighted, localize(_c.config.suit_conv, 'suits_plural'), colours = {G.C.SUITS[_c.config.suit_conv]}}
        elseif _c.name == "Judgement" then
        elseif _c.name == "The World" then loc_vars = {_c.config.max_highlighted, localize(_c.config.suit_conv, 'suits_plural'), colours = {G.C.SUITS[_c.config.suit_conv]}}
+       elseif _c.name == "The Clown" then loc_vars = {_c.config.max_highlighted, localize{type = 'name_text', set = 'Enhanced', key = 'm_glass'}}; info_queue[#info_queue+1] = G.P_CENTERS['m_glass']
        end
        localize{type = 'descriptions', key = _c.key, set = _c.set, nodes = desc_nodes, vars = loc_vars}
 

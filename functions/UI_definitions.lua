@@ -2683,49 +2683,6 @@ function create_UIBox_high_scores()
   return t
 end
 
-function create_UIBox_your_collection_polygons()
-  local deck_tables = {}
-
-  G.your_collection = {}
-  for j = 1, 2 do
-    G.your_collection[j] = CardArea( --This quite literally changes how much space the ui portion takes up
-      G.ROOM.T.x + 0.2*G.ROOM.T.w/2,G.ROOM.T.h,
-      (5)*G.CARD_W,
-      1*G.CARD_H, 
-      {card_limit = 3, type = 'title', highlight_limit = 0, collection = true}) -- This controls how far apart the cards are from each other
-    table.insert(deck_tables, 
-    {n=G.UIT.R, config={align = "cm", padding = 0, no_fill = true}, nodes={
-      {n=G.UIT.O, config={object = G.your_collection[j]}}
-    }}
-    )
-  end
-
-    for j = 1, #G.your_collection do
-      for i = 1, 3+j do
-      local center = G.P_CENTER_POOLS["Polygon"][i+(j-1)*3 + j - 1]
-
-      local card = Card(G.your_collection[j].T.x + G.your_collection[j].T.w/2, G.your_collection[j].T.y, G.CARD_W, G.CARD_H, nil, center)
-      card:start_materialize(nil, i>1 or j>1)
-      G.your_collection[j]:emplace(card)
-    end
-  end
-
-  local polygon_options = {}
-  for i = 1, math.floor(#G.P_CENTER_POOLS.Polygon/6) do
-    table.insert(polygon_options, localize('k_page')..' '..tostring(i)..'/'..tostring(math.floor(#G.P_CENTER_POOLS.Polygon/6)))
-  end
-
-  INIT_COLLECTION_CARD_ALERTS()
-
-  local t = create_UIBox_generic_options({ back_func = 'your_collection', contents = {
-            {n=G.UIT.R, config={align = "cm", minw = 2.5, padding = 0.1, r = 0.1, colour = G.C.BLACK, emboss = 0.05}, nodes=deck_tables},
-            {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
-              create_option_cycle({options = polygon_options, w = 4.5, cycle_shoulders = true, opt_callback = 'your_collection_polygon_page', focus_args = {snap_to = true, nav = 'wide'},current_option = 1, colour = G.C.RED, no_pips = true})
-            }},
-          }})
-  return t
-end
-
 function create_progress_box(_profile_progress, smaller)
   local rows, protos = {}, {'collection', 'challenges', 'joker_stickers', 'deck_stake_wins'}
   _profile_progress = _profile_progress or G.PROFILES[G.SETTINGS.profile].progress
@@ -3699,8 +3656,8 @@ function create_UIBox_your_collection_tarots()
   end
 
   local tarot_options = {}
-  for i = 1, math.floor(#G.P_CENTER_POOLS.Tarot/11) do
-    table.insert(tarot_options, localize('k_page')..' '..tostring(i)..'/'..tostring(math.floor(#G.P_CENTER_POOLS.Tarot/11)))
+  for i = 1, math.floor(#G.P_CENTER_POOLS.Tarot/7) do
+    table.insert(tarot_options, localize('k_page')..' '..tostring(i)..'/'..tostring(math.floor(#G.P_CENTER_POOLS.Tarot/6)))
   end
 
     for j = 1, #G.your_collection do
@@ -3850,9 +3807,9 @@ function create_UIBox_your_collection_polygons()
   for j = 1, 2 do
     G.your_collection[j] = CardArea( --This quite literally changes how much space the ui portion takes up
       G.ROOM.T.x + 0.2*G.ROOM.T.w/2,G.ROOM.T.h,
-      (5)*G.CARD_W,
+      (6.75)*G.CARD_W,
       1*G.CARD_H, 
-      {card_limit = 3, type = 'title', highlight_limit = 0, collection = true}) -- This controls how far apart the cards are from each other
+      {card_limit = 6, type = 'title', highlight_limit = 0, collection = true}) -- This controls how far apart the cards are from each other
     table.insert(deck_tables, 
     {n=G.UIT.R, config={align = "cm", padding = 0, no_fill = true}, nodes={
       {n=G.UIT.O, config={object = G.your_collection[j]}}
@@ -3861,17 +3818,16 @@ function create_UIBox_your_collection_polygons()
   end
 
     for j = 1, #G.your_collection do
-      for i = 1, 3+j do
-      local center = G.P_CENTER_POOLS["Polygon"][i+(j-1)*3 + j - 1]
-      
-      local card = Card(G.your_collection[j].T.x + G.your_collection[j].T.w/2, G.your_collection[j].T.y, G.CARD_W, G.CARD_H, nil, center)
+      for i = 1, 5+j do
+      local center = G.P_CENTER_POOLS["Polygon"][i+(j-1)*(6)]
+      local card = Card(G.your_collection[j].T.x + G.your_collection[j].T.w/3, G.your_collection[j].T.y, G.CARD_W, G.CARD_H, nil, center)
       card:start_materialize(nil, i>1 or j>1)
       G.your_collection[j]:emplace(card)
     end
   end
 
   local polygon_options = {}
-  for i = 1, math.floor(#G.P_CENTER_POOLS.Polygon/6) do
+  for i = 1, math.floor(#G.P_CENTER_POOLS.Polygon/13) do
     table.insert(polygon_options, localize('k_page')..' '..tostring(i)..'/'..tostring(math.floor(#G.P_CENTER_POOLS.Polygon/6)))
   end
 
@@ -3879,9 +3835,7 @@ function create_UIBox_your_collection_polygons()
   
   local t = create_UIBox_generic_options({ back_func = 'your_collection', contents = {
             {n=G.UIT.R, config={align = "cm", minw = 2.5, padding = 0.1, r = 0.1, colour = G.C.BLACK, emboss = 0.05}, nodes=deck_tables},
-            {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
-              create_option_cycle({options = polygon_options, w = 4.5, cycle_shoulders = true, opt_callback = 'your_collection_polygon_page', focus_args = {snap_to = true, nav = 'wide'},current_option = 1, colour = G.C.RED, no_pips = true})
-            }},
+            {n=G.UIT.R, config={align = "cm", padding = 0.7}, nodes={}},
           }})
   return t
 end
@@ -4116,7 +4070,7 @@ end
 
 function create_UIBox_your_collection_blinds(exit)
   local blind_matrix = {
-    {},{},{}, {}, {}, {}
+    {},{},{}, {}, {}, {}, {}
   }
   local blind_tab = {}
   for k, v in pairs(G.P_BLINDS) do
@@ -4170,10 +4124,13 @@ function create_UIBox_your_collection_blinds(exit)
       end
     temp_blind.stop_hover = function() temp_blind.hovering = false; Node.stop_hover(temp_blind); temp_blind.hover_tilt = 0 end
   end
-    blind_matrix[math.ceil((k-1)/5+0.001)][1+((k-1)%5)] = {n=G.UIT.C, config={align = "cm", padding = 0.1}, nodes={
-      (k==6 or k ==16 or k == 26) and {n=G.UIT.B, config={h=0.2,w=0.5}} or nil,
+    blind_matrix[math.ceil((k-1)/6+0.001)][1+((k-1)%6)] = {
+    n=G.UIT.C,
+    config={align = "cm", padding = 0.1},
+    nodes={ -- Completely overhauled the node system here
+      (k % 6 == 1 and math.floor((k)/6) % 2 == 0) and {n=G.UIT.B, config={h=0.2, w=0.5}} or nil,
       {n=G.UIT.O, config={object = temp_blind, focus_with_object = true}},
-      (k==5 or k ==15 or k == 25) and {n=G.UIT.B, config={h=0.2,w=0.5}} or nil,
+      (k % 6 == 0 and math.floor((k-1)/6) % 2 == 1) and {n=G.UIT.B, config={h=0.2, w=0.3}} or nil
     }}
   end
 

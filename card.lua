@@ -1564,6 +1564,86 @@ function Card:use_consumeable(area, copier)
         end
         delay(0.6)
     end
+    if self.ability.name == 'The Clown' then
+        G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function() self:flip();play_sound('card1', percent);return true end }))
+        G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.90,func = function() self:flip();play_sound('card1', percent);return true end }))
+        delay(1)
+        local clown_random = pseudorandom('clowncard')
+        if clown_random < G.GAME.probabilities.normal/8 then -- Probability (1) divided by 8 so everything under 0.125 is triggered
+            local destructable_jokers = {}
+                for i = 1, #G.jokers.cards do
+                    if G.jokers.cards[i] ~= G.jokers.cards[i].ability.eternal and not G.jokers.cards[i].getting_sliced then destructable_jokers[#destructable_jokers+1] = G.jokers.cards[i] end
+                end
+                local joker_to_destroy = #destructable_jokers > 0 and pseudorandom_element(destructable_jokers, pseudoseed('madness')) or nil
+
+                if joker_to_destroy then 
+                    joker_to_destroy.getting_sliced = true
+                    G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.5, func = function()
+                        self:juice_up(0.8, 0.8)
+                        joker_to_destroy:start_dissolve({G.C.RED}, nil, 1.6)
+                        attention_text({
+                            text = localize('k_joker'),
+                            scale = 1.3, 
+                            hold = 1.4,
+                            major = used_tarot,
+                            backdrop_colour = G.C.SECONDARY_SET.Tarot,
+                            align = (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.POLYGON_PACK) and 'tm' or 'cm', 
+                            offset = {x = 0, y = (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.POLYGON_PACK) and -0.2 or 0},
+                            silent = true
+                            })
+                            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.06*G.SETTINGS.GAMESPEED, blockable = false, blocking = false, func = function()
+                                play_sound('tarot2', 0.76, 0.4);return true end}))
+                            play_sound('tarot2', 1, 0.4)
+                            used_tarot:juice_up(0.3, 0.5)
+                    return true end }))
+                else
+                    card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_no_jokers'), colour = G.C.RED})
+                end
+        
+        elseif clown_random >= G.GAME.probabilities.normal/8 and clown_random < (G.GAME.probabilities.normal/2+0.25) then -- Inversion of the first If statemment, then checks if nmber under 0.75
+            local destroyed_cards = {}
+                for i=#G.hand.highlighted, 1, -1 do
+                    destroyed_cards[#destroyed_cards+1] = G.hand.highlighted[i]
+                end
+                card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_destroyed'), colour = G.C.BLUE})
+                G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                    play_sound('tarot1')
+                    used_tarot:juice_up(0.3, 0.5)
+                    return true end }))
+                G.E_MANAGER:add_event(Event({
+                    trigger = 'after',
+                    delay = 0.2,
+                    func = function() 
+                        for i=#G.hand.highlighted, 1, -1 do
+                            local card = G.hand.highlighted[i]
+                            card:start_dissolve(nil, i == #G.hand.highlighted)
+                        end
+                return true end }))
+
+        elseif clown_random >= (G.GAME.probabilities.normal/2+0.25) and clown_random <= G.GAME.probabilities.normal then -- final inversion of second and safety net for going above 1
+            card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_glass'), colour = G.C.GREEN})
+            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                play_sound('tarot1')
+                used_tarot:juice_up(0.3, 0.5)
+                return true end }))
+            for i=1, #G.hand.highlighted do
+                G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function()
+                    G.hand.highlighted[i]:flip()
+                    play_sound('card1', percent)
+                    G.hand.highlighted[i]:juice_up(0.3, 0.3)
+                return true end }))
+            end
+            delay(0.8)
+            for i=1, #G.hand.highlighted do
+                G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function()
+                    G.hand.highlighted[i]:set_ability(G.P_CENTERS['m_glass'])
+                    G.hand.highlighted[i]:flip()
+                    play_sound('card1', percent)
+                return true end }))
+            end
+        end
+        delay(0.6)
+    end
     if self.ability.name == 'Ouija' then
         G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
             play_sound('tarot1')
