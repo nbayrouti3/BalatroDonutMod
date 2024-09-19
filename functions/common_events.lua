@@ -1180,10 +1180,22 @@ end
 
 function juice_card_until(card, eval_func, first, delay)
     G.E_MANAGER:add_event(Event({
-        trigger = 'after',delay = delay or 0.1, blocking = false, blockable = false, timer = 'REAL',
-        func = (function() if eval_func(card) then if not first or first then card:juice_up(0.1, 0.1) end;juice_card_until(card, eval_func, nil, 0.8) end return true end)
+        trigger = 'after', delay = delay or 0.1, blocking = false, blockable = false, timer = 'REAL',
+        func = (function() 
+            if eval_func(card) then
+                if not first or first then 
+                    card:juice_up(0.1, 0.1)
+                end
+                if not eval_func(card) then
+                    return true
+                end
+                juice_card_until(card, eval_func, nil, 0.8)
+            end
+            return true
+        end)
     }))
 end
+
 
 function check_for_unlock(args)
     if not next(args) then return end
@@ -2770,19 +2782,19 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
        localize{type = 'descriptions', key = _c.key, set = _c.set, nodes = desc_nodes, vars = loc_vars}
 
     elseif _c.set == 'Polygon' then
-        if _c.name == "Tri-Eyed Cat" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Quadra Beast" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Penta Hand" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Hexwing Angel" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Septabug" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Octoclops" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Nonagon Lion" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Charybdis" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Echidna" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Typhon" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Parallax" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Fractal" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Infinity" then loc_vars = {_c.config.extra, G.GAME.current_round.hands_played*2, G.GAME.current_round.discards_used*2}
+        if _c.name == "Tri-Eyed Cat" then loc_vars = {_c.config.extra.rounds_needed, _c.config.extra.dupes}
+        elseif _c.name == "Quadra Beast" then loc_vars = {_c.config.extra.rounds_needed, _c.config.max_highlighted}
+        elseif _c.name == "Penta Hand" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}
+        elseif _c.name == "Hexwing Angel" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}
+        elseif _c.name == "Septabug" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}
+        elseif _c.name == "Octoclops" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}
+        elseif _c.name == "Nonagon Lion" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}
+        elseif _c.name == "Charybdis" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}
+        elseif _c.name == "Echidna" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}
+        elseif _c.name == "Typhon" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}
+        elseif _c.name == "Parallax" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}
+        elseif _c.name == "Fractal" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}
+        elseif _c.name == "Infinity" then loc_vars = {_c.config.extra.rounds_needed, G.GAME.current_round.hands_played*2, G.GAME.current_round.discards_used*2}
         end
         localize{type = 'descriptions', key = _c.key, set = _c.set, nodes = desc_nodes, vars = loc_vars}
     end

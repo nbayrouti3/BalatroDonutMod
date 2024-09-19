@@ -2352,21 +2352,22 @@
                 text = {
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
-                    "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    "either {C:polygon}Create a Copy{} or",
+                    "{C:red}Destroy {C:attention}#2#{} selected card"
                 }
             },
             c_tetragon = {
-                name = "Quadruped Beast",
+                name = "Quadra Beast",
                 text = {
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
-                    "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    "Convert up to",
+                    "{C:attention}#2#{} selected cards",
+                    "to {C:dark_edition}Random {C:attention}Suits"
                 }
             },
             c_pentagon = {
-                name = "Pentastar Hand",
+                name = "Penta Hand",
                 text = {
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
@@ -2375,7 +2376,7 @@
                 }
             },
             c_hexagon = {
-                name = "Hex-winged Angel",
+                name = "Hexwing Angel",
                 text = {
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
@@ -2459,7 +2460,7 @@
                 name = "Infinity",
                 text = {
                     "After {C:attention}#1#{} Hands played,",
-                    "use this card to Return",
+                    "use this card to {E:1,C:polygon}Return",
                     "{C:blue}Hands{} and {C:red}Discards{} Equal to",
                     "{C:attention}Double{} the amount used this round",
                     "{C:inactive}(Currently {C:blue}#2#{}/{C:red}#3#{})"
@@ -4221,6 +4222,20 @@
             k_no_jokers = "No Joker Found",
             k_destroyed = "Destroyed!",
             k_glass = "Glass!",
+            k_trigon = "Trigon!",
+            k_tetragon = "Tetragon!",
+            k_pentagon = "Pentagon!",
+            k_hexagon = "Hexagon!",
+            k_septagon = "Septagon!",
+            k_octagon = "Octagon!",
+            k_nonagon = "Nonagon!",
+            k_decagon = "Decagon!",
+            k_hendecagon = "Hendecagon!",
+            k_dodecagon = "Dodecagon!",
+            k_hectogon = "Hectogon!",
+            k_myriagon = "Myriagon!",
+            k_apeirogon = "Apeirogon!",
+            k_super = "SUPER"
         },
         v_dictionary = {
             a_xmult = "X#1# Mult",
