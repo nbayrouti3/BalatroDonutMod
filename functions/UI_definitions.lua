@@ -282,7 +282,7 @@ function G.UIDEF.use_and_sell_buttons(card)
         }},
     }}
   elseif card.ability.set == 'Polygon' then
-    if card.ability.polygon_rounds >= card.ability.extra then
+    if card.ability.polygon_rounds >= card.ability.extra.rounds_needed then
       if (card.area == G.pack_cards and G.pack_cards) then
       return {
         n=G.UIT.ROOT, config = {padding = 0, colour = G.C.CLEAR}, nodes={
@@ -301,7 +301,7 @@ function G.UIDEF.use_and_sell_buttons(card)
         {n=G.UIT.T, config={text = localize('b_use'),colour = G.C.UI.TEXT_LIGHT, scale = 0.55, shadow = true}}
       }}
     }}
-    elseif card.area and card.area == G.pack_cards and card.ability.polygon_rounds < card.ability.extra then
+    elseif card.area and card.area == G.pack_cards and card.ability.polygon_rounds < card.ability.extra.rounds_needed then
       return {
       n=G.UIT.ROOT, config = {padding = 0, colour = G.C.CLEAR}, nodes={
         {n=G.UIT.R, config={ref_table = card, r = 0.08, padding = 0.1, align = "bm", minw = 0.5*card.T.w - 0.15, maxw = 0.9*card.T.w - 0.15, minh = 0.3*card.T.h, hover = true, shadow = true, colour = G.C.UI.BACKGROUND_INACTIVE, one_press = true, button = 'use_card', func = 'can_select_consumeable'}, nodes={
