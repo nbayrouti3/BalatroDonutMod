@@ -1543,7 +1543,7 @@
                     "Each played {C:attention}6{} or {C:attention}9",
                     "gives {C:chips}+#1#{} Chips and", 
                     "{C:mult}+#2#{} Mult when scored"
-                },
+                }
             },
             j_stonks = {
                 name = "Stonks",
@@ -1551,13 +1551,20 @@
                     "Whenever you gain money, gain more.",
                     "Whenever you lose money, lose more", 
                     "Up to {X:mult,C:white}x#1#{} the original amount!"
-                },
+                }
             },
             j_perfect_loaf = {
                 name = "The Perfect Loaf",
                 text = {
                     "Gives {C:dark_edition}Polychrome{} to any",
                     "Duncan Jokers adjacent to it"
+                }
+            },
+            j_freaky = {
+                name = "Freaky Joker",
+                text = {
+                    "When sold, all cards in your",
+                    "hand become {C:attention}Wild{} cards"
                 }
             },
         },
@@ -2361,7 +2368,7 @@
                 text = {
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
-                    "Convert up to",
+                    "{C:polygon}Convert{} up to",
                     "{C:attention}#2#{} selected cards",
                     "to {C:dark_edition}Random {C:attention}Suits"
                 }
@@ -2371,8 +2378,8 @@
                 text = {
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
-                    "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    "{C:polygon}Retrigger {C:attention}Next Hand",
+                    "{C:polygon}#2#{} extra time"
                 }
             },
             c_hexagon = {
@@ -2380,17 +2387,18 @@
                 text = {
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
-                    "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    "Completely {C:polygon}Randomize all",
+                    "Jokers currently held"
                 }
             },
             c_septagon = {
                 name = "Septabug",
                 text = {
-                    "After {C:attention}#1#{} Hhands played,",
+                    "After {C:attention}#1#{} Hands played,",
                     "use this card to",
-                    "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    "{C:polygon}Devour {C:attention}Right{} card",
+                    "and {C:polygon}Convert {C:attention}Left{} card",
+                    "into {C:attention}Bugged Card"
                 }
             },
             c_octagon = {
@@ -2399,7 +2407,6 @@
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_nonagon = {
@@ -2408,7 +2415,6 @@
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_decagon = {
@@ -2417,7 +2423,6 @@
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_hendecagon = {
@@ -2426,7 +2431,6 @@
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_dodecagon = {
@@ -2435,7 +2439,6 @@
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_hectogon = {
@@ -2444,7 +2447,6 @@
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_myriagon = {
@@ -2453,7 +2455,6 @@
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
                     "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
                 }
             },
             c_apeirogon = {
@@ -2561,6 +2562,12 @@
                     "for {C:mult}+#2#{} Mult",
                     "{C:green}#1# in #5#{} chance",
                     "to win {C:money}$#4#"
+                }
+            },
+            m_bugged = {
+                name = "Bugged Card",
+                text = {
+                    "   {C:dark_edition}+#1#?{} Mult   "
                 }
             }
         },
@@ -4235,7 +4242,8 @@
             k_hectogon = "Hectogon!",
             k_myriagon = "Myriagon!",
             k_apeirogon = "Apeirogon!",
-            k_super = "SUPER"
+            k_super = "SUPER",
+            k_super_denied = "SUPER DENIED"
         },
         v_dictionary = {
             a_xmult = "X#1# Mult",

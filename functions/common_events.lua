@@ -598,8 +598,11 @@ function eval_card(card, context)
 
     if context.repetition_only then
         local seals = card:calculate_seal(context)
+        local pentahand = card:calculate_penta(context)
         if seals then
             ret.seals = seals
+        elseif pentahand then
+            ret.pentahand = pentahand
         end
         return ret
     end
@@ -796,9 +799,9 @@ function set_main_menu_UI()
 end
 
 function card_eval_status_text(card, eval_type, amt, percent, dir, extra)
-    percent = percent or (0.9 + 0.2*math.random())
+    percent = percent or (0.9 + 0.2 * math.random())
     if dir == 'down' then 
-        percent = 1-percent
+        percent = 1 - percent
     end
 
     if extra and extra.focus then card = extra.focus end
@@ -807,23 +810,25 @@ function card_eval_status_text(card, eval_type, amt, percent, dir, extra)
     local sound = nil
     local volume = 1
     local card_aligned = 'bm'
-    local y_off = 0.15*G.CARD_H
+    local y_off = 0.15 * G.CARD_H
     if card.area == G.jokers or card.area == G.consumeables then
-        y_off = 0.05*card.T.h
+        y_off = 0.05 * card.T.h
     elseif card.area == G.hand then
-        y_off = -0.05*G.CARD_H
+        y_off = -0.05 * G.CARD_H
         card_aligned = 'tm'
     elseif card.area == G.play then
-        y_off = -0.05*G.CARD_H
+        y_off = -0.05 * G.CARD_H
         card_aligned = 'tm'
     elseif card.jimbo then
-        y_off = -0.05*G.CARD_H
+        y_off = -0.05 * G.CARD_H
         card_aligned = 'tm'
     end
+
     local config = {}
     local delay = 0.65
-    local colour = config.colour or (extra and extra.colour) or ( G.C.FILTER )
+    local colour = config.colour or (extra and extra.colour) or (G.C.FILTER)
     local extrafunc = nil
+
 
     if eval_type == 'debuff' then 
         sound = 'cancel'
@@ -900,51 +905,56 @@ function card_eval_status_text(card, eval_type, amt, percent, dir, extra)
             config.scale = 0.7
         end
     end
-    delay = delay*1.25
+    delay = delay * 1.25
 
     if amt > 0 or amt < 0 then
         if extra and extra.instant then
             if extrafunc then extrafunc() end
             attention_text({
                 text = text,
-                scale = config.scale or 1, 
+                scale = config.scale or 1,
                 hold = delay - 0.2,
                 backdrop_colour = colour,
                 align = card_aligned,
                 major = card,
                 offset = {x = 0, y = y_off}
             })
-            play_sound(sound, 0.8+percent*0.2, volume)
-            if not extra or not extra.no_juice then
+            play_sound(sound, 0.8 + percent * 0.2, volume)
+
+            -- Ensure 'card' is valid and has 'juice_up' method
+            if card and card.juice_up then
                 card:juice_up(0.6, 0.1)
                 G.ROOM.jiggle = G.ROOM.jiggle + 0.7
             end
         else
-            G.E_MANAGER:add_event(Event({ --Add bonus chips from this card
-                    trigger = 'before',
-                    delay = delay,
-                    func = function()
+            G.E_MANAGER:add_event(Event({
+                trigger = 'before',
+                delay = delay,
+                func = function()
                     if extrafunc then extrafunc() end
                     attention_text({
                         text = text,
-                        scale = config.scale or 1, 
+                        scale = config.scale or 1,
                         hold = delay - 0.2,
                         backdrop_colour = colour,
                         align = card_aligned,
                         major = card,
                         offset = {x = 0, y = y_off}
                     })
-                    play_sound(sound, 0.8+percent*0.2, volume)
-                    if not extra or not extra.no_juice then
+                    play_sound(sound, 0.8 + percent * 0.2, volume)
+
+                    -- Ensure 'card' is valid and has 'juice_up' method
+                    if card and card.juice_up then
                         card:juice_up(0.6, 0.1)
                         G.ROOM.jiggle = G.ROOM.jiggle + 0.7
                     end
                     return true
-                    end
+                end
             }))
         end
     end
-    if extra and extra.playing_cards_created then 
+
+    if extra and extra.playing_cards_created then
         playing_card_joker_effects(extra.playing_cards_created)
     end
 end
@@ -2660,6 +2670,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
         elseif _c.effect == 'Stone Card' then loc_vars = {((specific_vars and specific_vars.bonus_chips) or _c.config.bonus)}
         elseif _c.effect == 'Gold Card' then loc_vars = {_c.config.h_dollars}
         elseif _c.effect == 'Lucky Card' then loc_vars = {G.GAME.probabilities.normal, _c.config.mult, 5, _c.config.p_dollars, 15}
+        elseif _c.effect == 'Bugged Card' then loc_vars = {math.random(_c.config.extra.min, _c.config.extra.max), _c.config.extra.min, _c.config.extra.max}
         end
         localize{type = 'descriptions', key = _c.key, set = _c.set, nodes = desc_nodes, vars = loc_vars}
         if _c.name ~= 'Stone Card' and ((specific_vars and specific_vars.bonus_chips) or _c.config.bonus) then
@@ -2784,9 +2795,9 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
     elseif _c.set == 'Polygon' then
         if _c.name == "Tri-Eyed Cat" then loc_vars = {_c.config.extra.rounds_needed, _c.config.extra.dupes}
         elseif _c.name == "Quadra Beast" then loc_vars = {_c.config.extra.rounds_needed, _c.config.max_highlighted}
-        elseif _c.name == "Penta Hand" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Hexwing Angel" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Septabug" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}
+        elseif _c.name == "Penta Hand" then loc_vars = {_c.config.extra.rounds_needed, _c.config.extra.penta_retrigger}
+        elseif _c.name == "Hexwing Angel" then loc_vars = {_c.config.extra.rounds_needed}
+        elseif _c.name == "Septabug" then loc_vars = {_c.config.extra.rounds_needed}; info_queue[#info_queue+1] = G.P_CENTERS.m_bugged
         elseif _c.name == "Octoclops" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}
         elseif _c.name == "Nonagon Lion" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}
         elseif _c.name == "Charybdis" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}

@@ -3917,7 +3917,7 @@ function create_UIBox_your_collection_enhancements(exit)
   for j = 1, 2 do
     G.your_collection[j] = CardArea(
       G.ROOM.T.x + 0.2*G.ROOM.T.w/2,G.ROOM.T.h,
-      4.25*G.CARD_W,
+      5.25*G.CARD_W,
       1.03*G.CARD_H, 
       {card_limit = 4, type = 'title', highlight_limit = 0})
     table.insert(deck_tables, 
@@ -3927,9 +3927,10 @@ function create_UIBox_your_collection_enhancements(exit)
     )
   end
 
-  for i = 1, 4 do
-    for j = 1, #G.your_collection do
-      local center = G.P_CENTER_POOLS["Enhanced"][i+(j-1)*4]
+  for j = 1, #G.your_collection do
+    local row_max = (j == 2) and 4 or 5  -- 5 cards in the first row, 4 cards in the second row
+    for i = 1, row_max do
+      local center = G.P_CENTER_POOLS["Enhanced"][i + (j-1) * 5]  -- Keep the index calculation
       local card = Card(G.your_collection[j].T.x + G.your_collection[j].T.w/2, G.your_collection[j].T.y, G.CARD_W, G.CARD_H, G.P_CARDS.empty, center)
       G.your_collection[j]:emplace(card)
     end
