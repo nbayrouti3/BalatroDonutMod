@@ -177,7 +177,7 @@ function Card:set_sprites(_center, _front)
                     (_center.set == 'Tarot' and G.t_undiscovered.pos) or 
                     (_center.set == 'Planet' and G.p_undiscovered.pos) or 
                     (_center.set == 'Spectral' and G.s_undiscovered.pos) or 
-                    (_center.set == 'Polygon' and G.s_undiscovered.pos) or  
+                    (_center.set == 'Polygon' and G.po_undiscovered.pos) or  
                     (_center.set == 'Voucher' and G.v_undiscovered.pos) or 
                     (_center.set == 'Booster' and G.booster_undiscovered.pos))
                 elseif _center.set == 'Joker' or _center.consumeable or _center.set == 'Voucher' then
@@ -1928,6 +1928,7 @@ function Card:use_consumeable(area, copier)
                     end
                 return true end }))
                 card_eval_status_text(used_tarot, 'above_consumeable', nil, nil, nil, {message = localize('k_super'), colour = G.C.SECONDARY_SET.Polygon})
+                play_sound('negative', 1.5, 0.4)
             end
             percent = 0.85 + (0.001)/(#G.hand.highlighted-0.998)*0.3
             G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.6,func = function()
@@ -1937,6 +1938,219 @@ function Card:use_consumeable(area, copier)
                 return true end }))
         end
         G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2,func = function() G.hand:unhighlight_all(); return true end }))
+        delay(0.5)
+    end
+
+    if self.ability.name == 'Octoclops' then
+        local selected_card = G.hand.highlighted[1]
+        local percent = 1.15 - (0.001)/(#G.hand.highlighted-0.998)*0.3
+
+        --Checks if card is Enhanced and not Debuffed
+        if selected_card.config.center ~= G.P_CENTERS.c_base and not selected_card.debuff then
+            --Check if not stone
+            if selected_card.config.center ~= G.P_CENTERS.m_stone then
+                card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_octagon'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.2})
+                --Juicing
+                G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2, func = function()
+                    play_sound('polyuse')
+                    used_tarot:juice_up(0.3, 0.5)
+                    return true end }))
+                --Flipping
+                G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2, func = function()
+                    selected_card:flip()
+                    play_sound('card1', percent)
+                    selected_card:juice_up(0.3, 0.3)
+                    return true end }))
+
+                --If the selected card is Hearts, Create 4 eight of hearts with random enhancements
+                if selected_card:is_suit('Hearts', nil, true) and selected_card.config.center ~= G.P_CENTERS.m_wild then
+                    G.E_MANAGER:add_event(Event({
+                    trigger = 'after',
+                    delay = 0.7,
+                    func = function() 
+                        local cards = {}
+                        for i=1, self.ability.extra.eoh_created do
+                            cards[i] = true
+                            local _suit, _rank = 'H', '8'
+                            local cen_pool = {}
+                            for k, v in pairs(G.P_CENTER_POOLS["Enhanced"]) do
+                                if v.key ~= 'm_stone' and v.key ~= 'm_bugged' then 
+                                    cen_pool[#cen_pool+1] = v
+                                end
+                            end
+                            create_playing_card({front = G.P_CARDS[_suit..'_'.._rank], center = pseudorandom_element(cen_pool, pseudoseed('octo_card'))}, G.hand, nil, i ~= 1, {G.C.SECONDARY_SET.Polygon})
+                        end
+                        playing_card_joker_effects(cards)
+                        return true end }))
+                    card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_hearts'), colour = G.C.SUITS.Hearts, delay = 0.2})
+
+                --If the selected card is Diamonds, Create 2 random Polygon cards (must have room)
+                elseif selected_card:is_suit('Diamonds', nil, true) and selected_card.config.center ~= G.P_CENTERS.m_wild then
+                    for i = 1, math.min(2, G.consumeables.config.card_limit - #G.consumeables.cards) do
+                        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                            if G.consumeables.config.card_limit > #G.consumeables.cards then
+                                play_sound('timpani')
+                                local card = create_card((self.ability.name == 'Octoclops' and 'Polygon'), G.consumeables, nil, nil, nil, nil, nil, (self.ability.name == 'Octoclops' and 'oct'))
+                                card:add_to_deck()
+                                G.consumeables:emplace(card)
+                                used_tarot:juice_up(0.3, 0.5)
+                            end
+                        return true end }))
+                    end
+                    card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_diamonds'), colour = G.C.SUITS.Diamonds, delay = 0.2})
+
+                --If the selected card is Spades, Add random edition and seal to highlighted card
+                elseif selected_card:is_suit('Spades', nil, true) and selected_card.config.center ~= G.P_CENTERS.m_wild then
+                    G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                        local over = false
+                        local edition = poll_edition('octoclops', nil, true, true)
+                        local seal_type = pseudorandom(pseudoseed('certsl'))
+                        selected_card:set_edition(edition, true)
+                        if seal_type > 0.8 then selected_card:set_seal('Red', true)
+                        elseif seal_type > 0.6 then selected_card:set_seal('Blue', true)
+                        elseif seal_type > 0.4 then selected_card:set_seal('Gold', true)
+                        elseif seal_type > 0.2 then selected_card:set_seal('Purple', true)
+                        else selected_card:set_seal('Biscuit', true)
+                        end
+                        used_tarot:juice_up(0.3, 0.5)
+                    return true end }))
+                    card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_spades'), colour = G.C.SUITS.Spades, delay = 0.2})
+
+                --If the selected card is Clubs, Add 3 Stone Cards to hand
+                elseif selected_card:is_suit('Clubs', nil, true) and selected_card.config.center ~= G.P_CENTERS.m_wild then
+                    G.E_MANAGER:add_event(Event({
+                    trigger = 'after',
+                    delay = 0.7,
+                    func = function() 
+                        local cards = {}
+                        for i=1, self.ability.extra.stone_created do
+                            cards[i] = true
+                            local _suit, _rank = nil, nil
+                            _rank = pseudorandom_element({'2','3','4','5','6','7','8','9','T','J','Q','K','A'}, pseudoseed('octo_stone'))
+                            _suit = 'C'; _rank = _rank or 'A'
+                            local cen_pool = {}
+                            for k, v in pairs(G.P_CENTER_POOLS["Enhanced"]) do
+                                if v.key == 'm_stone' then
+                                    cen_pool[#cen_pool+1] = v
+                                end
+                            end
+                            create_playing_card({front = G.P_CARDS[_suit..'_'.._rank], center = pseudorandom_element(cen_pool, pseudoseed('octo_stone'))}, G.hand, nil, i ~= 1, {G.C.SECONDARY_SET.Polygon})
+                        end
+                        playing_card_joker_effects(cards)
+                        return true end }))
+                    card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_clubs'), colour = G.C.SUITS.Clubs, delay = 0.2})
+
+                --If the selected card is specifically a Wild Card
+                elseif selected_card.config.center == G.P_CENTERS.m_wild then
+                    card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_super'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.2})
+                    play_sound('negative', 1.5, 0.4)
+                    G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                        G.hand:change_size(1)
+                        card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_handsize_plus_one'), colour = G.C.BLUE, delay = 0.2})
+                        play_sound('tarot1')
+                    return true end }))
+                end
+
+                --Flipping again; if spades, do not change enhanced type
+                percent = 0.85 + (0.001)/(#G.hand.highlighted-0.998)*0.3
+                G.E_MANAGER:add_event(Event({trigger = 'after',delay = 1.5,func = function()
+                    if selected_card:is_suit('Spades', nil, true) and selected_card.config.center ~= G.P_CENTERS.m_wild then
+                        --Leave blank to skip (since the previous rules already changed suit)
+                    else
+                        selected_card:set_ability(G.P_CENTERS.c_base)
+                    end
+                    selected_card:flip()
+                    play_sound('card1', percent, 0.6)
+                    selected_card:juice_up(0.3, 0.3)
+                    return true end }))
+            --If stone        
+            else
+                card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_no_suit'), colour = G.C.JOKER_GREY, delay = 0.2})
+                G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.5, func = function()
+                    play_sound('cancel')
+                    used_tarot:juice_up(0.3, 0.5)
+                    return true end }))
+            end
+
+        --If not Enhanced:
+        else
+            card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_not_enhanced'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.2})
+            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.5, func = function()
+                play_sound('cancel')
+                used_tarot:juice_up(0.3, 0.5)
+                return true end }))
+        end
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2,func = function() G.hand:unhighlight_all(); return true end }))
+        delay(0.5)
+    end
+
+    if self.ability.name == 'Nonagon Lion' then
+        -- Juicing
+        card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_nonagon'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.2})
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2, func = function()
+            play_sound('polyuse')
+            used_tarot:juice_up(0.3, 0.5)
+            return true end }))
+            
+        -- Check each selected card for Stone, then sort them.
+        local stone_count = 0  -- Keep track of the number of stone cards selected
+        for i=1, #G.hand.highlighted do
+            local card = G.hand.highlighted[i]
+
+            -- If stone, go here
+            if card.config.center == G.P_CENTERS.m_stone then 
+                stone_count = stone_count + 1  -- Count the stone cards
+                card_eval_status_text(card, 'extra', nil, nil, nil, {message = localize('k_plus_two_levels'), colour = G.C.BLUE, delay = 0.4})
+            else
+                card_eval_status_text(card, 'extra', nil, nil, nil, {message = localize('k_not_stone'), colour = G.C.JOKER_GREY, delay = 0.4})
+            end
+        end
+
+        -- Now, after looping through selected cards, apply levels to the hand based on the stone count
+        if stone_count > 0 then
+            local _hand, _tally = nil, 0
+            -- Find the most played hand
+            for k, v in ipairs(G.handlist) do
+                if G.GAME.hands[v].visible and G.GAME.hands[v].played > _tally then
+                    _hand = v
+                    _tally = G.GAME.hands[v].played
+                end
+            end
+
+            if _hand then
+                -- Calculate the total level increment
+                local initial_level = G.GAME.hands[_hand].level
+                local level_increase = stone_count * 2
+                local new_level = initial_level + level_increase
+
+                -- Check for Lion Joker to double the final result
+                for k, v in pairs(G.jokers.cards) do
+                    if v.ability.name == 'Lion Joker' then
+                        G.E_MANAGER:add_event(Event({
+                            trigger = 'after',
+                            delay = 0.4,
+                            func = function() 
+                                v:start_dissolve({G.C.SECONDARY_SET.Polygon})
+                                card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_super'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.2})
+                                play_sound('negative', 1.5, 0.4)
+                            return true end }))
+                        new_level = new_level * 2
+                        break
+                    end
+                end
+
+                -- Apply the final level to the hand
+                update_hand_text({sound = 'button', volume = 0.7, pitch = 0.8, delay = 0.3}, {
+                    handname = localize(_hand, 'poker_hands'),
+                    chips = _hand.chips,
+                    mult = _hand.mult,
+                    level = new_level
+                })
+
+                level_up_hand(card, _hand, false, new_level - initial_level)
+            end
+        end
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2, func = function() G.hand:unhighlight_all(); return true end}))
         delay(0.5)
     end
 
@@ -2010,10 +2224,9 @@ function Card:can_use_consumeable(any_state, skip_check)
         end
 
         if self.ability.set == 'Polygon' and self.ability.polygon_rounds >= self.ability.extra.rounds_needed then
-            if self.ability.name == 'Tri-Eyed Cat' and (#G.hand.highlighted > 0) and (#G.hand.highlighted <= self.ability.consumeable.max_highlighted) then
-                return true
-
-            elseif self.ability.name == 'Quadra Beast' and (#G.hand.highlighted > 0) and (#G.hand.highlighted <= self.ability.consumeable.max_highlighted) then
+            if (self.ability.name == 'Tri-Eyed Cat' or self.ability.name == 'Quadra Beast'
+            or self.ability.name == 'Octoclops' or self.ability.name == 'Nonagon Lion')
+            and (#G.hand.highlighted > 0) and (#G.hand.highlighted <= self.ability.consumeable.max_highlighted) then
                 return true
 
             elseif self.ability.name == 'Penta Hand' and G.GAME.next_hand_penta_bonus == 0 then
@@ -2024,12 +2237,6 @@ function Card:can_use_consumeable(any_state, skip_check)
 
             elseif self.ability.name == 'Septabug' and (#G.hand.highlighted == self.ability.consumeable.min_highlighted) then
                 return true
-
-            elseif self.ability.name == 'Octoclops' then
-                return false
-
-            elseif self.ability.name == 'Nonagon Lion' then
-                return false
 
             elseif self.ability.name == 'Charybdis' then
                 return false
@@ -3010,7 +3217,7 @@ function Card:calculate_joker(context)
                     card_eval_status_text(context.blueprint_card or self, 'extra', nil, nil, nil, {message = localize('k_no_other_jokers')})
                 end
             end
-            if self.ability.name == 'Lion Joker' or 'Freaky Joker' then
+            if self.ability.name == 'Lion Joker' or self.ability.name == 'Freaky Joker' then
                 self:juice_up(0.3, 0.3)
                 for i=1, #G.hand.cards do
                     local percent = 1.15 - (i-0.999)/(#G.hand.cards-0.998)*0.3
