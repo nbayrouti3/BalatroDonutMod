@@ -2798,8 +2798,8 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
         elseif _c.name == "Penta Hand" then loc_vars = {_c.config.extra.rounds_needed, _c.config.extra.penta_retrigger}
         elseif _c.name == "Hexwing Angel" then loc_vars = {_c.config.extra.rounds_needed}
         elseif _c.name == "Septabug" then loc_vars = {_c.config.extra.rounds_needed}; info_queue[#info_queue+1] = G.P_CENTERS.m_bugged
-        elseif _c.name == "Octoclops" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Nonagon Lion" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}
+        elseif _c.name == "Octoclops" then loc_vars = {_c.config.extra.rounds_needed}
+        elseif _c.name == "Nonagon Lion" then loc_vars = {_c.config.extra.rounds_needed, _c.config.max_highlighted}
         elseif _c.name == "Charybdis" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}
         elseif _c.name == "Echidna" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}
         elseif _c.name == "Typhon" then loc_vars = {_c.config.extra.rounds_needed, _c.config.polygon_rounds or 0}

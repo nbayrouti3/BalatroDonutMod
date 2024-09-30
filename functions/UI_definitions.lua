@@ -3677,6 +3677,9 @@ function create_UIBox_your_collection_tarots()
                     create_option_cycle({options = tarot_options, w = 4.5, cycle_shoulders = true, opt_callback = 'your_collection_tarot_page', focus_args = {snap_to = true, nav = 'wide'},current_option = 1, colour = G.C.RED, no_pips = true})
                   }}
           }})
+          create_UIBox_generic_options({ infotip = localize('ml_power_in_ingenuity'), back_func = exit or 'your_collection', snap_back = true, contents = {
+            {n=G.UIT.R, config={align = "cm", minw = 2.5, padding = 0.1, r = 0.1, colour = G.C.BLACK, emboss = 0.05}, nodes=deck_tables},
+          }})
   return t
 end
 
@@ -3754,6 +3757,9 @@ function create_UIBox_your_collection_planets()
             {n=G.UIT.R, config={align = "cm", minw = 2.5, padding = 0.1, r = 0.1, colour = G.C.BLACK, emboss = 0.05}, nodes=deck_tables},
             {n=G.UIT.R, config={align = "cm", padding = 0.7}, nodes={}},
           }})
+          create_UIBox_generic_options({ infotip = localize('ml_power_in_formations'), back_func = exit or 'your_collection', snap_back = true, contents = {
+            {n=G.UIT.R, config={align = "cm", minw = 2.5, padding = 0.1, r = 0.1, colour = G.C.BLACK, emboss = 0.05}, nodes=deck_tables},
+          }})
   return t
 end
 
@@ -3797,6 +3803,9 @@ function create_UIBox_your_collection_spectrals()
               create_option_cycle({options = spectral_options, w = 4.5, cycle_shoulders = true, opt_callback = 'your_collection_spectral_page', focus_args = {snap_to = true, nav = 'wide'},current_option = 1, colour = G.C.RED, no_pips = true})
             }},
           }})
+          create_UIBox_generic_options({ infotip = localize('ml_power_in_gambles'), back_func = exit or 'your_collection', snap_back = true, contents = {
+            {n=G.UIT.R, config={align = "cm", minw = 2.5, padding = 0.1, r = 0.1, colour = G.C.BLACK, emboss = 0.05}, nodes=deck_tables},
+          }})
   return t
 end
 
@@ -3836,6 +3845,9 @@ function create_UIBox_your_collection_polygons()
   local t = create_UIBox_generic_options({ back_func = 'your_collection', contents = {
             {n=G.UIT.R, config={align = "cm", minw = 2.5, padding = 0.1, r = 0.1, colour = G.C.BLACK, emboss = 0.05}, nodes=deck_tables},
             {n=G.UIT.R, config={align = "cm", padding = 0.7}, nodes={}},
+          }})
+            create_UIBox_generic_options({ infotip = localize('ml_power_in_pledges'), back_func = exit or 'your_collection', snap_back = true, contents = {
+            {n=G.UIT.R, config={align = "cm", minw = 2.5, padding = 0.1, r = 0.1, colour = G.C.BLACK, emboss = 0.05}, nodes=deck_tables},
           }})
   return t
 end

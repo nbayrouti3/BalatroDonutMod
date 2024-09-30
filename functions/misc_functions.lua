@@ -2021,7 +2021,7 @@ function GET_TOTAL_DUPLICATES_IN_DECK()
   local dupes = {}
   local count = 0
   for _, v in pairs(G.playing_cards) do
-    if v.config.center == G.P_CENTERS.c_base then
+    if v.config.center == G.P_CENTERS.c_base or G.P_CENTERS.c_base then
       if #dupes == 0 then
         table.insert(dupes, v.config.card.name)
       else
