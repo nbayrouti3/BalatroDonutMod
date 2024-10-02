@@ -1697,8 +1697,8 @@ utf8.chars =
 
 function localize(args, misc_cat)
   if args and not (type(args) == 'table') then
-    if misc_cat and G.localization.misc[misc_cat] then return G.localization.misc[misc_cat][args] or 'ERROR' end
-    return G.localization.misc.dictionary[args] or 'ERROR'
+    if misc_cat and G.localization.misc[misc_cat] then return G.localization.misc[misc_cat][args] or 'ERROR 1' end
+    return G.localization.misc.dictionary[args] or 'ERROR 2'
   end
 
   local loc_target = nil
@@ -1720,7 +1720,7 @@ function localize(args, misc_cat)
         for _, part in ipairs(lines) do
           local assembled_string = ''
           for _, subpart in ipairs(part.strings) do
-            assembled_string = assembled_string..(type(subpart) == 'string' and subpart or args.vars[tonumber(subpart[1])] or 'ERROR')
+            assembled_string = assembled_string..(type(subpart) == 'string' and subpart or args.vars[tonumber(subpart[1])] or 'ERROR 3')
           end
           final_line = final_line..assembled_string
         end
@@ -1732,7 +1732,7 @@ function localize(args, misc_cat)
     loc_target = G.localization.misc.v_text_parsed[args.key]
   elseif args.type == 'variable' then 
     loc_target = G.localization.misc.v_dictionary_parsed[args.key]
-    if not loc_target then return 'ERROR' end 
+    if not loc_target then return 'ERROR 4' end 
     if loc_target.multi_line then
       local assembled_strings = {}
       for k, v in ipairs(loc_target) do
@@ -1742,17 +1742,17 @@ function localize(args, misc_cat)
         end
         assembled_strings[k] = assembled_string
       end
-      return assembled_strings or {'ERROR'}
+      return assembled_strings or {'ERROR 5'}
     else
       local assembled_string = ''
       for _, subpart in ipairs(loc_target[1].strings) do
         assembled_string = assembled_string..(type(subpart) == 'string' and subpart or args.vars[tonumber(subpart[1])])
       end
-      ret_string = assembled_string or 'ERROR'
+      ret_string = assembled_string or 'ERROR 6'
     end
   elseif args.type == 'name_text' then
     if pcall(function() ret_string = G.localization.descriptions[(args.set or args.node.config.center.set)][args.key or args.node.config.center.key].name end) then
-    else ret_string = "ERROR" end
+    else ret_string = "ERROR 7" end
   elseif args.type == 'name' then
     loc_target = G.localization.descriptions[(args.set or args.node.config.center.set)][args.key or args.node.config.center.key]
   end
@@ -1765,7 +1765,7 @@ function localize(args, misc_cat)
       for _, part in ipairs(lines) do
         local assembled_string = ''
         for _, subpart in ipairs(part.strings) do
-          assembled_string = assembled_string..(type(subpart) == 'string' and subpart or args.vars[tonumber(subpart[1])] or 'ERROR')
+          assembled_string = assembled_string..(type(subpart) == 'string' and subpart or args.vars[tonumber(subpart[1])] or 'ERROR 8')
         end
         local desc_scale = G.LANG.font.DESCSCALE
         if G.F_MOBILE_UI then desc_scale = desc_scale*1.5 end

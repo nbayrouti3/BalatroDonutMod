@@ -794,6 +794,21 @@ G.FUNCS.evaluate_play = function(e)
 
                         --calculate the card edition effects
                         if effects[ii].edition then
+                            if effects[ii].edition.debuff_mod then
+                                local card_to_debuff = {}
+                                card_to_debuff[#card_to_debuff+1] = pseudorandom_element(G.hand.cards, pseudoseed('debuffrandom'))
+                                for i=#card_to_debuff, 1, -1 do
+                                    local target_card = card_to_debuff[i]
+                                    card_eval_status_text(target_card, 'extra', nil, nil, nil, {message = localize('k_debuffed'), colour = G.C.SECONDARY_SET.Polygon})
+                                    G.E_MANAGER:add_event(Event({
+                                        trigger = 'after',
+                                        delay = 0.1,
+                                        func = function() 
+                                            target_card:set_debuff(true)
+                                            target_card:juice_up()
+                                    return true end }))
+                                end
+                            end
                             hand_chips = mod_chips(hand_chips + (effects[ii].edition.chip_mod or 0))
                             mult = mult + (effects[ii].edition.mult_mod or 0)
                             mult = mod_mult(mult*(effects[ii].edition.x_mult_mod or 1))
@@ -981,6 +996,21 @@ G.FUNCS.evaluate_play = function(e)
                         chip_mod =  edition_effects.jokers.chip_mod,
                         colour =  G.C.EDITION,
                         edition = true})
+                end
+                if edition_effects.jokers.debuff_mod then
+                    local card_to_debuff = {}
+                    card_to_debuff[#card_to_debuff+1] = pseudorandom_element(G.hand.cards, pseudoseed('debuffrandom'))
+                    for i=#card_to_debuff, 1, -1 do
+                        local target_card = card_to_debuff[i]
+                        card_eval_status_text(target_card, 'extra', nil, nil, nil, {message = localize('k_debuffed'), colour = G.C.SECONDARY_SET.Polygon})
+                        G.E_MANAGER:add_event(Event({
+                            trigger = 'after',
+                            delay = 0.1,
+                            func = function() 
+                                target_card:set_debuff(true)
+                                target_card:juice_up()
+                        return true end }))
+                    end
                 end
                 if edition_effects.jokers.mult_mod then
                     mult = mod_mult(mult + edition_effects.jokers.mult_mod)

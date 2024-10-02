@@ -547,7 +547,7 @@ function Game:init_item_prototypes()
         j_moist_chan=       {order = 163,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 4, name = "Moist Chan", pos = {x=8,y=15}, set = "Joker", effect = "", cost_mult = 1.0, config = {extra = {chips = 10, mult = 4}, friendly = true}},
         j_stonks=           {order = 164,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 3, name = "Stonks", pos = {x=5, y=1}, set = 'Joker', effect = "", cost_mult = 1.0, config = {extra = 3, friendly = true}},
         j_perfect_loaf =    {order = 165,  unlocked = true,  discovered = false, blueprint_compat = false, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "The Perfect Loaf", pos = {x=5, y=14}, set = 'Joker', effect = "Duncan Boost", cost_mult = 1.0, config = {activated = {}, friendly = true}},
-        j_freaky=             {order = 166,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 6, name = "Freaky Joker", pos = {x=6, y=7}, set = "Joker", effect = "Steel Card", cost_mult = 1.0, config = {friendly = true} },
+        j_freaky=           {order = 166,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 6, name = "Freaky Joker", pos = {x=6, y=7}, set = "Joker", effect = "Steel Card", cost_mult = 1.0, config = {friendly = true}},
 
         --All Consumeables
 
@@ -619,9 +619,9 @@ function Game:init_item_prototypes()
         c_septagon=         {order = 5,    discovered = false,  cost = 4, consumeable = true, name = "Septabug", pos = {x=0,y=6}, set = "Polygon", config = {extra = {rounds_needed = 7}, min_highlighted = 2, max_highlighted = 2, septa_mod = 'm_bugged'}},
         c_octagon=          {order = 6,    discovered = false,  cost = 4, consumeable = true, name = "Octoclops", pos = {x=1,y=6}, set = "Polygon", config = {extra = {rounds_needed = 8, eoh_created = 4, stone_created = 3}, max_highlighted = 1}},
         c_nonagon=          {order = 7,    discovered = false,  cost = 4, consumeable = true, name = "Nonagon Lion", pos = {x=2,y=6}, set = "Polygon", config = {extra = {rounds_needed = 9,}, max_highlighted = 5}},
-        c_decagon=          {order = 8,    discovered = false,  cost = 4, consumeable = true, name = "Charybdis", pos = {x=3,y=6}, set = "Polygon", config = {extra = {rounds_needed = 10}}},
+        c_decagon=          {order = 8,    discovered = false,  cost = 4, consumeable = true, name = "Charybdis", pos = {x=3,y=6}, set = "Polygon", config = {extra = {rounds_needed = 10}, min_highlighted = 1, max_highlighted = 1}},
         c_hendecagon=       {order = 9,    discovered = false,  cost = 4, consumeable = true, name = "Echidna", pos = {x=4,y=6}, set = "Polygon", config = {extra = {rounds_needed = 11}}},
-        c_dodecagon=        {order = 10,   discovered = false,  cost = 4, consumeable = true, name = "Typhon", pos = {x=5,y=6}, set = "Polygon", config = {extra = {rounds_needed = 12}}},
+        c_dodecagon=        {order = 10,   discovered = false,  cost = 4, consumeable = true, name = "Typhon", pos = {x=5,y=6}, set = "Polygon", config = {extra = {rounds_needed = 12, typhon_cards = 15, cards_created = 5}}},
         c_hectogon=         {order = 11,   discovered = false,  cost = 4, consumeable = true, name = "Parallax", pos = {x=6,y=6}, set = "Polygon", config = {extra = {rounds_needed = 13}, hidden = true}},
         c_myriagon=         {order = 12,   discovered = false,  cost = 4, consumeable = true, name = "Fractal", pos = {x=7,y=6}, set = "Polygon", config = {extra = {rounds_needed = 14}, hidden = true}},
         c_apeirogon=        {order = 13,   discovered = false,  cost = 4, consumeable = true, name = "Infinity", pos = {x=8,y=6}, set = "Polygon", config = {extra = {rounds_needed = 15}, hidden = true}},
@@ -700,6 +700,7 @@ function Game:init_item_prototypes()
         e_holo =       {order = 3,  unlocked = true, discovered = false, name = "Holographic", pos = {x=0,y=0}, atlas = 'Joker', set = "Edition", config = {extra = 10}},
         e_polychrome = {order = 4,  unlocked = true, discovered = false, name = "Polychrome", pos = {x=0,y=0}, atlas = 'Joker', set = "Edition", config = {extra = 1.5}},
         e_negative =   {order = 5,  unlocked = true, discovered = false, name = "Negative", pos = {x=0,y=0}, atlas = 'Joker', set = "Edition", config = {extra = 1}},
+        e_shady =      {order = 6,  unlocked = true, discovered = false, name = "Shady", pos = {x=0,y=0}, atlas = 'Joker', set = "Edition", config = {extra = {shady_debuff = 1, shady_xmult = 2.5}}},
 
         --booster packs
         p_arcana_normal_1 =         {order = 1,  discovered = false, name = "Arcana Pack", weight = 1, kind = 'Arcana', cost = 4, pos = {x=0,y=0}, atlas = 'Booster', set = 'Booster', config = {extra = 3, choose = 1}},
@@ -1364,7 +1365,7 @@ function Game:sandbox()
                 create_text_input({prompt_text = 'Joker key', extended_corpus = true, ref_table = G.SANDBOX, ref_value = 'joker_text', text_scale = 0.3, w = 1.5, h = 0.6}),
                 UIBox_button{ label = {"-"}, button = "rem_joker", minw = 0.7, col = true},
               }},
-              create_option_cycle({options = {'base', 'foil', 'holo', 'polychrome','negative'}, opt_callback = 'edition_change', current_option = 1, colour = G.C.RED, w = 2, scale = 0.7}),
+              create_option_cycle({options = {'base', 'foil', 'holo', 'polychrome','negative', 'shady'}, opt_callback = 'edition_change', current_option = 1, colour = G.C.RED, w = 2, scale = 0.7}),
             }}
           }}
         return t
