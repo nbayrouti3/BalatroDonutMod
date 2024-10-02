@@ -1980,8 +1980,8 @@
                 name = "The Wheel of Fortune",
                 text = {
                     "{C:green}#1# in #2#{} chance to add",
-                    "{C:dark_edition}Foil{}, {C:dark_edition}Holographic{}, or",
-                    "{C:dark_edition}Polychrome{} edition",
+                    "{C:dark_edition}Foil{}, {C:dark_edition}Holographic{},",
+                    "{C:dark_edition}Polychrome{} or {C:dark_edition}Shady{} edition",
                     "to a random {C:attention}Joker"
                 }
             },
@@ -2235,7 +2235,7 @@
                 name = "Aura",
                 text = {
                     "Add {C:dark_edition}Foil{}, {C:dark_edition}Holographic{},",
-                    "or {C:dark_edition}Polychrome{} effect to",
+                    "{C:dark_edition}Polychrome{} or {C:dark_edition}Shady{} effect to",
                     "{C:attention}1{} selected card in hand"
                 }
             },
@@ -2416,10 +2416,9 @@
                 name = "Nonagon Lion",
                 text = {
                     "After {C:attention}#1#{} Hands played,",
-                    "use this card to",
-                    "{C:polygon}Upgrade {C:attention}Most used Hand",
-                    "by {C:polygon}2 levels{} foreach",
-                    "selected {C:attention}Stone Card",
+                    "use this card to {C:polygon}Upgrade",
+                    "{C:attention}Most used Hand{} by {C:polygon}2 levels{}",
+                    "for each selected {C:attention}Stone Card",
                     "{C:inactive}Max of #2# selected"
                 }
             },
@@ -2427,24 +2426,30 @@
                 name = "Charybdis",
                 text = {
                     "After {C:attention}#1#{} Hands played,",
-                    "use this card to",
-                    "{C:attention}PLACEHOLDER",
+                    "use this card to {C:polygon}Add",
+                    "{C:dark_edition}Shady{} effect to {C:attention}#2#",
+                    "selected card in hand"
                 }
             },
             c_hendecagon = {
                 name = "Echidna",
                 text = {
                     "After {C:attention}#1#{} Hands played,",
-                    "use this card to",
-                    "{C:attention}PLACEHOLDER",
+                    "use this card to {C:polygon}Remove{}",
+                    "selected Joker and {C:polygon}Create{}",
+                    "{C:attention}next{} Joker in {C:attention}Collection",
+                    "{C:inactive}Joker > Greedy Joker >",
+                    "{C:inactive}Lusty Joker > etc"
                 }
             },
             c_dodecagon = {
                 name = "Typhon",
                 text = {
                     "After {C:attention}#1#{} Hands played,",
-                    "use this card to",
-                    "{C:attention}PLACEHOLDER",
+                    "use this card to {C:polygon}Destroy {C:attention}#2#{}",
+                    "random cards in your deck,",
+                    "{C:polygon}Add {C:attention}#3#{} random {C:attention}Enhanced Cards{} ",
+                    "to your hand"
                 }
             },
             c_hectogon = {
@@ -2452,24 +2457,29 @@
                 text = {
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
-                    "{C:attention}PLACEHOLDER",
+                    "add {C:dark_edition}Negative{} to a",
+                    "{C:polygon}Selected Joker"
                 }
             },
             c_myriagon = {
                 name = "Fractal",
                 text = {
                     "After {C:attention}#1#{} Hands played,",
-                    "use this card to",
-                    "{C:attention}PLACEHOLDER",
+                    "use this card to {C:polygon}Remove{}",
+                    "selected Joker and {C:polygon}Create",
+                    "a {C:attention}Higher Rarity{} Joker",
+                    "{C:inactive}Common > Uncommon >",
+                    "{C:inactive}Rare > Legendary"
                 }
             },
             c_apeirogon = {
                 name = "Infinity",
                 text = {
                     "After {C:attention}#1#{} Hands played,",
-                    "use this card to {E:1,C:polygon}Return",
-                    "{C:blue}Hands{} and {C:red}Discards{} equal",
-                    "to {C:attention}Double{} the amount",
+                    "use this card to {E:1,C:polygon}Reset",
+                    "{C:attention}Discarded or Used{} cards",
+                    "and {E:1,C:polygon}Add{} {C:blue}Hands{} and {C:red}Discards{}",
+                    "equal to {C:attention}Double{} the amount",
                     "used this round",
                     "{C:inactive}(Currently {C:blue}#2#{}/{C:red}#3#{})"
                 }
@@ -2498,6 +2508,12 @@
                 name = "Polychrome",
                 text = {
                     "{X:mult,C:white} X#1# {} Mult"
+                }
+            },
+            e_shady = {
+                name = "Shady",
+                text = {
+                    "{X:mult,C:white} X2.5 {} Mult?"
                 }
             },
             e_negative = {
@@ -3870,6 +3886,7 @@
             foil = "Foil",
             holographic = "Holographic",
             polychrome = "Polychrome",
+            shady = "Shady",
             negative = "Negative",
             gold_seal = "Gold Seal",
             blue_seal = "Blue Seal",
@@ -4267,7 +4284,8 @@
             k_clubs = "Fortitude!",
             k_handsize_plus_one = "+1 Hand Size!",
             k_plus_two_levels = "+2 Levels",
-            k_not_stone = "Not Stone"
+            k_not_stone = "Not Stone",
+            k_none_found = "None Found!"
         },
         v_dictionary = {
             a_xmult = "X#1# Mult",
@@ -4303,6 +4321,10 @@
             ml_polychrome_desc = {
                 "Polychrome",
                 "X#1# Mult"
+            },
+            ml_shady_desc = {
+                "Shady",
+                "X2.5 Mult"
             },
             ml_negative_desc = {
                 "Negative",
