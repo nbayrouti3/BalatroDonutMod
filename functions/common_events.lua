@@ -2117,7 +2117,7 @@ function poll_edition(_key, _mod, _no_neg, _guaranteed)
         elseif edition_poll > 1 - 0.006*25 then
             return {polychrome = true}
         elseif edition_poll > 1 - 0.006*25 then
-            return {shady = true}
+            return {shaded = true}
         elseif edition_poll > 1 - 0.02*25 then
             return {holo = true}
         elseif edition_poll > 1 - 0.04*25 then
@@ -2129,7 +2129,7 @@ function poll_edition(_key, _mod, _no_neg, _guaranteed)
         elseif edition_poll > 1 - 0.006*G.GAME.edition_rate*_mod then
             return {polychrome = true}
         elseif edition_poll > 1 - 0.006*G.GAME.edition_rate*_mod then
-            return {shady = true}
+            return {shaded = true}
         elseif edition_poll > 1 - 0.02*G.GAME.edition_rate*_mod then
             return {holo = true}
         elseif edition_poll > 1 - 0.04*G.GAME.edition_rate*_mod then
@@ -2628,6 +2628,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
         elseif _c.name == 'Foil Tag' then info_queue[#info_queue+1] = G.P_CENTERS.e_foil 
         elseif _c.name == 'Holographic Tag' then info_queue[#info_queue+1] = G.P_CENTERS.e_holo
         elseif _c.name == 'Polychrome Tag' then info_queue[#info_queue+1] = G.P_CENTERS.e_polychrome 
+        elseif _c.name == 'Shaded Tag' then info_queue[#info_queue+1] = G.P_CENTERS.e_shaded
         elseif _c.name == 'Charm Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_arcana_mega_1 
         elseif _c.name == 'Meteor Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_celestial_mega_1 
         elseif _c.name == 'Ethereal Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_spectral_normal_1 
@@ -2739,7 +2740,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
             info_queue[#info_queue+1] = G.P_CENTERS.e_foil
             info_queue[#info_queue+1] = G.P_CENTERS.e_holo
             info_queue[#info_queue+1] = G.P_CENTERS.e_polychrome
-            info_queue[#info_queue+1] = G.P_CENTERS.e_shady
+            info_queue[#info_queue+1] = G.P_CENTERS.e_shaded
         end
         localize{type = 'descriptions', key = _c.key, set = _c.set, nodes = desc_nodes, vars = loc_vars}
     elseif _c.set == 'Planet' then
@@ -2773,7 +2774,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
        elseif _c.name == "The Chariot" then loc_vars = {_c.config.max_highlighted, localize{type = 'name_text', set = 'Enhanced', key = _c.config.mod_conv}}; info_queue[#info_queue+1] = G.P_CENTERS[_c.config.mod_conv]
        elseif _c.name == "Justice" then loc_vars = {_c.config.max_highlighted, localize{type = 'name_text', set = 'Enhanced', key = _c.config.mod_conv}}; info_queue[#info_queue+1] = G.P_CENTERS[_c.config.mod_conv]
        elseif _c.name == "The Hermit" then loc_vars = {_c.config.extra}
-       elseif _c.name == "The Wheel of Fortune" then loc_vars = {G.GAME.probabilities.normal, _c.config.extra};  info_queue[#info_queue+1] = G.P_CENTERS.e_foil; info_queue[#info_queue+1] = G.P_CENTERS.e_holo; info_queue[#info_queue+1] = G.P_CENTERS.e_polychrome; info_queue[#info_queue+1] = G.P_CENTERS.e_shady; 
+       elseif _c.name == "The Wheel of Fortune" then loc_vars = {G.GAME.probabilities.normal, _c.config.extra};  info_queue[#info_queue+1] = G.P_CENTERS.e_foil; info_queue[#info_queue+1] = G.P_CENTERS.e_holo; info_queue[#info_queue+1] = G.P_CENTERS.e_polychrome; info_queue[#info_queue+1] = G.P_CENTERS.e_shaded; 
        elseif _c.name == "Strength" then loc_vars = {_c.config.max_highlighted}
        elseif _c.name == "The Hanged Man" then loc_vars = {_c.config.max_highlighted}
        elseif _c.name == "Death" then loc_vars = {_c.config.max_highlighted}
@@ -2806,7 +2807,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
         elseif _c.name == "Septabug" then loc_vars = {_c.config.extra.rounds_needed}; info_queue[#info_queue+1] = G.P_CENTERS.m_bugged
         elseif _c.name == "Octoclops" then loc_vars = {_c.config.extra.rounds_needed}
         elseif _c.name == "Nonagon Lion" then loc_vars = {_c.config.extra.rounds_needed, _c.config.max_highlighted}
-        elseif _c.name == "Charybdis" then loc_vars = {_c.config.extra.rounds_needed, _c.config.max_highlighted}; info_queue[#info_queue+1] = G.P_CENTERS.e_shady
+        elseif _c.name == "Charybdis" then loc_vars = {_c.config.extra.rounds_needed, _c.config.max_highlighted}; info_queue[#info_queue+1] = G.P_CENTERS.e_shaded
         elseif _c.name == "Echidna" then loc_vars = {_c.config.extra.rounds_needed}
         elseif _c.name == "Typhon" then loc_vars = {_c.config.extra.rounds_needed, _c.config.extra.typhon_cards, _c.config.extra.cards_created}
         elseif _c.name == "Parallax" then loc_vars = {_c.config.extra.rounds_needed}
@@ -2835,7 +2836,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
             if v == 'foil' then info_queue[#info_queue+1] = G.P_CENTERS['e_foil'] end
             if v == 'holographic' then info_queue[#info_queue+1] = G.P_CENTERS['e_holo'] end
             if v == 'polychrome' then info_queue[#info_queue+1] = G.P_CENTERS['e_polychrome'] end
-            if v == 'shady' then info_queue[#info_queue+1] = G.P_CENTERS['e_shady'] end
+            if v == 'shaded' then info_queue[#info_queue+1] = G.P_CENTERS['e_shady'] end
             if v == 'negative' then info_queue[#info_queue+1] = G.P_CENTERS['e_negative'] end
             if v == 'negative_consumable' then info_queue[#info_queue+1] = {key = 'e_negative_consumable', set = 'Edition', config = {extra = 1}} end
             if v == 'gold_seal' then info_queue[#info_queue+1] = {key = 'gold_seal', set = 'Other'} end

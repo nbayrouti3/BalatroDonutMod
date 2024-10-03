@@ -382,7 +382,7 @@ function Card:set_cost()
     self.extra_cost = 0 + G.GAME.inflation
     if self.edition then
         self.extra_cost = self.extra_cost + (self.edition.holo and 3 or 0) + (self.edition.foil and 2 or 0) + 
-        (self.edition.polychrome and 5 or 0) + (self.edition.negative and 5 or 0) + (self.edition.shady and 5 or 0)
+        (self.edition.polychrome and 5 or 0) + (self.edition.negative and 5 or 0) + (self.edition.shaded and 5 or 0)
     end
     self.cost = math.max(1, math.floor((self.base_cost + self.extra_cost + 0.5)*(100-G.GAME.discount_percent)/100))
     if self.ability.set == 'Booster' and G.GAME.modifiers.booster_ante_scaling then self.cost = self.cost + G.GAME.round_resets.ante - 1 end
@@ -414,12 +414,12 @@ function Card:set_edition(edition, immediate, silent)
         self.edition.x_mult = G.P_CENTERS.e_polychrome.config.extra
         self.edition.polychrome = true
         self.edition.type = 'polychrome'
-    elseif edition.shady then
+    elseif edition.shaded then
         if not self.edition then self.edition = {} end
-        self.edition.x_mult = G.P_CENTERS.e_shady.config.extra.shady_xmult
-        self.edition.debuff = G.P_CENTERS.e_shady.config.extra.shady_debuff
-        self.edition.shady = true
-        self.edition.type = 'shady'
+        self.edition.x_mult = G.P_CENTERS.e_shaded.config.extra.shaded_xmult
+        self.edition.debuff = G.P_CENTERS.e_shaded.config.extra.shaded_debuff
+        self.edition.shaded = true
+        self.edition.type = 'shaded'
     elseif edition.negative then
         if not self.edition then
             self.edition = {}
@@ -458,7 +458,7 @@ function Card:set_edition(edition, immediate, silent)
                 if self.edition.foil then play_sound('foil1', 1.2, 0.4) end
                 if self.edition.holo then play_sound('holo1', 1.2*1.58, 0.4) end
                 if self.edition.polychrome then play_sound('polychrome1', 1.2, 0.7) end
-                if self.edition.shady then play_sound('shady', 1.2, 0.7) end
+                if self.edition.shaded then play_sound('shady', 1.2, 0.7) end
                 if self.edition.negative then play_sound('negative', 1.5, 0.4) end
                return true
             end
@@ -2168,7 +2168,7 @@ function Card:use_consumeable(area, copier)
     if self.ability.name == 'Charybdis' then
         G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
             local over = false
-            local edition = {shady = true}
+            local edition = {shaded = true}
             local card = G.hand.highlighted[1]
             card:set_edition(edition, true)
             used_tarot:juice_up(0.3, 0.5)
@@ -5429,7 +5429,7 @@ function Card:update(dt)
         if self.ability.name == 'Parallax' then
             self.eligible_negative_jokers = EMPTY(self.eligible_negative_jokers)
             for k, v in pairs(G.jokers.cards) do
-                if v.ability.set == 'Joker' and (not v.edition or v.edition.foil or v.edition.holo or v.edition.polychrome or v.edition.shady) then
+                if v.ability.set == 'Joker' and (not v.edition or v.edition.foil or v.edition.holo or v.edition.polychrome or v.edition.shaded) then
                     table.insert(self.eligible_negative_jokers, v)
                 end
             end
@@ -5734,7 +5734,7 @@ function Card:draw(layer)
                         self.children.front:draw_shader('polychrome', nil, self.ARGS.send_to_shader)
                     end
                 end
-                if self.edition and self.edition.shady then
+                if self.edition and self.edition.shaded then
                     self.children.center:draw_shader('smoke', nil, self.ARGS.send_to_shader)
                     if self.children.front and self.ability.effect ~= 'Stone card' then
                         self.children.front:draw_shader('smoke', nil, self.ARGS.send_to_shader)

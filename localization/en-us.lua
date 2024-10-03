@@ -1981,8 +1981,8 @@
                 text = {
                     "{C:green}#1# in #2#{} chance to add",
                     "{C:dark_edition}Foil{}, {C:dark_edition}Holographic{},",
-                    "{C:dark_edition}Polychrome{} or {C:dark_edition}Shady{} edition",
-                    "to a random {C:attention}Joker"
+                    "{C:dark_edition}Polychrome{} or {C:dark_edition}Shaded",
+                    "edition to a random {C:attention}Joker"
                 }
             },
             c_strength = {
@@ -2235,8 +2235,8 @@
                 name = "Aura",
                 text = {
                     "Add {C:dark_edition}Foil{}, {C:dark_edition}Holographic{},",
-                    "{C:dark_edition}Polychrome{} or {C:dark_edition}Shady{} effect to",
-                    "{C:attention}1{} selected card in hand"
+                    "{C:dark_edition}Polychrome{} or {C:dark_edition}Shaded{} effect",
+                    "to {C:attention}1{} selected card in hand"
                 }
             },
             c_wraith = {
@@ -2427,7 +2427,7 @@
                 text = {
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to {C:polygon}Add",
-                    "{C:dark_edition}Shady{} effect to {C:attention}#2#",
+                    "{C:dark_edition}Shaded{} effect to {C:attention}#2#",
                     "selected card in hand"
                 }
             },
@@ -2510,8 +2510,8 @@
                     "{X:mult,C:white} X#1# {} Mult"
                 }
             },
-            e_shady = {
-                name = "Shady",
+            e_shaded = {
+                name = "Shaded",
                 text = {
                     "{X:mult,C:white} X2.5 {} Mult?"
                 }
@@ -2702,6 +2702,14 @@
                     "Next base edition shop",
                     "Joker is free and",
                     "becomes {C:dark_edition}Polychrome"
+                }
+            },
+            tag_shaded = {
+                name = "Shaded Tag",
+                text = {
+                    "Next base edition shop",
+                    "Joker is free and",
+                    "becomes {C:dark_edition}Shaded"
                 }
             },
             tag_investment = {
@@ -3886,7 +3894,7 @@
             foil = "Foil",
             holographic = "Holographic",
             polychrome = "Polychrome",
-            shady = "Shady",
+            shaded = "Shaded",
             negative = "Negative",
             gold_seal = "Gold Seal",
             blue_seal = "Blue Seal",
@@ -4322,8 +4330,8 @@
                 "Polychrome",
                 "X#1# Mult"
             },
-            ml_shady_desc = {
-                "Shady",
+            ml_shaded_desc = {
+                "Shaded",
                 "X2.5 Mult"
             },
             ml_negative_desc = {
