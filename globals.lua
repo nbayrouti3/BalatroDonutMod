@@ -1,4 +1,4 @@
-VERSION = '1.0.1f'
+VERSION = '1.0.1g'
 VERSION = VERSION..'-FULL'
 --check_version
 
@@ -156,6 +156,7 @@ function Game:set_globals()
         colourblind_option = false,
         language = 'en-us',
         screenshake = true,
+        run_stake_stickers = false,
         rumble = self.F_RUMBLE,
         play_button_pos = 2,
         GAMESPEED = 1,
@@ -177,6 +178,14 @@ function Game:set_globals()
                 }
             },
         },
+        CUSTOM_DECK = {
+            Collabs = {
+                Spades = 'default',
+                Hearts = 'default',
+                Clubs = 'default',
+                Diamonds = 'default',
+            }
+        },
         GRAPHICS = {
             texture_scaling = 2,
             shadows = 'On',
@@ -184,6 +193,28 @@ function Game:set_globals()
             bloom = 1
         },
     }
+
+    self.COLLABS = {
+        pos = { Jack = {x=0,y=0}, Queen = {x=1,y=0}, King = {x=2,y=0} },
+        options = {
+          Spades = {
+              'default',
+              'collab_TW',
+         },
+          Hearts = {
+            'default',
+            'collab_AU',
+          },
+          Clubs = {
+            'default',
+            'collab_VS'
+          },
+          Diamonds = {
+            'default',
+            'collab_DTD'
+          }
+        },
+      }
 
     self.METRICS = {
         cards = {

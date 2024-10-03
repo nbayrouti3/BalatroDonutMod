@@ -1840,6 +1840,19 @@ function get_stake_sprite(_stake, _scale)
   return stake_sprite
 end
 
+function get_front_spriteinfo(_front)
+  if _front and _front.suit and (_front.value == 'Jack' or _front.value == 'Queen' or _front.value == 'King') then
+    if G.SETTINGS.CUSTOM_DECK and G.SETTINGS.CUSTOM_DECK.Collabs[_front.suit] then
+      local _collab = G.SETTINGS.CUSTOM_DECK.Collabs[_front.suit]
+      if (_collab == 'default') or (not G.ASSET_ATLAS[_collab..'_'..(G.SETTINGS.colourblind_option and 2 or 1)]) then 
+      else
+        return G.ASSET_ATLAS[_collab..'_'..(G.SETTINGS.colourblind_option and 2 or 1)], G.COLLABS.pos[_front.value]
+      end
+    end
+  end
+  return G.ASSET_ATLAS[_front.atlas] or G.ASSET_ATLAS["cards_"..(G.SETTINGS.colourblind_option and 2 or 1)], _front.pos
+end
+
 function get_stake_col(_stake)
   G.C.STAKES = G.C.STAKES or {
     G.C.WHITE,

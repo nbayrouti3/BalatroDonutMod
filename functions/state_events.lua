@@ -26,6 +26,9 @@ function win_game()
     G.E_MANAGER:add_event(Event({
         trigger = 'immediate',
         func = (function()
+            for k, v in pairs(G.I.CARD) do
+                v.sticker_run = nil
+            end
             play_sound('win')
             G.SETTINGS.paused = true
 

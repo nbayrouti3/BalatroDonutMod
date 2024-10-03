@@ -887,6 +887,15 @@ G.FUNCS.change_crt_bloom = function(args)
   G:save_settings()
 end
 
+G.FUNCS.change_collab = function(args)
+  G.SETTINGS.CUSTOM_DECK.Collabs[args.cycle_config.curr_suit] = G.COLLABS.options[args.cycle_config.curr_suit][args.to_key] or 'default'
+  for k, v in pairs(G.I.CARD) do
+    if v.config and v.config.card and v.children.front and v.ability.effect ~= 'Stone Card' then 
+      v:set_sprites(nil, v.config.card)
+    end
+  end
+  G:save_settings()
+end
 --||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 --                                         TEXT ENTRY
 --||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -1557,6 +1566,13 @@ G.FUNCS.high_scores = function(e)
   }
 end
 
+G.FUNCS.customize_deck = function(e)
+  G.SETTINGS.paused = true
+  G.FUNCS.overlay_menu{
+    definition = create_UIBox_customize_deck(),
+  }
+end
+
 G.FUNCS.usage = function(e)
   G.SETTINGS.paused = true
   G.FUNCS.overlay_menu{
@@ -1748,6 +1764,19 @@ G.FUNCS.reset_achievements = function(e)
   G.SETTINGS.ACHIEVEMENTS_EARNED = {}
   G:save_progress()
   G.FUNCS.exit_overlay_menu()
+end
+
+G.FUNCS.refresh_contrast_mode = function()
+  local new_colour_proto = G.C["SO_"..(G.SETTINGS.colourblind_option and 2 or 1)]
+  G.C.SUITS.Hearts = new_colour_proto.Hearts
+  G.C.SUITS.Diamonds = new_colour_proto.Diamonds
+  G.C.SUITS.Spades = new_colour_proto.Spades
+  G.C.SUITS.Clubs = new_colour_proto.Clubs
+  for k, v in pairs(G.I.CARD) do
+    if v.config and v.config.card and v.children.front and v.ability.effect ~= 'Stone Card' then 
+      v:set_sprites(nil, v.config.card)
+    end
+  end
 end
 
 G.FUNCS.warn_lang = function(e)

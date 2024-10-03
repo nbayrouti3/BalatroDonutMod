@@ -3719,6 +3719,24 @@
             ['3'] = "3",
             ['2'] = "2"
         },
+        collabs = {
+            Spades = {
+                ['1'] = 'Default', 
+                ['2'] = 'The Witcher',
+            },
+            Hearts = {
+                ['1'] = 'Default', 
+                ['2'] = 'Among Us'
+            },
+            Clubs = {
+                ['1'] = 'Default', 
+                ['2'] = 'Vampire Survivors'
+            },
+            Diamonds = {
+                ['1'] = 'Default', 
+                ['2'] = 'Dave the Diver'
+            },
+        },
         high_scores = {
             hand = "Best Hand",
             furthest_round = "Highest Round",
@@ -3935,6 +3953,7 @@
             b_copy = "Copy",
             b_credits = "Credits",
             b_stats = "Stats",
+            b_customize_deck = "Customize Deck",
             b_settings = "Settings",
             b_set_game = "Game",
             b_set_video = "Video",
@@ -4108,6 +4127,7 @@
             k_choose = "Choose",
             k_achievements_disabled = "Achievements Disabled",
             k_trophies_disabled = "Trophies Disabled",
+            ph_display_stickers = "Display Stake Stickers during Run",
             ph_improve_run = "Improve your run!",
             ph_no_boss_active = "no boss active",
             ph_sneak_peek = "Sneak Peek",
