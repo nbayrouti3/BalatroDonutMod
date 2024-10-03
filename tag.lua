@@ -458,6 +458,17 @@ function Tag:apply_to_run(_context)
                         return true
                     end)
                     _applied = true
+                elseif self.name == 'Shaded Tag' then
+                    _context.card.temp_edition = true
+                    self:yep('+', G.C.DARK_EDITION,function() 
+                        _context.card.temp_edition = nil
+                        _context.card:set_edition({shaded = true}, true)
+                        _context.card.ability.couponed = true
+                        _context.card:set_cost()
+                        G.CONTROLLER.locks[lock] = nil
+                        return true
+                    end)
+                    _applied = true
                 elseif self.name == 'Negative Tag' then
                     _context.card.temp_edition = true
                     self:yep('+', G.C.DARK_EDITION,function() 

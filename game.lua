@@ -251,6 +251,7 @@ function Game:init_item_prototypes()
         --Custom Tags
         tag_friendly_buffoon={name = 'Friendly Buffoon Tag', set = 'Tag', discovered = false, min_ante = 1, order = 25, config = {type = 'new_blind_choice', }, pos = {x = 4, y = 2}},
         tag_polygonal =     {name = 'Polygonal Tag',    set = 'Tag', discovered = false, min_ante = nil, order = 26, config = {type = 'new_blind_choice', }, pos = {x = 0,y = 5}},
+        tag_shaded =        {name = 'Shaded Tag',       set = 'Tag', discovered = false, min_ante = nil, order = 27, config = {type = 'store_joker_modify', edition = 'shaded', odds = 4}, requires = 'e_shaded', pos = {x = 1,y = 5}},
     }
     self.tag_undiscovered = {name = 'Not Discovered', order = 1, config = {type = ''}, pos = {x=3,y=4}}
 
@@ -700,7 +701,7 @@ function Game:init_item_prototypes()
         e_holo =       {order = 3,  unlocked = true, discovered = false, name = "Holographic", pos = {x=0,y=0}, atlas = 'Joker', set = "Edition", config = {extra = 10}},
         e_polychrome = {order = 4,  unlocked = true, discovered = false, name = "Polychrome", pos = {x=0,y=0}, atlas = 'Joker', set = "Edition", config = {extra = 1.5}},
         e_negative =   {order = 5,  unlocked = true, discovered = false, name = "Negative", pos = {x=0,y=0}, atlas = 'Joker', set = "Edition", config = {extra = 1}},
-        e_shady =      {order = 6,  unlocked = true, discovered = false, name = "Shady", pos = {x=0,y=0}, atlas = 'Joker', set = "Edition", config = {extra = {shady_debuff = 1, shady_xmult = 2.5}}},
+        e_shaded =      {order = 6,  unlocked = true, discovered = false, name = "Shaded", pos = {x=0,y=0}, atlas = 'Joker', set = "Edition", config = {extra = {shaded_debuff = 1, shaded_xmult = 2.5}}},
 
         --booster packs
         p_arcana_normal_1 =         {order = 1,  discovered = false, name = "Arcana Pack", weight = 1, kind = 'Arcana', cost = 4, pos = {x=0,y=0}, atlas = 'Booster', set = 'Booster', config = {extra = 3, choose = 1}},
@@ -1365,7 +1366,7 @@ function Game:sandbox()
                 create_text_input({prompt_text = 'Joker key', extended_corpus = true, ref_table = G.SANDBOX, ref_value = 'joker_text', text_scale = 0.3, w = 1.5, h = 0.6}),
                 UIBox_button{ label = {"-"}, button = "rem_joker", minw = 0.7, col = true},
               }},
-              create_option_cycle({options = {'base', 'foil', 'holo', 'polychrome','negative', 'shady'}, opt_callback = 'edition_change', current_option = 1, colour = G.C.RED, w = 2, scale = 0.7}),
+              create_option_cycle({options = {'base', 'foil', 'holo', 'polychrome','negative', 'shaded'}, opt_callback = 'edition_change', current_option = 1, colour = G.C.RED, w = 2, scale = 0.7}),
             }}
           }}
         return t

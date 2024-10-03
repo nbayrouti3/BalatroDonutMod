@@ -1169,7 +1169,7 @@ end
       foil = G.C.DARK_EDITION,
       holographic = G.C.DARK_EDITION,
       polychrome = G.C.DARK_EDITION,
-      shady = G.C.DARK_EDITION,
+      shaded = G.C.DARK_EDITION,
       negative = G.C.DARK_EDITION,
       gold_seal = G.C.GOLD,
       red_seal = G.C.RED,
@@ -3967,7 +3967,7 @@ function create_UIBox_your_collection_editions()
     {n=G.UIT.O, config={object = G.your_collection[1]}}
   }}
 
-  local editions = {'base', 'foil','holo','polychrome', 'shady','negative'}
+  local editions = {'base', 'foil','holo','polychrome', 'shaded','negative'}
 
   for i = 1, 6 do
       local card = Card(G.your_collection[1].T.x + G.your_collection[1].T.w/2, G.your_collection[1].T.y, G.CARD_W, G.CARD_H, G.P_CARDS.empty, G.P_CENTERS['e_'..editions[i]])

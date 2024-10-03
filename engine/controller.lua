@@ -846,8 +846,8 @@ function Controller:key_press_update(key, dt)
                         foil = not _card.edition,
                         holo = _card.edition and _card.edition.foil,
                         polychrome = _card.edition and _card.edition.holo,
-                        shady = _card.edition and _card.edition.polychrome,
-                        negative = _card.edition and _card.edition.shady,
+                        shaded = _card.edition and _card.edition.polychrome,
+                        negative = _card.edition and _card.edition.shaded,
                     }
                     _card:set_edition(_edition, true, true)
                 end
