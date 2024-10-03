@@ -2334,6 +2334,7 @@ function create_UIBox_options()
   local main_menu = nil
   local your_collection = nil
   local credits = nil
+  local customize = nil
 
   G.E_MANAGER:add_event(Event({
     blockable = false,
@@ -2369,6 +2370,7 @@ function create_UIBox_options()
 
   local settings = UIBox_button({button = 'settings', label = {localize('b_settings')}, minw = 5, focus_args = {snap_to = true}})
   local high_scores = UIBox_button{ label = {localize('b_stats')}, button = "high_scores", minw = 5}
+  local customize = UIBox_button{ label = {localize('b_customize_deck')}, button = "customize_deck", minw = 5} 
 
   local t = create_UIBox_generic_options({ contents = {
       settings,
@@ -2377,6 +2379,7 @@ function create_UIBox_options()
       main_menu,
       high_scores,
       your_collection,
+      customize,
       credits
     }})
   return t
@@ -2423,20 +2426,8 @@ function G.UIDEF.settings_tab(tab)
       create_option_cycle({w = 5, label = localize('b_set_play_discard_pos'),scale = 0.8, options = localize('ml_play_discard_pos_opt'), opt_callback = 'change_play_discard_position', current_option = (G.SETTINGS.play_button_pos)}),
       G.F_RUMBLE and create_toggle({label = localize('b_set_rumble'), ref_table = G.SETTINGS, ref_value = 'rumble'}) or nil,
       create_slider({label = localize('b_set_screenshake'),w = 4, h = 0.4, ref_table = G.SETTINGS, ref_value = 'screenshake', min = 0, max = 100}),
-      create_toggle({label = localize('b_high_contrast_cards'), ref_table = G.SETTINGS, ref_value = 'colourblind_option', callback = (
-        function(_set_toggle)
-          local new_colour_proto = G.C["SO_"..(G.SETTINGS.colourblind_option and 2 or 1)]
-          G.C.SUITS.Hearts = new_colour_proto.Hearts
-          G.C.SUITS.Diamonds = new_colour_proto.Diamonds
-          G.C.SUITS.Spades = new_colour_proto.Spades
-          G.C.SUITS.Clubs = new_colour_proto.Clubs
-          for k, v in pairs(G.I.SPRITE) do
-            if v.atlas and string.find(v.atlas.name, 'cards_') then
-              v.atlas = G.ASSET_ATLAS["cards_"..(G.SETTINGS.colourblind_option and 2 or 1)]
-            end
-          end
-        end
-      )}),
+      create_toggle({label = localize('ph_display_stickers'), ref_table = G.SETTINGS, ref_value = 'run_stake_stickers'}),
+      --create_toggle({label = localize('b_high_contrast_cards'), ref_table = G.SETTINGS, ref_value = 'colourblind_option', callback = G.FUNCS.refresh_contrast_mode}),
       create_toggle({label = localize('b_reduced_motion'), ref_table = G.SETTINGS, ref_value = 'reduced_motion'}),
       G.F_CRASH_REPORTS and create_toggle({label = localize('b_set_crash_reports'), ref_table = G.SETTINGS, ref_value = 'crashreports', info = localize('ml_crash_report_info')}) or nil,
     }}
@@ -2650,6 +2641,84 @@ function create_UIBox_usage(args)
   }}
 
   return t
+end
+
+function create_UIBox_customize_deck()
+  local t = create_UIBox_generic_options({ back_func = 'options', snap_back = nil, contents = {
+    {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
+      create_tabs(
+        {tabs = {
+            {
+                label = localize('Spades', 'suits_plural'),
+                chosen = true,
+                tab_definition_function = G.UIDEF.custom_deck_tab,
+                tab_definition_function_args = 'Spades'
+            },
+            {
+              label = localize('Hearts', 'suits_plural'),
+              tab_definition_function = G.UIDEF.custom_deck_tab,
+              tab_definition_function_args = 'Hearts'
+            },
+            {
+              label = localize('Clubs', 'suits_plural'),
+              tab_definition_function = G.UIDEF.custom_deck_tab,
+              tab_definition_function_args = 'Clubs'
+            },
+            {
+              label = localize('Diamonds', 'suits_plural'),
+              tab_definition_function = G.UIDEF.custom_deck_tab,
+              tab_definition_function_args = 'Diamonds'
+            }
+        },snap_to_nav = true, no_shoulders = true}
+    )}}}
+  })
+  return t
+end
+
+function G.UIDEF.custom_deck_tab(_suit)
+  local t = {}
+
+  local face_cards = CardArea(
+    0,0,
+    4*G.CARD_W,
+    1.4*G.CARD_H, 
+    {card_limit = 3, type = 'title', highlight_limit = 0})
+
+  table.insert(t, 
+    {n=G.UIT.R, config={align = "cm", colour = G.C.BLACK, r = 0.1, padding = 0.07, no_fill = true}, nodes={
+      {n=G.UIT.O, config={object = face_cards}}
+    }}
+  )
+
+  local loc_options = localize(_suit, 'collabs')
+  local conv_loc_options = {}
+  for k, v in pairs(loc_options) do
+    conv_loc_options[tonumber(k)] = v
+  end
+
+  loc_options = conv_loc_options
+
+  local current_option = 1
+  for k, v in pairs(G.COLLABS.options[_suit]) do
+    if G.SETTINGS.CUSTOM_DECK.Collabs[_suit] == v then current_option = k end
+  end
+
+  table.insert(t, 
+    {n=G.UIT.R, config={align = "cm"}, nodes={
+      create_option_cycle({options = loc_options, w = 4.5, cycle_shoulders = true, curr_suit = _suit, opt_callback = 'change_collab', current_option = current_option, colour = G.C.RED, focus_args = {snap_to = true, nav = 'wide'}}),
+    }}
+  )
+  table.insert(t, create_toggle({label = localize('b_high_contrast_cards'), ref_table = G.SETTINGS, ref_value = 'colourblind_option', callback = G.FUNCS.refresh_contrast_mode}))
+
+  local faces = {'K','Q','J'}
+  for i = 1, 3 do
+    local card_code = (string.sub(_suit, 1, 1))..'_'..faces[i]
+    local card = Card(0,0, G.CARD_W*1.2, G.CARD_H*1.2, G.P_CARDS[card_code], G.P_CENTERS.c_base)
+    card.no_ui = true
+    face_cards:emplace(card)
+  end
+
+  return {n=G.UIT.ROOT, config={align = "cm", padding = 0, colour = G.C.CLEAR, r = 0.1, minw = 7, minh = 4.2}, nodes=t}
 end
 
 function create_UIBox_high_scores()

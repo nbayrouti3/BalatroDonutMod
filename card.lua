@@ -146,11 +146,12 @@ end
 
 function Card:set_sprites(_center, _front)
     if _front then 
+        local _atlas, _pos = get_front_spriteinfo(_front)
         if self.children.front then
-            self.children.front.atlas = G.ASSET_ATLAS[_front.atlas] or G.ASSET_ATLAS["cards_"..(G.SETTINGS.colourblind_option and 2 or 1)]
-            self.children.front:set_sprite_pos(self.config.card.pos)
+            self.children.front.atlas = _atlas
+            self.children.front:set_sprite_pos(_pos)
         else
-            self.children.front = Sprite(self.T.x, self.T.y, self.T.w, self.T.h, _front.atlas and G.ASSET_ATLAS[_front.atlas] or G.ASSET_ATLAS["cards_"..(G.SETTINGS.colourblind_option and 2 or 1)], self.config.card.pos)
+            self.children.front = Sprite(self.T.x, self.T.y, self.T.w, self.T.h, _atlas, _pos)
             self.children.front.states.hover = self.states.hover
             self.children.front.states.click = self.states.click
             self.children.front.states.drag = self.states.drag
@@ -234,6 +235,7 @@ function Card:set_ability(center, initial, delay_sprites)
 
     local old_center = self.config.center
     self.config.center = center
+    self.sticker_run = nil
     for k, v in pairs(G.P_CENTERS) do
         if center == v then self.config.center_key = k end
     end
@@ -987,7 +989,7 @@ function Card:generate_UIBox_ability_table()
     if self.ability.rental then badges[#badges + 1] = 'rental' end
     if self.pinned then badges[#badges + 1] = 'pinned_left' end
 
-    if self.sticker then loc_vars = loc_vars or {}; loc_vars.sticker=self.sticker end
+    if self.sticker or ((self.sticker_run and self.sticker_run~='NONE') and G.SETTINGS.run_stake_stickers)  then loc_vars = loc_vars or {}; loc_vars.sticker=(self.sticker or self.sticker_run) end
 
     return generate_card_ui(self.config.center, nil, loc_vars, card_type, badges, hide_desc, main_start, main_end)
 end
@@ -5338,6 +5340,10 @@ function Card:update(dt)
     end
 
     self:update_alert()
+    if self.ability.set == 'Joker' and not self.sticker_run then 
+        self.sticker_run = get_joker_win_sticker(self.config.center) or 'NONE'
+    end
+
     if self.ability.consumeable and self.ability.consumeable.max_highlighted then
         self.ability.consumeable.mod_num = math.min(5, self.ability.consumeable.max_highlighted)
     end
@@ -5706,7 +5712,7 @@ function Card:draw(layer)
             end
             
             --If the card has any edition/seal, add that here
-            if self.edition or self.seal or self.ability.eternal or self.ability.rental or self.ability.perishable or self.sticker or self.ability.set == 'Spectral' or self.ability.set == 'Polygon' or self.debuff or self.greyed or self.ability.name == 'The Soul' or self.ability.set == 'Voucher' or self.ability.set == 'Booster' or self.config.center.soul_pos or self.config.center.soul_anim_pos or self.config.center.demo then
+            if self.edition or self.seal or self.ability.eternal or self.ability.rental or self.ability.perishable or self.sticker or ((self.sticker_run and self.sticker_run ~= 'NONE') and G.SETTINGS.run_stake_stickers) or self.ability.set == 'Spectral' or self.ability.set == 'Polygon' or self.debuff or self.greyed or self.ability.name == 'The Soul' or self.ability.set == 'Voucher' or self.ability.set == 'Booster' or self.config.center.soul_pos or self.config.center.soul_anim_pos or self.config.center.demo then
                 if (self.ability.set == 'Voucher' or self.config.center.demo) and (self.ability.name ~= 'Antimatter' or not (self.config.center.discovered or self.bypass_discovery_center)) then
                     self.children.center:draw_shader('voucher', nil, self.ARGS.send_to_shader)
                 end
@@ -5767,6 +5773,10 @@ function Card:draw(layer)
                     G.shared_stickers[self.sticker].role.draw_major = self
                     G.shared_stickers[self.sticker]:draw_shader('dissolve', nil, nil, nil, self.children.center)
                     G.shared_stickers[self.sticker]:draw_shader('voucher', nil, self.ARGS.send_to_shader, nil, self.children.center)
+                elseif (self.sticker_run and G.shared_stickers[self.sticker_run]) and G.SETTINGS.run_stake_stickers then
+                    G.shared_stickers[self.sticker_run].role.draw_major = self
+                    G.shared_stickers[self.sticker_run]:draw_shader('dissolve', nil, nil, nil, self.children.center)
+                    G.shared_stickers[self.sticker_run]:draw_shader('voucher', nil, self.ARGS.send_to_shader, nil, self.children.center)
                 end
 
                 if self.ability.name == 'The Soul' and (self.config.center.discovered or self.bypass_discovery_center) then
@@ -5940,6 +5950,7 @@ function Card:load(cardTable, other_card)
     self.config.center_key = cardTable.save_fields.center
     self.config.center = G.P_CENTERS[self.config.center_key]
     self.params = cardTable.params
+    self.sticker_run = nil
 
     local H = G.CARD_H
     local W = G.CARD_W
