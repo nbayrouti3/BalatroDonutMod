@@ -5720,7 +5720,9 @@ function Card:draw(layer)
                     self.children.center:draw_shader('booster', nil, self.ARGS.send_to_shader)
                 end
                 if self.ability.set == 'Polygon' then
-                    self.children.center:draw_shader('smoke', nil, self.ARGS.send_to_shader) 
+                    if self.ability.polygon_rounds >= self.ability.extra.rounds_needed then
+                        self.children.center:draw_shader('smoke', nil, self.ARGS.send_to_shader)
+                    end
                 end
                 if self.edition and self.edition.holo then
                     self.children.center:draw_shader('holo', nil, self.ARGS.send_to_shader)

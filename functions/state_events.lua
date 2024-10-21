@@ -688,9 +688,10 @@ G.FUNCS.evaluate_play = function(e)
                             repetition_only = true,
                             cardarea = G.play,
                             full_hand = G.play.cards,
-                            scoring_hand = scoring_hand[i],
+                            scoring_hand = scoring_hand,
                             scoring_name = text,
                             poker_hands = poker_hands,
+                            other_card = G.hand.cards[i],
                             repetition = true
                         })
 
@@ -802,14 +803,28 @@ G.FUNCS.evaluate_play = function(e)
                                 card_to_debuff[#card_to_debuff+1] = pseudorandom_element(G.hand.cards, pseudoseed('debuffrandom'))
                                 for i=#card_to_debuff, 1, -1 do
                                     local target_card = card_to_debuff[i]
-                                    card_eval_status_text(target_card, 'extra', nil, nil, nil, {message = localize('k_debuffed'), colour = G.C.SECONDARY_SET.Polygon})
-                                    G.E_MANAGER:add_event(Event({
-                                        trigger = 'after',
-                                        delay = 0.1,
-                                        func = function() 
-                                            target_card:set_debuff(true)
-                                            target_card:juice_up()
-                                    return true end }))
+                                    if target_card.debuff then
+                                        card_eval_status_text(target_card, 'extra', nil, nil, nil, {message = localize('k_destroyed'), colour = G.C.SECONDARY_SET.Polygon})
+                                        G.E_MANAGER:add_event(Event({
+                                            trigger = 'after',
+                                            delay = 0.1,
+                                            func = function() 
+                                                if target_card.ability.name == 'Glass Card' then 
+                                                    target_card:shatter()
+                                                else
+                                                    target_card:start_dissolve(nil, i ~= #card_to_debuff)
+                                                end
+                                        return true end }))
+                                    else
+                                        card_eval_status_text(target_card, 'extra', nil, nil, nil, {message = localize('k_debuffed'), colour = G.C.SECONDARY_SET.Polygon})
+                                        G.E_MANAGER:add_event(Event({
+                                            trigger = 'after',
+                                            delay = 0.1,
+                                            func = function() 
+                                                target_card:set_debuff(true)
+                                                target_card:juice_up()
+                                        return true end }))
+                                    end
                                 end
                             end
                             hand_chips = mod_chips(hand_chips + (effects[ii].edition.chip_mod or 0))
@@ -855,6 +870,7 @@ G.FUNCS.evaluate_play = function(e)
                     scoring_name = text,
                     poker_hands = poker_hands,
                     repetition = false,
+                    other_card = G.hand.cards[i],
                     card_effects = effects
                 })
         
@@ -1005,14 +1021,28 @@ G.FUNCS.evaluate_play = function(e)
                     card_to_debuff[#card_to_debuff+1] = pseudorandom_element(G.hand.cards, pseudoseed('debuffrandom'))
                     for i=#card_to_debuff, 1, -1 do
                         local target_card = card_to_debuff[i]
-                        card_eval_status_text(target_card, 'extra', nil, nil, nil, {message = localize('k_debuffed'), colour = G.C.SECONDARY_SET.Polygon})
-                        G.E_MANAGER:add_event(Event({
-                            trigger = 'after',
-                            delay = 0.1,
-                            func = function() 
-                                target_card:set_debuff(true)
-                                target_card:juice_up()
-                        return true end }))
+                        if target_card.debuff then
+                            card_eval_status_text(target_card, 'extra', nil, nil, nil, {message = localize('k_destroyed'), colour = G.C.SECONDARY_SET.Polygon})
+                            G.E_MANAGER:add_event(Event({
+                                trigger = 'after',
+                                delay = 0.1,
+                                func = function() 
+                                    if target_card.ability.name == 'Glass Card' then 
+                                        target_card:shatter()
+                                    else
+                                        target_card:start_dissolve(nil, i ~= #card_to_debuff)
+                                    end
+                            return true end }))
+                        else
+                            card_eval_status_text(target_card, 'extra', nil, nil, nil, {message = localize('k_debuffed'), colour = G.C.SECONDARY_SET.Polygon})
+                            G.E_MANAGER:add_event(Event({
+                                trigger = 'after',
+                                delay = 0.1,
+                                func = function() 
+                                    target_card:set_debuff(true)
+                                    target_card:juice_up()
+                            return true end }))
+                        end
                     end
                 end
                 if edition_effects.jokers.mult_mod then
