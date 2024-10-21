@@ -2083,6 +2083,13 @@
                     "{C:attention}2 in 8 chance{} to {C:green}convert selected cards",
                     "{C:green}into glass cards"
                 }
+            },
+            c_gooby = {
+                name = "The Gooby Guy",
+                text = {
+                    "Gain {C:blue}+#1# Hands",
+                    "{C:inactive}(Usable during Blind)"
+                }
             }
         },
         Planet = {

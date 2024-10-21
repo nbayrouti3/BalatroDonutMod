@@ -2796,6 +2796,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
        elseif _c.name == "Judgement" then
        elseif _c.name == "The World" then loc_vars = {_c.config.max_highlighted, localize(_c.config.suit_conv, 'suits_plural'), colours = {G.C.SUITS[_c.config.suit_conv]}}
        elseif _c.name == "The Clown" then loc_vars = {_c.config.max_highlighted, localize{type = 'name_text', set = 'Enhanced', key = 'm_glass'}}; info_queue[#info_queue+1] = G.P_CENTERS['m_glass']
+       elseif _c.name == "The Gooby Guy" then loc_vars = {_c.config.extra}
        end
        localize{type = 'descriptions', key = _c.key, set = _c.set, nodes = desc_nodes, vars = loc_vars}
 
