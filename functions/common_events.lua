@@ -2836,7 +2836,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
             if v == 'foil' then info_queue[#info_queue+1] = G.P_CENTERS['e_foil'] end
             if v == 'holographic' then info_queue[#info_queue+1] = G.P_CENTERS['e_holo'] end
             if v == 'polychrome' then info_queue[#info_queue+1] = G.P_CENTERS['e_polychrome'] end
-            if v == 'shaded' then info_queue[#info_queue+1] = G.P_CENTERS['e_shady'] end
+            if v == 'shaded' then info_queue[#info_queue+1] = G.P_CENTERS['e_shaded'] end
             if v == 'negative' then info_queue[#info_queue+1] = G.P_CENTERS['e_negative'] end
             if v == 'negative_consumable' then info_queue[#info_queue+1] = {key = 'e_negative_consumable', set = 'Edition', config = {extra = 1}} end
             if v == 'gold_seal' then info_queue[#info_queue+1] = {key = 'gold_seal', set = 'Other'} end
