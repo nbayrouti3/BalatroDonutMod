@@ -1682,6 +1682,17 @@ function Card:use_consumeable(area, copier)
         delay(0.6)
     end
 
+    if self.ability.name == 'The Gooby Guy' then
+        card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize{type='variable',key='a_hands',vars={self.ability.extra}},colour = G.C.SECONDARY_SET.Tarot,delay = 0.4})
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+            play_sound('timpani')
+            used_tarot:juice_up(0.3, 0.5)
+            self.hands_sub = self.ability.extra
+            ease_hands_played(self.hands_sub)
+        return true end }))
+        delay(0.5)
+    end
+
     if self.ability.name == 'Tri-Eyed Cat' then
         local trigon_random = pseudorandom('trigon')
         if trigon_random <= G.GAME.probabilities.normal/2 then
@@ -2389,6 +2400,11 @@ function Card:can_use_consumeable(any_state, skip_check)
                 self.ability.name == 'Sigil' or self.ability.name == 'Ouija')
                 and #G.hand.cards > 1 then
                 return true
+            end
+            if self.ability.name == 'The Gooby Guy' then
+                if G.STATE == G.STATES.SELECTING_HAND then
+                    return true
+                end
             end
         end
 
