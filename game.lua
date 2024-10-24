@@ -623,7 +623,7 @@ function Game:init_item_prototypes()
         --Polygonal
         c_trigon=           {order = 1,    discovered = false,  cost = 4, consumeable = true, name = "Tri-Eyed Cat", pos = {x=6,y=5}, set = "Polygon", config = {extra = {rounds_needed = 3, dupes = 1, dupes_secret = 2}, max_highlighted = 1, remove_card = true}},
         c_tetragon=         {order = 2,    discovered = false,  cost = 4, consumeable = true, name = "Quadra Beast", pos = {x=7,y=5}, set = "Polygon", config = {extra = {rounds_needed = 4}, max_highlighted = 4}},
-        c_pentagon=         {order = 3,    discovered = false,  cost = 4, consumeable = true, name = "Penta Hand", pos = {x=8,y=5}, set = "Polygon", config = {extra = {rounds_needed = 1, penta_retrigger = 1, penta_retrigger_secret = 2}}},
+        c_pentagon=         {order = 3,    discovered = false,  cost = 4, consumeable = true, name = "Penta Hand", pos = {x=8,y=5}, set = "Polygon", config = {extra = {rounds_needed = 5, penta_retrigger = 1, penta_retrigger_secret = 2}}},
         c_hexagon=          {order = 4,    discovered = false,  cost = 4, consumeable = true, name = "Hexwing Angel", pos = {x=9,y=5}, set = "Polygon", config = {extra = {rounds_needed = 6}}},
         c_septagon=         {order = 5,    discovered = false,  cost = 4, consumeable = true, name = "Septabug", pos = {x=0,y=6}, set = "Polygon", config = {extra = {rounds_needed = 7}, min_highlighted = 2, max_highlighted = 2, septa_mod = 'm_bugged'}},
         c_octagon=          {order = 6,    discovered = false,  cost = 4, consumeable = true, name = "Octoclops", pos = {x=1,y=6}, set = "Polygon", config = {extra = {rounds_needed = 8, eoh_created = 4, stone_created = 3}, max_highlighted = 1}},
