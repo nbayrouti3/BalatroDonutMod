@@ -3727,7 +3727,7 @@ function create_UIBox_your_collection_tarots()
 
   local tarot_options = {}
   for i = 1, math.floor(#G.P_CENTER_POOLS.Tarot/7) do
-    table.insert(tarot_options, localize('k_page')..' '..tostring(i)..'/'..tostring(math.floor(#G.P_CENTER_POOLS.Tarot/6)))
+    table.insert(tarot_options, localize('k_page')..' '..tostring(i)..'/'..tostring(math.floor(#G.P_CENTER_POOLS.Tarot/7)))
   end
 
     for j = 1, #G.your_collection do
@@ -4488,81 +4488,254 @@ function G.UIDEF.credits()
             end,
           },
             {
-              label = "Misc",
+              label = "Publishing",
               tab_definition_function = function() return 
-                {n=G.UIT.ROOT, config={align = "cm", padding = 0.2, colour = G.C.BLACK, r = 0.1, emboss = 0.05, minh = 6, minw = 6}, nodes={
-                  {n=G.UIT.R, config={align = "cm", padding = 0.1,outline_colour = G.C.JOKER_GREY, r = 0.1, outline = 1}, nodes={
+                {n=G.UIT.ROOT, config={align = "cm", padding = 0.2, colour = G.C.BLACK, r = 0.1, emboss = 0.05, minh = 6, minw = 10}, nodes={
+                  {n=G.UIT.C, config={align = "cm", padding = 0.1,outline_colour = G.C.JOKER_GREY, r = 0.1, outline = 1}, nodes={
                     {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
-                      {n=G.UIT.T, config={text = "For Marshal", scale = text_scale*0.6, colour = G.C.WHITE, shadow = true}},
-                    }},
-                  }},
-                  {n=G.UIT.R, config={align = "cm", padding = 0.1,outline_colour = G.C.JOKER_GREY, r = 0.1, outline = 1}, nodes={
-                    {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
-                      {n=G.UIT.T, config={text = "Special Thanks", scale = text_scale*0.6, colour = G.C.GREEN, shadow = true}},
+                      {n=G.UIT.T, config={text = "Playstack", scale = text_scale*0.6, colour = G.C.RED, shadow = true}},
                     }},
                     {n=G.UIT.R, config={align = "tm", padding = 0}, nodes={
-                      {n=G.UIT.C, config={align = "tl", padding = 0.05, minw = 2.5}, nodes={
+                      {n=G.UIT.C, config={align = "tl", padding = 0.05}, nodes={
                         {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Nicole', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          {n=G.UIT.T, config={text = 'Harvey Elliott', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
                         }},
                         {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Josh', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          {n=G.UIT.T, config={text = 'Kevin Shrapnell', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
                         }},
                         {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Jeremy', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          {n=G.UIT.T, config={text = 'Rob Crossley', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
                         }},
                         {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Dylan', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          {n=G.UIT.T, config={text = 'Liz Cheng-Moore', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
                         }},
                         {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Justin', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          {n=G.UIT.T, config={text = 'Will Newell', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
                         }},
                         {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Daniel', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          {n=G.UIT.T, config={text = 'Charlotte Riley', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
                         }},
                         {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Colby', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          {n=G.UIT.T, config={text = 'Alexander Saunders', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
                         }},
                         {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Thomas', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          {n=G.UIT.T, config={text = 'Naman Budhwar', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
                         }},
                         {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Mom & Dad', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          {n=G.UIT.T, config={text = 'Tomasz Wisniowski', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
                         }},
                         {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Luc & Donna', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          {n=G.UIT.T, config={text = 'Patrick Johnson', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Tom Verney', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Wouter van Halderen', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Shawn Cotter', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
                         }},
                       }},
-                      {n=G.UIT.C, config={align = "tl", padding = 0.05, minw = 2.5}, nodes={
+                      {n=G.UIT.C, config={align = "tl", padding = 0.093}, nodes={
                         {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'GothicLordUK', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          {n=G.UIT.T, config={text = 'CEO', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
                         }},
                         {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Big Simple', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          {n=G.UIT.T, config={text = 'COO', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
                         }},
                         {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'MALF', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          {n=G.UIT.T, config={text = 'VP of Publishing', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
                         }},
                         {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Northernlion', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          {n=G.UIT.T, config={text = 'Lead Marketing Manager', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
                         }},
                         {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Purple Moss Collectors', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          {n=G.UIT.T, config={text = 'Producer', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
                         }},
                         {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Dan Gheesling', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          {n=G.UIT.T, config={text = 'Producer', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
                         }},
                         {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Fabian Fischer', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          {n=G.UIT.T, config={text = 'Producer', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
                         }},
                         {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'newobject', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          {n=G.UIT.T, config={text = 'Lead Visual Marketing Manager', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
                         }},
                         {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'MurphyObv', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          {n=G.UIT.T, config={text = 'Producer', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
                         }},
                         {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Love2D', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          {n=G.UIT.T, config={text = 'Senior Discovery Scout', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Discovery Scout', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'PR Manager', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Marketing Manager', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                      }},
+                      {n=G.UIT.B, config={align = "tl", w=0.25, h=0}, nodes={}},
+                      {n=G.UIT.C, config={align = "tl", padding = 0.05}, nodes={
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Marta Matyjewicz', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Rebecca Bell', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Alex Flynn', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Justas Pugaciauskas', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Jessica Chu', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Millicent Su', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Carla Malavasi', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Pawel Kwietniak', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Ela Müller', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Edgar Khoo', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Dami Ajiboye', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Aaron Ludlow', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Jenny Quintero', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                      }},
+                      {n=G.UIT.C, config={align = "tl", padding = 0.093}, nodes={
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Marketing Manager', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Finance', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Creative Director', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Graphic Designer', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Lead Video Artist', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Senior User Acquisition Manager', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Director of Publishing Services', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Front-end Developer', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Graphic Designer', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Video Editor', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Data Analyst', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Product Director', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Senior Partnerships Manager', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                      }},
+                      {n=G.UIT.B, config={align = "tl", w=0.25, h=0}, nodes={}},
+                      {n=G.UIT.C, config={align = "tl", padding = 0.05}, nodes={
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Stephanie Marti', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Emma Smith-Bodie', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Moe Abrams', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Piotr Kowalik', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Carmen Martino', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Rong Lin', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Bea Gomez', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Jose Olivares', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Joanna Kieronska', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Zuzanna Dawidowska', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Jean-Claude Vidanes ', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'AJ Purnell', scale = text_scale*0.42, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                      }},
+                      {n=G.UIT.C, config={align = "tl", padding = 0.093}, nodes={
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Senior Video Artist', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Community Manager', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Customer Support', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Software Engineer', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'HR & Office Manager', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Finance Manager', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Video Editor', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'QA & Localisation Manager', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'QA Tester', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'QA Tester', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'QA Tester', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'QA Tester', scale = text_scale*0.35, colour = G.C.GOLD, shadow = true}},
                         }},
                       }},
                     }},
@@ -4574,101 +4747,61 @@ function G.UIDEF.credits()
               label = "Production",
               tab_definition_function = function() return 
                 {n=G.UIT.ROOT, config={align = "cm", padding = 0.2, colour = G.C.BLACK, r = 0.1, emboss = 0.05, minh = 6, minw = 10}, nodes={
-                  {n=G.UIT.C, config={align = "cm", padding = 0.1,outline_colour = G.C.JOKER_GREY, r = 0.1, outline = 1}, nodes={
-                    {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
-                      {n=G.UIT.T, config={text = "Publishing", scale = text_scale*0.6, colour = G.C.WHITE, shadow = true}},
-                    }},
-                    {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
-                      {n=G.UIT.T, config={text = "Playstack", scale = text_scale*0.6, colour = G.C.RED, shadow = true}},
-                    }},
-                    {n=G.UIT.R, config={align = "tm", padding = 0}, nodes={
-                      {n=G.UIT.C, config={align = "tl", padding = 0.05}, nodes={
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Harvey Elliot', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Kevin Shrapnell', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Rob Crossley', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Liz Cheng-Moore', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Charlotte Riley', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Alexander Saunders', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Naman Budhwar', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Tomasz Wisniowski', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Patrick Johnson', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Wout van Halderen', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Shawn Cotter', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Marta Matyjewicz', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Krzysztof Niedzielski', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Rebecca Bell', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                    {n=G.UIT.C, config={align = "tm", padding = 0.1,outline_colour = G.C.JOKER_GREY, r = 0.1, outline = 1}, nodes={
+                      {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
+                        {n=G.UIT.T, config={text = "Porting", scale = text_scale*0.6, colour = G.C.WHITE, shadow = true}},
+                      }},
+                      {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
+                        {n=G.UIT.T, config={text = "PlayStation", scale = text_scale*0.45, colour = G.C.GOLD, shadow = true}},
+                      }},
+                      {n=G.UIT.R, config={align = "tm", padding = 0}, nodes={
+                        {n=G.UIT.C, config={align = "tl", padding = 0.03}, nodes={
+                          {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                            {n=G.UIT.T, config={text = 'Maarten De Meyer', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          }},
                         }},
                       }},
-                      {n=G.UIT.C, config={align = "tl", padding = 0.05}, nodes={
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Jose Olivares', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                      {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
+                        {n=G.UIT.T, config={text = "Xbox", scale = text_scale*0.45, colour = G.C.GOLD, shadow = true}},
+                      }},
+                      {n=G.UIT.R, config={align = "tm", padding = 0}, nodes={
+                        {n=G.UIT.C, config={align = "tl", padding = 0.03}, nodes={
+                          {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                            {n=G.UIT.T, config={text = 'Maarten De Meyer', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          }},
                         }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Alex Flynn', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                      }},
+                      {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
+                        {n=G.UIT.T, config={text = "Android", scale = text_scale*0.45, colour = G.C.GOLD, shadow = true}},
+                      }},
+                      {n=G.UIT.R, config={align = "tm", padding = 0}, nodes={
+                        {n=G.UIT.C, config={align = "tl", padding = 0.03}, nodes={
+                          {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                            {n=G.UIT.T, config={text = 'Maarten De Meyer', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          }},
                         }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Justas Pugaciauskas', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                      }},
+                      {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
+                        {n=G.UIT.T, config={text = "Apple Platforms", scale = text_scale*0.45, colour = G.C.GOLD, shadow = true}},
+                      }},
+                      {n=G.UIT.R, config={align = "tm", padding = 0}, nodes={
+                        {n=G.UIT.C, config={align = "tl", padding = 0.03}, nodes={
+                          {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                            {n=G.UIT.T, config={text = 'Maarten De Meyer', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          }},
                         }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Jessica Chu', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Millicent Su', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Carla Malavasi', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Pawel Kwietniak', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Ela Müller', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Fox Hambly', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Edgar Khoo', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Dami Ajiboye', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Jean Claude Vidanes', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                        }},
-                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                          {n=G.UIT.T, config={text = 'Joanna Kierońska', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                      }},
+                      {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
+                        {n=G.UIT.T, config={text = "Mac (Steam)", scale = text_scale*0.45, colour = G.C.GOLD, shadow = true}},
+                      }},
+                      {n=G.UIT.R, config={align = "tm", padding = 0}, nodes={
+                        {n=G.UIT.C, config={align = "tl", padding = 0.03}, nodes={
+                          {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                            {n=G.UIT.T, config={text = 'william341', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                          }},
                         }},
                       }},
                     }},
-                  }},
                   {n=G.UIT.C, config={align = "cm", padding = 0.1,outline_colour = G.C.JOKER_GREY, r = 0.1, outline = 1}, nodes={
                     {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
                       {n=G.UIT.T, config={text = "Localization", scale = text_scale*0.6, colour = G.C.WHITE, shadow = true}},
@@ -4767,35 +4900,7 @@ function G.UIDEF.credits()
                       }},
                     }},
                   }},
-                  {n=G.UIT.C, config={align = "cm", padding = 0.1}, nodes={
-                    {n=G.UIT.R, config={align = "tm", padding = 0.1,outline_colour = G.C.JOKER_GREY, r = 0.1, outline = 1}, nodes={
-                      {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
-                        {n=G.UIT.T, config={text = "Porting", scale = text_scale*0.6, colour = G.C.WHITE, shadow = true}},
-                      }},
-                      (love.system.getOS() == 'Nintendo Switch') and {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
-                        {n=G.UIT.T, config={text = "Platform help", scale = text_scale*0.45, colour = G.C.GOLD, shadow = true}},
-                      }} or {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
-                        {n=G.UIT.T, config={text = "Xbox and PlayStation", scale = text_scale*0.45, colour = G.C.GOLD, shadow = true}},
-                      }},
-                      {n=G.UIT.R, config={align = "tm", padding = 0}, nodes={
-                        {n=G.UIT.C, config={align = "tl", padding = 0.03}, nodes={
-                          {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                            {n=G.UIT.T, config={text = 'Maarten De Meyer', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                          }},
-                        }},
-                      }},
-                      (love.system.getOS() ~= 'Nintendo Switch') and {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
-                        {n=G.UIT.T, config={text = "Mac", scale = text_scale*0.45, colour = G.C.GOLD, shadow = true}},
-                      }} or nil,
-                      {n=G.UIT.R, config={align = "tm", padding = 0}, nodes={
-                        {n=G.UIT.C, config={align = "tl", padding = 0.03}, nodes={
-                          {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
-                            {n=G.UIT.T, config={text = 'william341', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                          }},
-                        }},
-                      }},
-                    }},
-                    {n=G.UIT.R, config={align = "tm", padding = 0.1,outline_colour = G.C.JOKER_GREY, r = 0.1, outline = 1}, nodes={
+                    {n=G.UIT.C, config={align = "tm", padding = 0.1,outline_colour = G.C.JOKER_GREY, r = 0.1, outline = 1}, nodes={
                       {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
                         {n=G.UIT.T, config={text = "Testing/QA", scale = text_scale*0.6, colour = G.C.WHITE, shadow = true}},
                       }},
@@ -4826,9 +4931,10 @@ function G.UIDEF.credits()
                             {n=G.UIT.T, config={text = 'mcpower', scale = text_scale*0.35, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
                           }},
                         }},
-                      }},
-                    }},
-                  }}
+                      
+                  }},
+                  }},
+                  
                 }}
               end,
             },
@@ -4887,15 +4993,6 @@ function G.UIDEF.credits()
               label = "Imagery",
               tab_definition_function = function() return 
                 {n=G.UIT.ROOT, config={align = "cm", padding = 0.2, colour = G.C.BLACK, r = 0.1, emboss = 0.05, minh = 6, minw = 10}, nodes={
-                  {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
-                    {n=G.UIT.T, config={text = "All sprites, shaders, and any other visual assets", scale = text_scale*0.6, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                  }},
-                  {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
-                    {n=G.UIT.T, config={text = "not listed here were created by LocalThunk.", scale = text_scale*0.6, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
-                  }},
-                  {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
-                    {n=G.UIT.T, config={text = "©2024 - All rights reserved", scale = text_scale*0.6, colour = G.C.BLUE, shadow = true}},
-                  }},
                   {n=G.UIT.R, config={align = "cm", padding = 0.1,outline_colour = G.C.JOKER_GREY, r = 0.1, outline = 1}, nodes={
                     {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
                       {n=G.UIT.T, config={text = 'The font "m6x11.ttf" by Daniel Linssen (https://managore.itch.io/m6x11)', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
@@ -4915,6 +5012,103 @@ function G.UIDEF.credits()
                       {n=G.UIT.T, config={text = 'The Joker "Vagabond" was created by Lumpy Touch', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
                     }},
                   }},
+                  {n=G.UIT.R, config={align = "cm", padding = 0.1,outline_colour = G.C.JOKER_GREY, r = 0.1, outline = 1}, nodes={
+                    {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
+                      {n=G.UIT.T, config={text = 'The Collab art for Slay the Spire and The Binding of Isaac was created by Neato', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                    }},
+                  }},
+                  {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
+                    {n=G.UIT.T, config={text = "All sprites, shaders, and any other visual assets", scale = text_scale*0.6, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                  }},
+                  {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
+                    {n=G.UIT.T, config={text = "not listed here were created by LocalThunk.", scale = text_scale*0.6, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                  }},
+                  {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
+                    {n=G.UIT.T, config={text = "©2024 - All rights reserved", scale = text_scale*0.6, colour = G.C.BLUE, shadow = true}},
+                  }},
+                }}
+              end,
+            },
+            {
+              label = "Misc",
+              tab_definition_function = function() return 
+                {n=G.UIT.ROOT, config={align = "cm", padding = 0.2, colour = G.C.BLACK, r = 0.1, emboss = 0.05, minh = 6, minw = 6}, nodes={
+                  {n=G.UIT.R, config={align = "cm", padding = 0.1,outline_colour = G.C.JOKER_GREY, r = 0.1, outline = 1}, nodes={
+                    {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
+                      {n=G.UIT.T, config={text = "For Marshal", scale = text_scale*0.6, colour = G.C.WHITE, shadow = true}},
+                    }},
+                  }},
+                  {n=G.UIT.R, config={align = "cm", padding = 0.1,outline_colour = G.C.JOKER_GREY, r = 0.1, outline = 1}, nodes={
+                    {n=G.UIT.R, config={align = "cm", padding = 0}, nodes={
+                      {n=G.UIT.T, config={text = "Special Thanks", scale = text_scale*0.6, colour = G.C.GREEN, shadow = true}},
+                    }},
+                    {n=G.UIT.R, config={align = "tm", padding = 0}, nodes={
+                      {n=G.UIT.C, config={align = "tl", padding = 0.05, minw = 2.5}, nodes={
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Nicole', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Josh', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Jeremy', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Dylan', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Justin', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Daniel', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Colby', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Thomas', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Mom & Dad', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Luc & Donna', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                      }},
+                      {n=G.UIT.C, config={align = "tl", padding = 0.05, minw = 2.5}, nodes={
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'GothicLordUK', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Big Simple', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'MALF', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Northernlion', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Purple Moss Collectors', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Dan Gheesling', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Fabian Fischer', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'newobject', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'MurphyObv', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                        {n=G.UIT.R, config={align = "cl", padding = 0}, nodes={
+                          {n=G.UIT.T, config={text = 'Love2D', scale = text_scale*0.5, colour = G.C.UI.TEXT_LIGHT, shadow = true}},
+                        }},
+                      }},
+                    }},
+                  }}
                 }}
               end,
             },

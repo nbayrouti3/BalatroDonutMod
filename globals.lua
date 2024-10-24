@@ -197,24 +197,28 @@ function Game:set_globals()
     self.COLLABS = {
         pos = { Jack = {x=0,y=0}, Queen = {x=1,y=0}, King = {x=2,y=0} },
         options = {
-          Spades = {
+            Spades = {
+                'default',
+                'collab_TW',
+                'collab_CYP'
+            },
+            Hearts = {
               'default',
-              'collab_TW',
-         },
-          Hearts = {
-            'default',
-            'collab_AU',
-          },
-          Clubs = {
-            'default',
-            'collab_VS'
-          },
-          Diamonds = {
-            'default',
-            'collab_DTD'
-          }
+              'collab_AU',
+              'collab_TBoI'
+            },
+            Clubs = {
+              'default',
+              'collab_VS',
+              'collab_STS'
+            },
+            Diamonds = {
+              'default',
+              'collab_DTD',
+              'collab_SV'
+            }
         },
-      }
+    }
 
     self.METRICS = {
         cards = {
