@@ -2532,11 +2532,6 @@ function G.UIDEF.usage_tabs()
           tab_definition_function_args = {'consumeable_usage'},
         },
         {
-          label = localize('b_stat_polygons'),
-          tab_definition_function = create_UIBox_usage,
-          tab_definition_function_args = {'consumeable_usage', 'Polygon'},
-        },
-        {
           label = localize('b_stat_tarots'),
           tab_definition_function = create_UIBox_usage,
           tab_definition_function_args = {'consumeable_usage', 'Tarot'},
