@@ -442,6 +442,11 @@ function evaluate_poker_hand(hand)
     if not results.top then results.top = results["Straight Flush"] end
   end
 
+  if next(parts._straight) and next(find_joker('Morally Complex Joker')) then
+    results["Straight Flush"] = parts._straight
+    if not results.top then results.top = results["Straight Flush"] end
+  end
+
   if next(parts._4) then
     results["Four of a Kind"] = parts._4
     if not results.top then results.top = results["Four of a Kind"] end
@@ -902,6 +907,9 @@ end
 
 function find_joker(name, non_debuff)
   local jokers = {}
+  if name == "Morally Complex Joker" then
+    local random_var = 1
+  end
   if not G.jokers or not G.jokers.cards then return {} end
   for k, v in pairs(G.jokers.cards) do
     if v and type(v) == 'table' and v.ability.name == name and (non_debuff or not v.debuff) then

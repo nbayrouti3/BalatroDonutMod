@@ -963,6 +963,7 @@ function Card:generate_UIBox_ability_table()
         elseif self.ability.name == 'Stonks' then loc_vars = {self.ability.extra}
         elseif self.ability.name == 'The Perfect Loaf' then
         elseif self.ability.name == 'Freaky Joker' then loc_vars = self.ability.extra 
+        elseif self.ability.name == 'Morally Complex Joker' then
         end
     end
 
@@ -4723,6 +4724,9 @@ function Card:calculate_joker(context)
                         elseif context.scoring_name == 'Two Pair' then
                             self.ability.mult = self.ability.mult + 4
                         end
+                    end
+                    if self.ability.name == 'Morally Complex Joker' then
+                        if context.scoring_name == 'Straight' then context.scoring_name = 'Straight Flush' end
                     end
                     if self.ability.name == 'Obelisk' and not context.blueprint then
                         local reset = true
