@@ -298,7 +298,7 @@ function Game:init_item_prototypes()
         bl_flint =           {name = 'The Flint',    defeated = false, order = 24, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=24}, boss = {min = 2, max = 10}, boss_colour = HEX('e56a2f')},
         bl_final_acorn =     {name = 'Amber Acorn',  defeated = false, order = 26, dollars = 8, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=27}, boss = {showdown = true, min = 10, max = 10}, boss_colour = HEX('fda200')},
         bl_final_heart =     {name = 'Crimson Heart',defeated = false, order = 29, dollars = 8, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=25}, boss = {showdown = true, min = 10, max = 10}, boss_colour = HEX('ac3232')},
-        bl_smothering_tithe= {name = 'Smothering Tithe', defeated = false, order = 31, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=8}, boss = {min = 1, max = 10}, boss_color = HEX('ac3232')},
+        bl_smothering_tithe= {name = 'Smothering Tithe', defeated = false, order = 31, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=31}, boss = {min = 1, max = 10}, boss_colour = HEX('ac3232')},
     }
     self.b_undiscovered = {name = 'Undiscovered', debuff_text = 'Defeat this blind to discover', pos = {x=0,y=30}}
 
