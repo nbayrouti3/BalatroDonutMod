@@ -1559,6 +1559,13 @@
                     "Duncan Jokers adjacent to it"
                 }
             },
+            j_morally_complex = {
+                name = "Morally Complex Joker",
+                text = {
+                    "All {C:attention}Straights{} are now",
+                    "considered {C:attention}Straight Flushes{}"
+                }
+            },
             j_freaky = {
                 name = "Freaky Joker",
                 text = {
