@@ -21,7 +21,7 @@ int noiseSwirlSteps = 2;
 float noiseSwirlValue = 1.;
 float noiseSwirlStepValue = noiseSwirlValue / float(noiseSwirlSteps);
 
-float noiseScale = 2.0;
+float noiseScale = .02;
 float noiseTimeScale = 0.07;
 
 
@@ -187,21 +187,35 @@ vec4 dissolve_mask(vec4 tex, vec2 texture_coords, vec2 uv)
 }
 
 vec4 effect( vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords ){
+    //UV SETUP
     vec4 tex = Texel(texture, texture_coords);
     vec2 uv = (((texture_coords)*(image_details)) - texture_details.xy*texture_details.ba)/texture_details.ba;
-    vec2 adjusted_uv = uv - vec2(0.5, 0.5) ;
+    vec2 adjusted_uv = uv - vec2(.5, .5);
+    //UV SETUP
 
-    float noise = getNoise(vec3(uv.x + .1 * noiseScale, uv.y - real_time * .2, real_time * noiseTimeScale));
-    float noise_2 = getNoise(vec3(uv.x + .05 * cos(real_time) * noiseScale *2., uv.y - real_time * .25, real_time * noiseTimeScale));
+    //GET NOISE BASED OFF OF SCREEN COORDS, INSTEAD OF UV
+    float noise = getNoise(vec3((screen_coords + real_time) * .01, real_time * noiseTimeScale));
+    float noise_2 = getNoise(vec3((screen_coords + real_time) * .01, real_time * noiseTimeScale));
+    //GET NOISE BASED OFF OF SCREEN COORDS, INSTEAD OF UV
 
+    //DARKEN NOISE BUT ALSO REMOVE OFF ALPHA
     noise = noise * noise * noise * noise * 2.0;
     noise_2 = noise_2 * noise_2 + .5 * noise_2 * noise_2 * 2.0;
-    float mix_middle = mix(noise, -1.0 * (3. * length(adjusted_uv)), 0.3);
-    vec3 noiseTuple = vec3(mix_middle + noise);
-    vec3 noiseTuple_2 = vec3(mix_middle + noise_2);
-    //tex.rgb *= noiseTuple;
-    tex.a *= (2.- noiseTuple.r);
-    tex = mix(tex , vec4(mix(length(adjusted_uv) * -noiseTuple, noiseTuple_2, .5), tex.a), noiseTuple.r + noiseTuple_2.r);
+    //DARKEN NOISE BUT ALSO REMOVE OFF ALPHA
+
+    //LERP NOISE TO CENTER OF CARD
+    float mix_middle = mix(noise, -1.0 * (3. * length(adjusted_uv)), 0.35);
+    //LERP NOISE TO CENTER OF CARD
+
+    //ALLOW NEGATIVE EFFECT NEAR CENTER AND SET ALPHA
+    vec3 noise_tex = vec3(mix(length(adjusted_uv) * -noise, noise, .75));
+    tex.a *= (2.- noise + mix_middle);
+    //ALLOW NEGATIVE EFFECT NEAR CENTER AND SET ALPHA
+
+    //APPLY NOISE TO TEX THROUGH A LERP
+    tex = mix(tex, vec4(noise_tex, tex.a), (noise + mix_middle) + (noise_2 + mix_middle));
+    //APPLY NOISE TO TEX THROUGH A LERP
+
     return dissolve_mask(tex, texture_coords, uv);
 }
 

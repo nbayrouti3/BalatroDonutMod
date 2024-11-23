@@ -5822,6 +5822,7 @@ function Card:draw(layer)
                         self.children.front:draw_shader('foil', nil, self.ARGS.send_to_shader)
                     end
                 end
+
                 if self.edition and self.edition.polychrome then
                     self.children.center:draw_shader('polychrome', nil, self.ARGS.send_to_shader)
                     if self.children.front and self.ability.effect ~= 'Stone Card' then
