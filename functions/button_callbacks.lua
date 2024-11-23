@@ -2524,6 +2524,23 @@ G.FUNCS.buy_from_shop = function(e)
           if e.config.id == 'buy_and_use' then 
             G.FUNCS.use_card(e, true)
           end
+
+          if G.GAME.shop.captured_joker_charges > 0 then
+            G.GAME.shop.captured_joker_charges = G.GAME.shop.captured_joker_charges - 1
+            for k, v in ipairs(G.shop_booster.cards) do
+                v:set_cost()
+                create_shop_card_ui(v)
+            end
+            for k, v in ipairs(G.shop_vouchers.cards) do
+                v:set_cost()
+                create_shop_card_ui(v)
+            end
+            for k, v in ipairs(G.shop_jokers.cards) do
+                v:set_cost()
+                create_shop_card_ui(v)
+            end
+          end
+          
           return true
         end
       }))

@@ -395,6 +395,7 @@ function Card:set_cost()
     if self.ability.rental then self.cost = 1 end
     self.sell_cost = math.max(1, math.floor(self.cost/2)) + (self.ability.extra_value or 0)
     if self.area and self.ability.couponed and (self.area == G.shop_jokers or self.area == G.shop_booster) then self.cost = 0 end
+    if G.GAME.shop.captured_joker_charges > 0 then self.cost = 0 end
     self.sell_cost_label = self.facing == 'back' and '?' or self.sell_cost
 end
 
@@ -964,6 +965,7 @@ function Card:generate_UIBox_ability_table()
         elseif self.ability.name == 'The Perfect Loaf' then
         elseif self.ability.name == 'Freaky Joker' then loc_vars = self.ability.extra 
         elseif self.ability.name == 'Morally Complex Joker' then
+        elseif self.ability.name == 'Captured Joker' then
         end
     end
 
@@ -2704,6 +2706,22 @@ function Card:open()
             end
 
         return true end }))
+
+        if G.GAME.shop.captured_joker_charges > 0 then
+            G.GAME.shop.captured_joker_charges = G.GAME.shop.captured_joker_charges - 1
+            for k, v in ipairs(G.shop_booster.cards) do
+                v:set_cost()
+                create_shop_card_ui(v)
+            end
+            for k, v in ipairs(G.shop_vouchers.cards) do
+                v:set_cost()
+                create_shop_card_ui(v)
+            end
+            for k, v in ipairs(G.shop_jokers.cards) do
+                v:set_cost()
+                create_shop_card_ui(v)
+            end
+        end
     end
 end
 
@@ -2771,6 +2789,22 @@ function Card:redeem()
             self.children.bot_disp:remove()
             self.children.bot_disp = nil
         return true end }))
+
+        if G.GAME.shop.captured_joker_charges > 0 then
+            G.GAME.shop.captured_joker_charges = G.GAME.shop.captured_joker_charges - 1
+            for k, v in ipairs(G.shop_booster.cards) do
+                v:set_cost()
+                create_shop_card_ui(v)
+            end
+            for k, v in ipairs(G.shop_vouchers.cards) do
+                v:set_cost()
+                create_shop_card_ui(v)
+            end
+            for k, v in ipairs(G.shop_jokers.cards) do
+                v:set_cost()
+                create_shop_card_ui(v)
+            end
+        end
     end
 end
 
@@ -3431,6 +3465,24 @@ function Card:calculate_joker(context)
                         return true
                     end }))
                     G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.05,func = function() G.hand.cards[i]:flip();G.hand.cards[i]:juice_up(0.3, 0.3);return true end }))
+                end
+            end
+            if self.ability.name == "Captured Joker" then
+                G.GAME.shop.captured_joker_charges = G.GAME.shop.captured_joker_charges + 1
+                local shop_exists = not not G.shop
+                if shop_exists then
+                    for k, v in ipairs(G.shop_booster.cards) do
+                        v:set_cost()
+                        create_shop_card_ui(v)
+                    end
+                    for k, v in ipairs(G.shop_vouchers.cards) do
+                        v:set_cost()
+                        create_shop_card_ui(v)
+                    end
+                    for k, v in ipairs(G.shop_jokers.cards) do
+                        v:set_cost()
+                        create_shop_card_ui(v)
+                    end
                 end
             end
         elseif context.selling_card then
