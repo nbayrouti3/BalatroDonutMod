@@ -966,6 +966,7 @@ function Card:generate_UIBox_ability_table()
         elseif self.ability.name == 'Freaky Joker' then loc_vars = self.ability.extra 
         elseif self.ability.name == 'Morally Complex Joker' then
         elseif self.ability.name == 'Captured Joker' then
+        elseif self.ability.name == 'Habibi Duncan' then
         end
     end
 
@@ -2394,6 +2395,16 @@ function Card:can_use_consumeable(any_state, skip_check)
         end
         if G.STATE == G.STATES.SELECTING_HAND or G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.PLANET_PACK or G.STATE == G.STATES.POLYGON_PACK then
             if self.ability.consumeable.max_highlighted then
+                if self.ability.name == "The Lovers" then
+                    local not_found = true
+                    for k, v in pairs(G.jokers.cards) do
+                        if v.ability.name == "Habibi Duncan" then 
+                            self.ability.consumeable.max_highlighted = 2
+                            not_found = false
+                        end
+                    end
+                    if not_found then self.ability.consumeable.max_highlighted = 1 end
+                end
                 if self.ability.consumeable.mod_num >= #G.hand.highlighted and #G.hand.highlighted >= (self.ability.consumeable.min_highlighted or 1) then
                     return true
                 end
@@ -5554,7 +5565,7 @@ function Card:update(dt)
             end
             self.ability.mult = sell_cost
         end
-        if self.ability.name == "The Perfect Loaf" then
+        if self.ability.name == "The Perfect Loaf" and ( not self.area or not self.area.config.collection ) then
             local left_joker = nil
             local right_joker = nil
             for i = 1, #G.jokers.cards do
@@ -5575,7 +5586,10 @@ function Card:update(dt)
                     still_active = true
                 end
     
-                if still_active == false then curr_joker:set_edition(nil) end
+                if still_active == false then 
+                    curr_joker:set_edition(nil) 
+                    table.remove(activated, i)
+                end
             end
     
             if left_joker and left_joker.config.center.config.duncan and (not left_joker.edition or not left_joker.edition.polychrome)then

@@ -1580,6 +1580,13 @@
                     "in the shop for {C:attention}free{}"
                 }
             },
+            j_habibi_duncan = {
+                name = "Habibi Duncan",
+                text = {
+                    "Lets you choose {C:attention}1{} extra",
+                    "card for {C:tarot}The Lovers{}"
+                }
+            }
         },
         Voucher = {
             v_overstock_norm = {
