@@ -1573,6 +1573,13 @@
                     "hand become {C:attention}Wild{} cards"
                 }
             },
+            j_captured_joker = {
+                name = "Captured Joker",
+                text = {
+                    "Sell this card to get one item",
+                    "in the shop for {C:attention}free{}"
+                }
+            },
         },
         Voucher = {
             v_overstock_norm = {
