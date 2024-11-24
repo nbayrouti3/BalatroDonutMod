@@ -513,6 +513,18 @@ function Card:set_seal(_seal, silent, immediate)
                 }))
             end
         end
+        if self:is_face(false) then
+            for i = 1, #G.jokers.cards do
+                local joker = G.jokers.cards[i]
+                if joker.ability.name == "Shirtless Benzon" then
+                    joker.ability.x_mult = joker.ability.x_mult + joker.ability.extra
+                    G.E_MANAGER:add_event(Event({
+                        func = function() card_eval_status_text(joker, 'extra', nil, nil, nil, {message = localize{type='variable',key='a_xmult',vars={joker.ability.x_mult}}}); return true
+                        end}))
+                    return
+                end
+            end
+        end
     end
     if self.ability.name == 'Gold Card' and self.seal == 'Gold' and self.playing_card then 
         check_for_unlock({type = 'double_gold'})
@@ -958,6 +970,7 @@ function Card:generate_UIBox_ability_table()
         elseif self.ability.name == 'Freeze Dried Strawberry' then loc_vars = {self.ability.extra.chips, ''..(G.GAME and G.GAME.probabilities.normal or 1), self.ability.extra.odds}
         elseif self.ability.name == 'Part of You' then loc_vars = {self.ability.x_mult, self.ability.extra + self.ability.x_mult*(self.ability.dupe_tally or 0)}
         elseif self.ability.name == 'The Singularity' then loc_vars = {self.ability.extra}
+        elseif self.ability.name == 'Shirtless Benzon' then loc_vars = {self.ability.extra, self.ability.x_mult}
         elseif self.ability.name == 'Sacrificial Joker' then
         elseif self.ability.name == 'Monochromatic Joker' then loc_vars = {self.ability.extra, 1 + self.ability.extra*(self.ability.mono_tally or 0)}
         elseif self.ability.name == 'Moist Chan' then loc_vars = {self.ability.extra.chips, self.ability.extra.mult}
