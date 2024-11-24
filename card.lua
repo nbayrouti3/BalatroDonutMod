@@ -2399,7 +2399,7 @@ function Card:can_use_consumeable(any_state, skip_check)
                     local not_found = true
                     for k, v in pairs(G.jokers.cards) do
                         if v.ability.name == "Habibi Duncan" then 
-                            self.ability.consumeable.max_highlighted = 2
+                            self.ability.consumeable.max_highlighted = self.ability.consumeable.habibi_bonus
                             not_found = false
                         end
                     end
