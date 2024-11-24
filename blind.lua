@@ -300,6 +300,7 @@ function Blind:defeat(silent)
     local blind_name_dynatext = G.HUD_blind:get_UIE_by_ID('HUD_blind_name').config.object
     blind_name_dynatext:pop_out(2)
 
+    G.GAME.current_round.hand_played = 0
     G.E_MANAGER:add_event(Event({
         trigger = 'after',
         blockable = false,
@@ -474,6 +475,39 @@ function Blind:draw()
     add_to_drawhash(self)
 end
 
+function Blind:press_discard()
+    if self.disabled then return end
+    if self.name == "The Hail" then
+        delay(0.3)
+        G.E_MANAGER:add_event(Event({ func = function()
+            local any_selected = nil
+            local _cards = {}
+            for k, v in ipairs(G.hand.cards) do
+                _cards[#_cards+1] = v
+            end
+            for i = 1, 1 do
+                if G.hand.cards[i] then 
+                    local selected_card, card_key = pseudorandom_element(_cards, pseudoseed('hail'))
+                    G.hand:add_to_highlighted(selected_card, true)
+                    table.remove(_cards, card_key)
+                    any_selected = true
+                    play_sound('card1', 1)
+                    if any_selected then
+                        if selected_card == G.P_CENTERS.m_glass then 
+                            selected_card:shatter()
+                        else
+                            selected_card:start_dissolve()
+                        end
+                    end
+                end
+            end
+        return true end })) 
+        self.triggered = true
+        delay(0.7)
+        return true
+    end
+end
+
 function Blind:press_play()
     if self.disabled then return end
     if self.name == "The Hook" then
@@ -516,6 +550,62 @@ function Blind:press_play()
         end
         return true end })) 
         self.triggered = true
+        return true
+    end
+    if self.name == 'The Noble' then
+        G.E_MANAGER:add_event(Event({ func = function()
+            local _suit, _rank = nil, nil
+            _rank = 'Q'
+            _suit = pseudorandom_element({'S','H','D','C'}, pseudoseed('noble'))
+            _suit = _suit or 'S'; _rank = _rank or 'A'
+            local new_card = create_playing_card({front = G.P_CARDS[_suit..'_'.._rank]}, G.hand, nil, i ~= 1, {G.C.SECONDARY_SET.Polygon})
+            new_card:set_debuff(true)
+            new_card.permanent_debuff = true
+        return true end })) 
+        self.triggered = true
+        delay(0.7)
+        return true
+    end
+    if self.name == 'The Marshal' or self.name == 'The Traitor' then
+        G.E_MANAGER:add_event(Event({ func = function()
+            local any_selected = nil
+            local _cards = {}
+            for k, v in ipairs(G.hand.cards) do
+                _cards[#_cards+1] = v
+            end
+            for i = 1, 3 do
+                if G.hand.cards[i] then 
+                    local selected_card, card_key = pseudorandom_element(_cards, pseudoseed('hook'))
+                    G.hand:add_to_highlighted(selected_card, true)
+                    table.remove(_cards, card_key)
+                    any_selected = true
+                    play_sound('card1', 1)
+                    if any_selected then
+                        selected_card:flip()
+                        local _rank = pseudorandom_element({'2','3','4','5','6','7','8','9','T','J','Q','K','A'}, pseudoseed('marshal'))
+                        local _suit = pseudorandom_element({'S','H','D','C'}, pseudoseed('traitor'))
+                        if self.name == 'The Marshal' then
+                            local suit_prefix = string.sub(selected_card.base.suit, 1, 1)..'_'
+                            local rank_suffix = _rank
+                            selected_card:set_base(G.P_CARDS[suit_prefix..rank_suffix])
+                            card_eval_status_text(selected_card, 'above_consumeable', nil, nil, nil, {message = localize{type='variable',key='a_rank',vars={selected_card.base.value}}})
+                        elseif self.name == 'The Traitor' then
+                            local suit_prefix = _suit..'_'
+                            local rank_suffix = selected_card.base.id < 10 and tostring(selected_card.base.id) or
+                            selected_card.base.id == 10 and 'T' or selected_card.base.id == 11 and 'J' or
+                            selected_card.base.id == 12 and 'Q' or selected_card.base.id == 13 and 'K' or
+                            selected_card.base.id == 14 and 'A'
+                            selected_card:set_base(G.P_CARDS[suit_prefix..rank_suffix])
+                            card_eval_status_text(selected_card, 'above_consumeable', nil, nil, nil, {message = localize{type='variable',key='a_rank',vars={selected_card.base.suit}}})
+                        end
+                        selected_card:flip()
+                        G.hand:unhighlight_all()
+                    end
+                end
+            end
+        return true end })) 
+        self.triggered = true
+        delay(0.7)
         return true
     end
 end
@@ -611,6 +701,26 @@ function Blind:drawn_to_hand()
                 self:wiggle()
             end
         end
+        if self.name == 'Saffron Timer' then
+            local needed_chips = self.mult+(G.GAME.current_round.hands_played*(G.GAME.current_round.hands_played*0.4)) -- This increase will reach the same mult amount as Violet Vessel in 4/5 hands, Race against the clock
+            self.chips = get_blind_amount(G.GAME.round_resets.ante)*needed_chips*G.GAME.starting_params.ante_scaling
+            self.chip_text = number_format(self.chips)
+            if G.GAME.current_round.hand_played == 1 then -- This flag is set to 1 in state_events, under "G.FUNCS.play_cards_from_highlighted". Required to counter draw from hand via discard.
+                G.E_MANAGER:add_event(Event({
+                    trigger = 'immediate',
+                    func = (function()
+                        G.HUD_blind:get_UIE_by_ID('HUD_blind_debuff_1'):juice_up(0.3, 0)
+                        G.HUD_blind:get_UIE_by_ID('HUD_blind_debuff_2'):juice_up(0.3, 0)
+                        G.GAME.blind:juice_up()
+                        G.GAME.current_round.hand_played = 0
+                        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.06*G.SETTINGS.GAMESPEED, blockable = false, blocking = false, func = function()
+                            play_sound('tarot2', 0.76, 0.4);return true end}))
+                        play_sound('tarot2', 1, 0.4)
+                        return true
+                    end)
+                }))
+            end
+        end
     end
     self.prepped = nil
 end
@@ -635,12 +745,23 @@ function Blind:stay_flipped(area, card)
 end
 
 function Blind:debuff_card(card, from_blind)
+    -- Ensure permanent debuffs are respected
+    if card.permanent_debuff then
+        card:set_debuff(true)
+        return
+    end
+
+    if card.temporary_debuff then
+        card:set_debuff(true)
+        return
+    end
+
     if self.debuff and not self.disabled and card.area ~= G.jokers then
         if self.debuff.suit and card:is_suit(self.debuff.suit, true) then
             card:set_debuff(true)
             return
         end
-        if self.debuff.is_face =='face' and card:is_face(true) then
+        if self.debuff.is_face == 'face' and card:is_face(true) then
             card:set_debuff(true)
             return
         end
@@ -660,7 +781,12 @@ function Blind:debuff_card(card, from_blind)
     if self.name == 'Crimson Heart' and not self.disabled and card.area == G.jokers then 
         return
     end
-    if self.name == 'Verdant Leaf' and not self.disabled and card.area ~= G.jokers then card:set_debuff(true); return end
+    if self.name == 'Verdant Leaf' and not self.disabled and card.area ~= G.jokers then
+        card:set_debuff(true)
+        return
+    end
+
+    -- Remove debuff only if no other flag is set
     card:set_debuff(false)
 end
 

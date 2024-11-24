@@ -2421,10 +2421,10 @@ function get_new_boss()
     if G.FORCE_BOSS then return G.FORCE_BOSS end
     
     local eligible_bosses = {}
-    local smothering_tithe = nil
+    local forced_boss = nil
     for k, v in pairs(G.P_BLINDS) do
-        --if v.name == "Smothering Tithe" then
-            --smothering_tithe = k
+        --if v.name == "Saffron Timer" then
+        --    forced_boss = k
         --end
         if not v.boss then
 
@@ -2455,7 +2455,7 @@ function get_new_boss()
         end
     end
     local _, boss = pseudorandom_element(eligible_bosses, pseudoseed('boss'))
-    boss = smothering_tithe or boss
+    boss = forced_boss or boss
     G.GAME.bosses_used[boss] = G.GAME.bosses_used[boss] + 1
     
     return boss

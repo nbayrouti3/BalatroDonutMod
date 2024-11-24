@@ -119,6 +119,10 @@ function Card:set_base(card, initial)
         times_played = 0
     }
 
+    -- Initialize permanent_debuff and temporary_debuff flag to false
+    self.permanent_debuff = false -- This flag is for debuffs that last the entire run
+    self.temporary_debuff = false -- This flag is for debuffs that last 1 round (For instance: Shaded cards.)
+
     if self.base.value == '2' then self.base.nominal = 2; self.base.id = 2
     elseif self.base.value == '3' then self.base.nominal = 3; self.base.id = 3
     elseif self.base.value == '4' then self.base.nominal = 4; self.base.id = 4
@@ -558,15 +562,31 @@ function Card:set_rental(_rental)
 end
 
 function Card:set_debuff(should_debuff)
-    if self.ability.perishable and self.ability.perish_tally <= 0 then 
+    -- If the card is flagged as permanently or temporarily debuffed, force it to remain debuffed
+    if self.permanent_debuff or self.temporary_debuff then
+        should_debuff = true
+    end
+
+    -- Handle perishable cards
+    if self.ability.perishable and self.ability.perish_tally <= 0 then
         if not self.debuff then
             self.debuff = true
-            if self.area == G.jokers then self:remove_from_deck(true) end
+            if self.area == G.jokers then
+                self:remove_from_deck(true)
+            end
         end
         return
     end
+
+    -- Update debuff state only if it has changed
     if should_debuff ~= self.debuff then
-        if self.area == G.jokers then if should_debuff then self:remove_from_deck(true) else self:add_to_deck(true) end end
+        if self.area == G.jokers then
+            if should_debuff then
+                self:remove_from_deck(true)
+            else
+                self:add_to_deck(true)
+            end
+        end
         self.debuff = should_debuff
     end
 end
@@ -5914,9 +5934,18 @@ function Card:draw(layer)
                     self.children.animated_sprite:draw_shader('dissolve', nil, nil, true, self.children.center, scale_mod, rotate_mod, x_mod, y_mod, nil, 0)
                 end
                 if self.debuff then
-                    self.children.center:draw_shader('debuff', nil, self.ARGS.send_to_shader)
-                    if self.children.front and self.ability.effect ~= 'Stone Card' then
-                        self.children.front:draw_shader('debuff', nil, self.ARGS.send_to_shader)
+                    if self.debuff and not self.permanent_debuff then
+                        self.children.center:draw_shader('debuff', nil, self.ARGS.send_to_shader)
+                        if self.children.front and self.ability.effect ~= 'Stone Card' then
+                            self.children.front:draw_shader('debuff', nil, self.ARGS.send_to_shader)
+                        end
+                    elseif self.debuff and self.permanent_debuff then
+                        self.children.center:draw_shader('debuff', nil, self.ARGS.send_to_shader)
+                        self.children.center:draw_shader('negative', nil, self.ARGS.send_to_shader)
+                        if self.children.front then
+                            self.children.front:draw_shader('debuff', nil, self.ARGS.send_to_shader)
+                            --self.children.front:draw_shader('hologram', nil, self.ARGS.send_to_shader, nil, self.children.center, 0, 0)
+                        end
                     end
                 end
                 if self.greyed then

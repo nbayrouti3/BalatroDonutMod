@@ -3102,6 +3102,41 @@
                     "Every time you discard",
                     "lose $2"
                 }
+            },
+            bl_noble = {
+                name = "The Noble",
+                text = {
+                    "Add 1 Permanently",
+                    "debuffed Queen per hand"
+                }
+            },
+            bl_hail = {
+                name = "The Hail",
+                text = {
+                    "Destroys 1 random",
+                    "card per discard"
+                }
+            },
+            bl_marshal = {
+                name = "The Marshal",
+                text = {
+                    "Randomize Rank of",
+                    "3 cards every hand"
+                }
+            },
+            bl_traitor = {
+                name = "The Traitor",
+                text = {
+                    "Randomize Suit of",
+                    "3 cards every hand"
+                }
+            },
+            bl_final_timer = {
+                name = "Saffron Timer",
+                text = {
+                    "Blind gets larger",
+                    "every hand"
+                }
             }
         },
         Back = {
@@ -4367,6 +4402,8 @@
             a_hands = "+#1# Hands",
             a_sold_tally = "#1#/#2# Sold",
             a_remaining = "#1# Remaining",
+            a_rank = "#1#",
+            a_suit = "#1#",
             ante_x_voucher = "ANTE #1# VOUCHER",
             loyalty_active = "Active!",
             loyalty_inactive = "#1# remaining",
