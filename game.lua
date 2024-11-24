@@ -298,7 +298,12 @@ function Game:init_item_prototypes()
         bl_flint =           {name = 'The Flint',    defeated = false, order = 24, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=24}, boss = {min = 2, max = 10}, boss_colour = HEX('e56a2f')},
         bl_final_acorn =     {name = 'Amber Acorn',  defeated = false, order = 26, dollars = 8, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=27}, boss = {showdown = true, min = 10, max = 10}, boss_colour = HEX('fda200')},
         bl_final_heart =     {name = 'Crimson Heart',defeated = false, order = 29, dollars = 8, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=25}, boss = {showdown = true, min = 10, max = 10}, boss_colour = HEX('ac3232')},
-        bl_smothering_tithe= {name = 'Smothering Tithe', defeated = false, order = 31, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=31}, boss = {min = 1, max = 10}, boss_colour = HEX('ac3232')},
+        bl_smothering_tithe= {name = 'Smothering Tithe', defeated = false, order = 31, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=31}, boss = {min = 1, max = 10}, boss_colour = HEX('c5c493')},
+        bl_noble=            {name = 'The Noble',    defeated = false, order = 32, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=32}, boss = {min = 1, max = 10}, boss_colour = HEX('bc4677')},
+        bl_hail=             {name = 'The Hail',     defeated = false, order = 33, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=33}, boss = {min = 3, max = 10}, boss_colour = HEX('7f9db1')},
+        bl_marshal=          {name = 'The Marshal',   defeated = false, order = 34, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=34}, boss = {min = 1, max = 10}, boss_colour = HEX('6681ca')},
+        bl_traitor=          {name = 'The Traitor',   defeated = false, order = 35, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=35}, boss = {min = 1, max = 10}, boss_colour = HEX('9f353f')},
+        bl_final_timer=      {name = 'Saffron Timer', defeated = false, order = 36, dollars = 8, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=36}, boss = {showdown = true, min = 10, max = 10}, boss_colour = HEX('cca073')},
     }
     self.b_undiscovered = {name = 'Undiscovered', debuff_text = 'Defeat this blind to discover', pos = {x=0,y=30}}
 
@@ -1984,6 +1989,7 @@ function Game:init_game_object()
                 chip_total = 0,
                 chip_total_text = '',
                 handname = "",
+                hand_played = 0, -- This can be used to trigger effects that depend on a hand having been played. (For Example: Saffron Timer juice up fx excluding discard draw)
                 hand_level = ''
             },
             used_packs = {},

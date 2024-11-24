@@ -290,8 +290,8 @@ function new_round()
     G.RESET_JIGGLES = nil
     delay(0.4)
     G.E_MANAGER:add_event(Event({
-      trigger = 'immediate',
-      func = function()
+        trigger = 'immediate',
+        func = function()
             G.GAME.current_round.discards_left = math.max(0, G.GAME.round_resets.discards + G.GAME.round_bonus.discards)
             G.GAME.current_round.hands_left = (math.max(1, G.GAME.round_resets.hands + G.GAME.round_bonus.next_hands))
             G.GAME.current_round.hands_played = 0
@@ -305,6 +305,12 @@ function new_round()
 
             for k, v in pairs(G.playing_cards) do
                 v.ability.wheel_flipped = nil
+                
+                -- Clear the temporary_debuff flag for each card
+                if v.temporary_debuff then
+                    v.temporary_debuff = false
+                    --v:set_debuff(false) -- Optionally clear the active debuff as well
+                end
             end
 
             local chaos = find_joker('Chaos the Clown')
@@ -347,8 +353,8 @@ function new_round()
                 end
             }))
             return true
-            end
-        }))
+        end
+    }))
 end
 
 G.FUNCS.draw_from_deck_to_hand = function(e)
@@ -426,6 +432,22 @@ G.FUNCS.discard_cards_from_highlighted = function(e, hook)
             end
         end
 
+        if G.GAME.blind:press_discard() then
+            G.E_MANAGER:add_event(Event({
+                trigger = 'immediate',
+                func = (function()
+                    G.HUD_blind:get_UIE_by_ID('HUD_blind_debuff_1'):juice_up(0.3, 0)
+                    G.HUD_blind:get_UIE_by_ID('HUD_blind_debuff_2'):juice_up(0.3, 0)
+                    G.GAME.blind:juice_up()
+                    G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.06*G.SETTINGS.GAMESPEED, blockable = false, blocking = false, func = function()
+                        play_sound('tarot2', 0.76, 0.4);return true end}))
+                    play_sound('tarot2', 1, 0.4)
+                    return true
+                end)
+            }))
+            delay(0.4)
+        end
+
         G.GAME.round_scores.cards_discarded.amt = G.GAME.round_scores.cards_discarded.amt + #cards
         check_for_unlock({type = 'discard_custom', cards = cards})
         if not hook then
@@ -465,6 +487,7 @@ G.FUNCS.play_cards_from_highlighted = function(e)
         trigger = 'immediate',
         func = function()
             G.STATE = G.STATES.HAND_PLAYED
+            G.GAME.current_round.hand_played = 1
             G.STATE_COMPLETE = true
             return true
         end
@@ -822,6 +845,7 @@ G.FUNCS.evaluate_play = function(e)
                                             delay = 0.1,
                                             func = function() 
                                                 target_card:set_debuff(true)
+                                                target_card.temporary_debuff = true -- flag for debuffing. This ensures the selected card doesn't get reset with deck changes.
                                                 target_card:juice_up()
                                         return true end }))
                                     end
