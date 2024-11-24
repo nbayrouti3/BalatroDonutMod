@@ -1511,6 +1511,14 @@
                     "played hand is {C:attention}Singular{}"
                 }
             },
+            j_shirtless_benzon = {
+                name = "Shirtless Benzon",
+                text = {
+                    "Gains {X:mult,C:white} X#1#{} Mult",
+                    "every time a face card gets a seal",
+                    "{C:inactive}(Currently {X:mult,C:white} X#2# {C:inactive} Mult)"
+                }
+            },
             j_sacrificial = {
                 name = "Sacrificial Joker",
                 text = {
