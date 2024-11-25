@@ -321,7 +321,8 @@ function Card:set_ability(center, initial, delay_sprites)
         check_for_unlock({type = 'double_gold'})
     end
     if self.ability.set == "Polygon" then
-        self.ability.polygon_rounds = 0
+        self.ability.polygon_rounds = 0 + G.GAME.polygon_voucher_bonus
+        self.ability.polygon_shader_flag = false
     end
     if self.ability.name == "Invisible Joker" then 
         self.ability.invis_rounds = 0
@@ -2943,6 +2944,9 @@ function Card:apply_to_run(center)
             ease_discard(-center_table.extra)
         end
     end
+    if center_table.name == 'Bestiary' or center_table.name == 'Grimoire' then
+        G.GAME.polygon_voucher_bonus = G.GAME.polygon_voucher_bonus + 2
+    end
 end
 
 function Card:explode(dissolve_colours, explode_time_fac)
@@ -3318,12 +3322,12 @@ function Card:calculate_joker(context)
     end
     if self.ability.set == "Polygon" then
         if (self.ability.polygon_rounds >= self.ability.extra.rounds_needed-1) then
-            G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function() self:juice_up(); play_sound('tarot1') return true end }))
+            G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function() self:juice_up(); play_sound('tarot1'); self.ability.polygon_shader_flag = true; return true end }))
         end
         if context.scoring_hand then
             self.ability.polygon_rounds = self.ability.polygon_rounds + 1
             return {
-                message = (self.ability.polygon_rounds < self.ability.extra.rounds_needed) and (self.ability.polygon_rounds..'/'..self.ability.extra.rounds_needed) or (localize('k_poly_ready')),
+                message = (self.ability.polygon_rounds < self.ability.extra.rounds_needed) and ((self.ability.polygon_rounds-G.GAME.polygon_voucher_bonus)..'/'..(self.ability.extra.rounds_needed-G.GAME.polygon_voucher_bonus)) or (localize('k_poly_ready')),
                 colour = G.C.RED,
                 scale = 1.3
             }
@@ -5839,7 +5843,9 @@ function Card:draw(layer)
                     self.children.center:draw_shader('booster', nil, self.ARGS.send_to_shader)
                 end
                 if self.ability.set == 'Polygon' then
-                    if self.ability.polygon_rounds >= self.ability.extra.rounds_needed then
+                    if (self.ability.polygon_rounds >= self.ability.extra.rounds_needed) and self.ability.polygon_shader_flag == true then
+                        self.children.center:draw_shader('smoke', nil, self.ARGS.send_to_shader)
+                    elseif self.ability.extra.rounds_needed - G.GAME.polygon_voucher_bonus < 1 then
                         self.children.center:draw_shader('smoke', nil, self.ARGS.send_to_shader)
                     end
                 end

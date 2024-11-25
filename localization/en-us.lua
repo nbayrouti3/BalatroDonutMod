@@ -1922,6 +1922,20 @@
                     "Reduce hand size",
                     "down to {C:attention}#1#{} cards"
                 }
+            },
+            v_bestiary = {
+                name = "Bestiary",
+                text = {
+                    "{C:attention}-2{} needed hands",
+                    "for {C:polygon}Polygon Cards"
+                }
+            },
+            v_grimoire = {
+                name = "Grimoire",
+                text = {
+                    "{C:attention}-2{} needed hands",
+                    "for {C:polygon}Polygon Cards"
+                }
             }
         },
         Tarot = {
@@ -2514,7 +2528,7 @@
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to {E:1,C:polygon}Reset",
                     "{C:attention}Discarded or Used{} cards",
-                    "and {E:1,C:polygon}Add{} {C:blue}Hands{} and {C:red}Discards{}",
+                    "and {E:1,C:polygon}Add{} {C:blue}Hands{} + {C:red}Discards{}",
                     "equal to {C:attention}Double{} the amount",
                     "used this round",
                     "{C:inactive}(Currently {C:blue}#2#{}/{C:red}#3#{})"

@@ -2801,19 +2801,19 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
        localize{type = 'descriptions', key = _c.key, set = _c.set, nodes = desc_nodes, vars = loc_vars}
 
     elseif _c.set == 'Polygon' then
-        if _c.name == "Tri-Eyed Cat" then loc_vars = {_c.config.extra.rounds_needed, _c.config.extra.dupes}
-        elseif _c.name == "Quadra Beast" then loc_vars = {_c.config.extra.rounds_needed, _c.config.max_highlighted}
-        elseif _c.name == "Penta Hand" then loc_vars = {_c.config.extra.rounds_needed, _c.config.extra.penta_retrigger}
-        elseif _c.name == "Hexwing Angel" then loc_vars = {_c.config.extra.rounds_needed}
-        elseif _c.name == "Septabug" then loc_vars = {_c.config.extra.rounds_needed}; info_queue[#info_queue+1] = G.P_CENTERS.m_bugged
-        elseif _c.name == "Octoclops" then loc_vars = {_c.config.extra.rounds_needed}
-        elseif _c.name == "Nonagon Lion" then loc_vars = {_c.config.extra.rounds_needed, _c.config.max_highlighted}
-        elseif _c.name == "Charybdis" then loc_vars = {_c.config.extra.rounds_needed, _c.config.max_highlighted}; info_queue[#info_queue+1] = G.P_CENTERS.e_shaded
-        elseif _c.name == "Echidna" then loc_vars = {_c.config.extra.rounds_needed}
-        elseif _c.name == "Typhon" then loc_vars = {_c.config.extra.rounds_needed, _c.config.extra.typhon_cards, _c.config.extra.cards_created}
-        elseif _c.name == "Parallax" then loc_vars = {_c.config.extra.rounds_needed}
-        elseif _c.name == "Fractal" then loc_vars = {_c.config.extra.rounds_needed}
-        elseif _c.name == "Infinity" then loc_vars = {_c.config.extra.rounds_needed, G.GAME.current_round.hands_played*2, G.GAME.current_round.discards_used*2}
+        if _c.name == "Tri-Eyed Cat" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0), _c.config.extra.dupes}
+        elseif _c.name == "Quadra Beast" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0), _c.config.max_highlighted}
+        elseif _c.name == "Penta Hand" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0), _c.config.extra.penta_retrigger}
+        elseif _c.name == "Hexwing Angel" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0)}
+        elseif _c.name == "Septabug" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0)}; info_queue[#info_queue+1] = G.P_CENTERS.m_bugged
+        elseif _c.name == "Octoclops" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0)}
+        elseif _c.name == "Nonagon Lion" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0), _c.config.max_highlighted}
+        elseif _c.name == "Charybdis" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0), _c.config.max_highlighted}; info_queue[#info_queue+1] = G.P_CENTERS.e_shaded
+        elseif _c.name == "Echidna" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0)}
+        elseif _c.name == "Typhon" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0), _c.config.extra.typhon_cards, _c.config.extra.cards_created}
+        elseif _c.name == "Parallax" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0)}
+        elseif _c.name == "Fractal" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0)}
+        elseif _c.name == "Infinity" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0), G.GAME.current_round.hands_played * 2, G.GAME.current_round.discards_used * 2}
         end
         localize{type = 'descriptions', key = _c.key, set = _c.set, nodes = desc_nodes, vars = loc_vars}
     end
