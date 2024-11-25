@@ -3924,6 +3924,7 @@
             c_golden_needle_1 = "Golden Needle",
             c_cruelty_1 = "Cruelty",
             c_jokerless_1 = "Jokerless",
+            c_blind_faith_1 = "Blind Faith"
         },
         poker_hands = {
             ['Flush Five'] = "Flush Five",
@@ -4529,6 +4530,12 @@
             },
             ch_c_set_joker_slots_ante = {
                 "When ante {C:attention}#1#{} boss is defeated, set Joker slots to {C:attention}0"
+            },
+            ch_c_hexwing_every_hand = {
+                "{C:polygon}Hexwing Angel{} effect {C:attention}after{} every hand played"
+            },
+            ch_c_cheaper_polygons = {
+                "{C:polygon}Polygon Cards{} take {C:attention}-4{} hands to play"
             }
         },
         quips = {

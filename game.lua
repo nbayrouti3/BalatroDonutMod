@@ -1992,7 +1992,7 @@ function Game:init_game_object()
                 chip_total = 0,
                 chip_total_text = '',
                 handname = "",
-                hand_played = 0, -- This can be used to trigger effects that depend on a hand having been played. (For Example: Saffron Timer juice up fx excluding discard draw)
+                hand_played = 0, -- ((NOT TO BE CONFUSED WITH HANDS_PLAYED)) This can be used to trigger effects that depend on a hand having been played. (For Example: Saffron Timer juice up fx excluding discard draw) 
                 hand_level = ''
             },
             used_packs = {},
@@ -2003,7 +2003,7 @@ function Game:init_game_object()
             ancient_card = {suit = 'Spades'},
             castle_card = {suit = 'Spades'},
             hands_left = 0,
-            hands_played = 0,
+            hands_played = 0, -- ((NOT TO BE CONFUSED WITH HAND_PLAYED))
             discards_left = 0,
             discards_used = 0,
             dollars = 0,

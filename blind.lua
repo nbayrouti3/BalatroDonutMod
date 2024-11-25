@@ -701,18 +701,17 @@ function Blind:drawn_to_hand()
                 self:wiggle()
             end
         end
-        if self.name == 'Saffron Timer' then
-            local needed_chips = self.mult+(G.GAME.current_round.hands_played*(G.GAME.current_round.hands_played*0.4)) -- This increase will reach the same mult amount as Violet Vessel in 4/5 hands, Race against the clock
-            self.chips = get_blind_amount(G.GAME.round_resets.ante)*needed_chips*G.GAME.starting_params.ante_scaling
-            self.chip_text = number_format(self.chips)
-            if G.GAME.current_round.hand_played == 1 then -- This flag is set to 1 in state_events, under "G.FUNCS.play_cards_from_highlighted". Required to counter draw from hand via discard.
+        if G.GAME.current_round.hand_played == 1 then -- This flag is set to 1 in state_events, under "G.FUNCS.play_cards_from_highlighted". Required to counter draw from hand via discard.
+            if self.name == 'Saffron Timer' then
+                local needed_chips = self.mult+(G.GAME.current_round.hands_played*(G.GAME.current_round.hands_played*0.4)) -- This increase will reach the same mult amount as Violet Vessel in 4/5 hands, Race against the clock
+                self.chips = get_blind_amount(G.GAME.round_resets.ante)*needed_chips*G.GAME.starting_params.ante_scaling
+                self.chip_text = number_format(self.chips)
                 G.E_MANAGER:add_event(Event({
                     trigger = 'immediate',
                     func = (function()
                         G.HUD_blind:get_UIE_by_ID('HUD_blind_debuff_1'):juice_up(0.3, 0)
                         G.HUD_blind:get_UIE_by_ID('HUD_blind_debuff_2'):juice_up(0.3, 0)
                         G.GAME.blind:juice_up()
-                        G.GAME.current_round.hand_played = 0
                         G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.06*G.SETTINGS.GAMESPEED, blockable = false, blocking = false, func = function()
                             play_sound('tarot2', 0.76, 0.4);return true end}))
                         play_sound('tarot2', 1, 0.4)
@@ -720,6 +719,47 @@ function Blind:drawn_to_hand()
                     end)
                 }))
             end
+            if G.GAME.modifiers.hexwing_every_hand then
+                local deletable_jokers = {}
+                for k, v in pairs(G.jokers.cards) do
+                    if not v.ability.eternal and not v:get_edition(polychrome) then deletable_jokers[#deletable_jokers + 1] = v end
+                end
+
+                G.E_MANAGER:add_event(Event({trigger = 'immediate', delay = 0.75, func = function()
+                    for k, v in pairs(G.jokers.cards) do
+                        if v:get_edition(polychrome) then
+                            if #deletable_jokers ~= 0 then
+                                card_eval_status_text(v, 'extra', nil, nil, nil, {message = localize('k_super'), colour = G.C.SECONDARY_SET.Polygon})
+                                play_sound('negative', 1.5, 0.4)
+                            else
+                                card_eval_status_text(v, 'extra', nil, nil, nil, {message = localize('k_super_denied'), colour = G.C.SECONDARY_SET.Polygon})
+                                play_sound('cancel', 1.5, 0.4)
+                            end
+                        end  
+                    end
+                    return true 
+                end }))
+                G.E_MANAGER:add_event(Event({trigger = 'before', delay = 0.75, func = function()
+                    for k, v in pairs(deletable_jokers) do
+                        v:start_dissolve({G.C.SECONDARY_SET.Polygon})
+                    end
+                    return true 
+                end }))
+
+
+                G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.9, func = function()
+                        for i = 1, #deletable_jokers do
+                            local card = create_card('Joker', G.jokers, nil, pseudorandom('createrandom'), nil, nil, nil, 'hexa')
+                            card:add_to_deck()
+                            G.jokers:emplace(card)
+                            card:start_materialize()
+                            G.GAME.consumeable_buffer = 0
+                        end
+                    return true
+                end}))
+                delay(0.6)
+            end
+            G.GAME.current_round.hand_played = 0
         end
     end
     self.prepped = nil
