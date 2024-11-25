@@ -2423,9 +2423,9 @@ function get_new_boss()
     local eligible_bosses = {}
     local forced_boss = nil
     for k, v in pairs(G.P_BLINDS) do
-        if v.name == "Saffron Timer" then
-            forced_boss = k
-        end
+        --if v.name == "Saffron Timer" then
+        --    forced_boss = k
+        --end
         if not v.boss then
 
         elseif not v.boss.showdown and (v.boss.min <= math.max(1, G.GAME.round_resets.ante) and ((math.max(1, G.GAME.round_resets.ante))%G.GAME.win_ante ~= 0 or G.GAME.round_resets.ante < 2)) then
