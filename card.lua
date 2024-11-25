@@ -321,8 +321,14 @@ function Card:set_ability(center, initial, delay_sprites)
         check_for_unlock({type = 'double_gold'})
     end
     if self.ability.set == "Polygon" then
-        self.ability.polygon_rounds = 0 + G.GAME.polygon_voucher_bonus
-        self.ability.polygon_shader_flag = false
+        if G.GAME.modifiers.cheaper_polygons then
+            G.GAME.polygon_voucher_bonus = 4
+            self.ability.polygon_rounds = 0 + G.GAME.polygon_voucher_bonus
+            self.ability.polygon_shader_flag = false
+        else
+            self.ability.polygon_rounds = 0 + G.GAME.polygon_voucher_bonus
+            self.ability.polygon_shader_flag = false
+        end
     end
     if self.ability.name == "Invisible Joker" then 
         self.ability.invis_rounds = 0

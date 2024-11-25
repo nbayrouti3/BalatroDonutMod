@@ -735,4 +735,36 @@ G.CHALLENGES = {
             }
         }
     },
+    {
+        name = "Blind Faith",
+        id = 'c_blind_faith_1',
+        rules = {
+            custom = {
+                {id = 'hexwing_every_hand'},
+                {id = 'cheaper_polygons'},
+            },
+            modifiers = {
+                {id = 'joker_slots', value = 6},
+            }
+        },
+        jokers = {
+        },
+        consumeables = {
+            {id = 'c_hexagon'},
+            {id = 'c_hexagon'},
+        },
+        vouchers = {
+        },
+        deck = {
+            type = 'Challenge Deck'
+        },
+        restrictions = {
+            banned_cards = {
+            },
+            banned_tags = {
+            },
+            banned_other = {
+            }
+        }
+    }
 }
