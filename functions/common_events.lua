@@ -95,6 +95,17 @@ function ease_dollars(mod, instant)
         --Play a chip sound
         play_sound('coin1')
     end
+    
+    if G.jokers and G.jokers.cards then
+        for k, v in ipairs(G.jokers.cards) do
+            if v.ability.name == "Stonks" then
+                local decimal_add = math.random()
+                local percent_effect = math.floor( math.random(0, v.ability.extra) + decimal_add )
+                mod = mod * percent_effect
+            end
+        end
+    end
+
     if instant then
         _mod(mod)
     else
@@ -587,8 +598,11 @@ function eval_card(card, context)
 
     if context.repetition_only then
         local seals = card:calculate_seal(context)
+        local pentahand = card:calculate_penta(context)
         if seals then
             ret.seals = seals
+        elseif pentahand then
+            ret.pentahand = pentahand
         end
         return ret
     end
@@ -785,9 +799,9 @@ function set_main_menu_UI()
 end
 
 function card_eval_status_text(card, eval_type, amt, percent, dir, extra)
-    percent = percent or (0.9 + 0.2*math.random())
+    percent = percent or (0.9 + 0.2 * math.random())
     if dir == 'down' then 
-        percent = 1-percent
+        percent = 1 - percent
     end
 
     if extra and extra.focus then card = extra.focus end
@@ -796,23 +810,25 @@ function card_eval_status_text(card, eval_type, amt, percent, dir, extra)
     local sound = nil
     local volume = 1
     local card_aligned = 'bm'
-    local y_off = 0.15*G.CARD_H
+    local y_off = 0.15 * G.CARD_H
     if card.area == G.jokers or card.area == G.consumeables then
-        y_off = 0.05*card.T.h
+        y_off = 0.05 * card.T.h
     elseif card.area == G.hand then
-        y_off = -0.05*G.CARD_H
+        y_off = -0.05 * G.CARD_H
         card_aligned = 'tm'
     elseif card.area == G.play then
-        y_off = -0.05*G.CARD_H
+        y_off = -0.05 * G.CARD_H
         card_aligned = 'tm'
-    elseif card.jimbo  then
-        y_off = -0.05*G.CARD_H
+    elseif card.jimbo then
+        y_off = -0.05 * G.CARD_H
         card_aligned = 'tm'
     end
+
     local config = {}
     local delay = 0.65
-    local colour = config.colour or (extra and extra.colour) or ( G.C.FILTER )
+    local colour = config.colour or (extra and extra.colour) or (G.C.FILTER)
     local extrafunc = nil
+
 
     if eval_type == 'debuff' then 
         sound = 'cancel'
@@ -858,6 +874,12 @@ function card_eval_status_text(card, eval_type, amt, percent, dir, extra)
         amt = amt
         text = localize('k_swapped_ex')
         colour = G.C.PURPLE
+    elseif eval_type == 'above_consumeable' then
+        sound = 'generic1'
+        y_off = -0.05*G.CARD_H
+        card_aligned = 'tm'
+        text = extra.message or text
+        amt = 0.5
     elseif eval_type == 'extra' or eval_type == 'jokers' then 
         sound = extra.edition and 'foil2' or extra.mult_mod and 'multhit1' or extra.Xmult_mod and 'multhit2' or 'generic1'
         if extra.edition then 
@@ -883,51 +905,56 @@ function card_eval_status_text(card, eval_type, amt, percent, dir, extra)
             config.scale = 0.7
         end
     end
-    delay = delay*1.25
+    delay = delay * 1.25
 
     if amt > 0 or amt < 0 then
         if extra and extra.instant then
             if extrafunc then extrafunc() end
             attention_text({
                 text = text,
-                scale = config.scale or 1, 
+                scale = config.scale or 1,
                 hold = delay - 0.2,
                 backdrop_colour = colour,
                 align = card_aligned,
                 major = card,
                 offset = {x = 0, y = y_off}
             })
-            play_sound(sound, 0.8+percent*0.2, volume)
-            if not extra or not extra.no_juice then
+            play_sound(sound, 0.8 + percent * 0.2, volume)
+
+            -- Ensure 'card' is valid and has 'juice_up' method
+            if card and card.juice_up then
                 card:juice_up(0.6, 0.1)
                 G.ROOM.jiggle = G.ROOM.jiggle + 0.7
             end
         else
-            G.E_MANAGER:add_event(Event({ --Add bonus chips from this card
-                    trigger = 'before',
-                    delay = delay,
-                    func = function()
+            G.E_MANAGER:add_event(Event({
+                trigger = 'before',
+                delay = delay,
+                func = function()
                     if extrafunc then extrafunc() end
                     attention_text({
                         text = text,
-                        scale = config.scale or 1, 
+                        scale = config.scale or 1,
                         hold = delay - 0.2,
                         backdrop_colour = colour,
                         align = card_aligned,
                         major = card,
                         offset = {x = 0, y = y_off}
                     })
-                    play_sound(sound, 0.8+percent*0.2, volume)
-                    if not extra or not extra.no_juice then
+                    play_sound(sound, 0.8 + percent * 0.2, volume)
+
+                    -- Ensure 'card' is valid and has 'juice_up' method
+                    if card and card.juice_up then
                         card:juice_up(0.6, 0.1)
                         G.ROOM.jiggle = G.ROOM.jiggle + 0.7
                     end
                     return true
-                    end
+                end
             }))
         end
     end
-    if extra and extra.playing_cards_created then 
+
+    if extra and extra.playing_cards_created then
         playing_card_joker_effects(extra.playing_cards_created)
     end
 end
@@ -1163,10 +1190,22 @@ end
 
 function juice_card_until(card, eval_func, first, delay)
     G.E_MANAGER:add_event(Event({
-        trigger = 'after',delay = delay or 0.1, blocking = false, blockable = false, timer = 'REAL',
-        func = (function() if eval_func(card) then if not first or first then card:juice_up(0.1, 0.1) end;juice_card_until(card, eval_func, nil, 0.8) end return true end)
+        trigger = 'after', delay = delay or 0.1, blocking = false, blockable = false, timer = 'REAL',
+        func = (function() 
+            if eval_func(card) then
+                if not first or first then 
+                    card:juice_up(0.1, 0.1)
+                end
+                if not eval_func(card) then
+                    return true
+                end
+                juice_card_until(card, eval_func, nil, 0.8)
+            end
+            return true
+        end)
     }))
 end
+
 
 function check_for_unlock(args)
     if not next(args) then return end
@@ -2077,6 +2116,8 @@ function poll_edition(_key, _mod, _no_neg, _guaranteed)
             return {negative = true}
         elseif edition_poll > 1 - 0.006*25 then
             return {polychrome = true}
+        elseif edition_poll > 1 - 0.006*25 then
+            return {shaded = true}
         elseif edition_poll > 1 - 0.02*25 then
             return {holo = true}
         elseif edition_poll > 1 - 0.04*25 then
@@ -2087,6 +2128,8 @@ function poll_edition(_key, _mod, _no_neg, _guaranteed)
             return {negative = true}
         elseif edition_poll > 1 - 0.006*G.GAME.edition_rate*_mod then
             return {polychrome = true}
+        elseif edition_poll > 1 - 0.006*G.GAME.edition_rate*_mod then
+            return {shaded = true}
         elseif edition_poll > 1 - 0.02*G.GAME.edition_rate*_mod then
             return {holo = true}
         elseif edition_poll > 1 - 0.04*G.GAME.edition_rate*_mod then
@@ -2095,6 +2138,7 @@ function poll_edition(_key, _mod, _no_neg, _guaranteed)
     end
     return nil
 end
+
 
 function create_card(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
     local area = area or G.jokers
@@ -2377,11 +2421,11 @@ function get_new_boss()
     if G.FORCE_BOSS then return G.FORCE_BOSS end
     
     local eligible_bosses = {}
-    local smothering_tithe = nil
+    local forced_boss = nil
     for k, v in pairs(G.P_BLINDS) do
-        if v.name == "Smothering Tithe" then
-            smothering_tithe = k
-        end
+        --if v.name == "Saffron Timer" then
+        --    forced_boss = k
+        --end
         if not v.boss then
 
         elseif not v.boss.showdown and (v.boss.min <= math.max(1, G.GAME.round_resets.ante) and ((math.max(1, G.GAME.round_resets.ante))%G.GAME.win_ante ~= 0 or G.GAME.round_resets.ante < 2)) then
@@ -2411,7 +2455,7 @@ function get_new_boss()
         end
     end
     local _, boss = pseudorandom_element(eligible_bosses, pseudoseed('boss'))
-    boss = smothering_tithe or boss
+    boss = forced_boss or boss
     G.GAME.bosses_used[boss] = G.GAME.bosses_used[boss] + 1
     
     return boss
@@ -2584,6 +2628,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
         elseif _c.name == 'Foil Tag' then info_queue[#info_queue+1] = G.P_CENTERS.e_foil 
         elseif _c.name == 'Holographic Tag' then info_queue[#info_queue+1] = G.P_CENTERS.e_holo
         elseif _c.name == 'Polychrome Tag' then info_queue[#info_queue+1] = G.P_CENTERS.e_polychrome 
+        elseif _c.name == 'Shaded Tag' then info_queue[#info_queue+1] = G.P_CENTERS.e_shaded
         elseif _c.name == 'Charm Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_arcana_mega_1 
         elseif _c.name == 'Meteor Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_celestial_mega_1 
         elseif _c.name == 'Ethereal Tag' then info_queue[#info_queue+1] = G.P_CENTERS.p_spectral_normal_1 
@@ -2631,6 +2676,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
         elseif _c.effect == 'Stone Card' then loc_vars = {((specific_vars and specific_vars.bonus_chips) or _c.config.bonus)}
         elseif _c.effect == 'Gold Card' then loc_vars = {_c.config.h_dollars}
         elseif _c.effect == 'Lucky Card' then loc_vars = {G.GAME.probabilities.normal, _c.config.mult, 5, _c.config.p_dollars, 15}
+        elseif _c.effect == 'Bugged Card' then loc_vars = {math.random(_c.config.extra.min, _c.config.extra.max), _c.config.extra.min, _c.config.extra.max}
         end
         localize{type = 'descriptions', key = _c.key, set = _c.set, nodes = desc_nodes, vars = loc_vars}
         if _c.name ~= 'Stone Card' and ((specific_vars and specific_vars.bonus_chips) or _c.config.bonus) then
@@ -2694,6 +2740,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
             info_queue[#info_queue+1] = G.P_CENTERS.e_foil
             info_queue[#info_queue+1] = G.P_CENTERS.e_holo
             info_queue[#info_queue+1] = G.P_CENTERS.e_polychrome
+            info_queue[#info_queue+1] = G.P_CENTERS.e_shaded
         end
         localize{type = 'descriptions', key = _c.key, set = _c.set, nodes = desc_nodes, vars = loc_vars}
     elseif _c.set == 'Planet' then
@@ -2727,7 +2774,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
        elseif _c.name == "The Chariot" then loc_vars = {_c.config.max_highlighted, localize{type = 'name_text', set = 'Enhanced', key = _c.config.mod_conv}}; info_queue[#info_queue+1] = G.P_CENTERS[_c.config.mod_conv]
        elseif _c.name == "Justice" then loc_vars = {_c.config.max_highlighted, localize{type = 'name_text', set = 'Enhanced', key = _c.config.mod_conv}}; info_queue[#info_queue+1] = G.P_CENTERS[_c.config.mod_conv]
        elseif _c.name == "The Hermit" then loc_vars = {_c.config.extra}
-       elseif _c.name == "The Wheel of Fortune" then loc_vars = {G.GAME.probabilities.normal, _c.config.extra};  info_queue[#info_queue+1] = G.P_CENTERS.e_foil; info_queue[#info_queue+1] = G.P_CENTERS.e_holo; info_queue[#info_queue+1] = G.P_CENTERS.e_polychrome; 
+       elseif _c.name == "The Wheel of Fortune" then loc_vars = {G.GAME.probabilities.normal, _c.config.extra};  info_queue[#info_queue+1] = G.P_CENTERS.e_foil; info_queue[#info_queue+1] = G.P_CENTERS.e_holo; info_queue[#info_queue+1] = G.P_CENTERS.e_polychrome; info_queue[#info_queue+1] = G.P_CENTERS.e_shaded; 
        elseif _c.name == "Strength" then loc_vars = {_c.config.max_highlighted}
        elseif _c.name == "The Hanged Man" then loc_vars = {_c.config.max_highlighted}
        elseif _c.name == "Death" then loc_vars = {_c.config.max_highlighted}
@@ -2748,23 +2795,25 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
        elseif _c.name == "The Sun" then loc_vars = {_c.config.max_highlighted, localize(_c.config.suit_conv, 'suits_plural'), colours = {G.C.SUITS[_c.config.suit_conv]}}
        elseif _c.name == "Judgement" then
        elseif _c.name == "The World" then loc_vars = {_c.config.max_highlighted, localize(_c.config.suit_conv, 'suits_plural'), colours = {G.C.SUITS[_c.config.suit_conv]}}
+       elseif _c.name == "The Clown" then loc_vars = {_c.config.max_highlighted, localize{type = 'name_text', set = 'Enhanced', key = 'm_glass'}}; info_queue[#info_queue+1] = G.P_CENTERS['m_glass']
+       elseif _c.name == "The Gooby Guy" then loc_vars = {_c.config.extra}
        end
        localize{type = 'descriptions', key = _c.key, set = _c.set, nodes = desc_nodes, vars = loc_vars}
 
     elseif _c.set == 'Polygon' then
-        if _c.name == "Tri-Eyed Cat" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Quadra Beast" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Penta Hand" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Hexwing Angel" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Septabug" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Octoclops" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Nonagon Lion" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Charybdis" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Echidna" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Typhon" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Parallax" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Fractal" then loc_vars = {_c.config.extra, _c.config.polygon_rounds or 0}
-        elseif _c.name == "Infinity" then loc_vars = {_c.config.extra, G.GAME.current_round.hands_played*2, G.GAME.current_round.discards_used*2}
+        if _c.name == "Tri-Eyed Cat" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0), _c.config.extra.dupes}
+        elseif _c.name == "Quadra Beast" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0), _c.config.max_highlighted}
+        elseif _c.name == "Penta Hand" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0), _c.config.extra.penta_retrigger}
+        elseif _c.name == "Hexwing Angel" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0)}
+        elseif _c.name == "Septabug" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0)}; info_queue[#info_queue+1] = G.P_CENTERS.m_bugged
+        elseif _c.name == "Octoclops" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0)}
+        elseif _c.name == "Nonagon Lion" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0), _c.config.max_highlighted}
+        elseif _c.name == "Charybdis" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0), _c.config.max_highlighted}; info_queue[#info_queue+1] = G.P_CENTERS.e_shaded
+        elseif _c.name == "Echidna" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0)}
+        elseif _c.name == "Typhon" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0), _c.config.extra.typhon_cards, _c.config.extra.cards_created}
+        elseif _c.name == "Parallax" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0)}
+        elseif _c.name == "Fractal" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0)}
+        elseif _c.name == "Infinity" then loc_vars = {math.max(_c.config.extra.rounds_needed - G.GAME.polygon_voucher_bonus, 0), G.GAME.current_round.hands_played * 2, G.GAME.current_round.discards_used * 2}
         end
         localize{type = 'descriptions', key = _c.key, set = _c.set, nodes = desc_nodes, vars = loc_vars}
     end
@@ -2788,6 +2837,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
             if v == 'foil' then info_queue[#info_queue+1] = G.P_CENTERS['e_foil'] end
             if v == 'holographic' then info_queue[#info_queue+1] = G.P_CENTERS['e_holo'] end
             if v == 'polychrome' then info_queue[#info_queue+1] = G.P_CENTERS['e_polychrome'] end
+            if v == 'shaded' then info_queue[#info_queue+1] = G.P_CENTERS['e_shaded'] end
             if v == 'negative' then info_queue[#info_queue+1] = G.P_CENTERS['e_negative'] end
             if v == 'negative_consumable' then info_queue[#info_queue+1] = {key = 'e_negative_consumable', set = 'Edition', config = {extra = 1}} end
             if v == 'gold_seal' then info_queue[#info_queue+1] = {key = 'gold_seal', set = 'Other'} end

@@ -1452,8 +1452,8 @@
             j_camou = {
                 name = "Camou",
                 text = {
-                    "Copies ability of",
-                    "{C:attention}Joker{} to the left and right"
+                    "Copies ability of {C:attention}Joker",
+                    "to the left and right"
                 }
             },
             j_lion = {
@@ -1474,34 +1474,34 @@
                 name = "Gambler's Phallussy",
                 text = {
                     "Every played card counts",
-                    "in scoring. Scored cards have a",
-                    "chance to give either {X:mult,C:white}X#1#{}",
-                    "or {X:mult,C:white}X#2#{} Mult"
+                    "in scoring. Scored cards have",
+                    "a chance to give either",
+                    "{X:mult,C:white}X#1#{} or {X:mult,C:white}X#2#{} Mult"
                 }
             },
             j_dancing_dunc = {
                 name = "Dancing Duncan",
                 text = {
-                    "This Joker gains {X:mult,C:white} +#1# {} Mult",
-                    "for every Pair played and {X:mult,C:white} +#2# {} Mult",
-                    "for every Two Pair played",
-                    "{C:inactive}(Currently {X:mult,C:white} +#3# {C:inactive} Mult)"
+                    "This Joker gains {C:red}+#1# {}Mult for",
+                    "every played {C:attention}Pair{} and {C:red}+#2# {}Mult",
+                    "for every played {C:attention}Two Pair",
+                    "{C:inactive}(Currently {C:red}+#3# {C:inactive}Mult)"
                 }
             },
             j_strawberry = {
                 name = "Freeze Dried Strawberry",
                 text = {
-                    "{C:chips}+#1#{} Chips {C:green}#2# in #3#{} chance this",
-                    "card is destroyed at end of round"
+                    "{C:chips}+#1#{} Chips {C:green}#2# in #3#{} chance this card",
+                    "is destroyed at end of round"
                 }
             },
             j_part_of_you = {
                 name = "Part of You",
                 text = {
-                    "This joker gains {X:mult,C:white} x#1# {} Mult for each",
-                    "duplicate card in your {C:attention}full deck",
+                    "This joker gains {X:mult,C:white} x#1# {} Mult",
+                    "for each duplicate card",
+                    "in your {C:attention}full deck",
                     "{C:inactive}(Currently {X:mult,C:white} x#2# {C:inactive} Mult)",
-                    "{C:inactive}(Must have consumables)",
                 }
             },
             j_singularity = {
@@ -1509,6 +1509,14 @@
                 text = {
                     "{C:red}+#1#{} Retriggers if",
                     "played hand is {C:attention}Singular{}"
+                }
+            },
+            j_shirtless_benzon = {
+                name = "Shirtless Benzon",
+                text = {
+                    "Gains {X:mult,C:white} X#1#{} Mult",
+                    "every time a face card gets a seal",
+                    "{C:inactive}(Currently {X:mult,C:white} X#2# {C:inactive} Mult)"
                 }
             },
             j_sacrificial = {
@@ -1528,46 +1536,63 @@
                     "{C:inactive}It's Gomez Time!"
                 }
             },
-            j_twin = {
-                name = "Joker Twin",
-                text = {
-                    "Copies ability of a",
-                    "random {C:attention}Joker{}"
-                }
-            },
-            j_phallussy = {
-                name = "Gambler's Phallussy",
-                text = {
-                    "Every played card counts",
-                    "in scoring. Scored cards have a",
-                    "chance to give either {X:mult,C:white}X#1#{}",
-                    "or {X:mult,C:white}X#2#{} Mult"
-                }
-            },
-            j_dancing_dunc = {
-                name = "Dancing Duncan",
-                text = {
-                    "This Joker gains {X:mult,C:white} +#1# {} Mult",
-                    "for every Pair played and {X:mult,C:white} +#2# {} Mult",
-                    "for every Two Pair played",
-                    "{C:inactive}(Currently {X:mult,C:white} +#3# {C:inactive} Mult)"
-                }
-            },
-            j_part_of_you = {
-                name = "Part of You",
-                text = {
-                    "This joker gains {X:mult,C:white} x#1# {} Mult for each",
-                    "duplicate card in your {C:attention}full deck",
-                    "{C:inactive}(Currently {X:mult,C:white} x#2# {C:inactive} Mult)",
-                }
-            },
             j_monojoker = {
                 name = "Monochromatic Joker",
                 text = {
-                    "Gives {X:mult,C:white} X#1# {} Mult",
-                    "for each {C:attention}Suit Removed",
-                    "in your {C:attention}full deck",
+                    "Gives {X:mult,C:white} X#1#{} Mult for each",
+                    "{C:attention}Suit Removed{} in your {C:attention}Deck",
                     "{C:inactive}(Currently {X:mult,C:white} X#2# {C:inactive} Mult)",
+                }
+            },
+            j_moist_chan = {
+                name = "Moist Chan",
+                text = {
+                    "Each played {C:attention}6{} or {C:attention}9",
+                    "gives {C:chips}+#1#{} Chips and", 
+                    "{C:mult}+#2#{} Mult when scored"
+                }
+            },
+            j_stonks = {
+                name = "Stonks",
+                text = {
+                    "Whenever you gain money, gain more.",
+                    "Whenever you lose money, lose more.", 
+                    "Up to {X:mult,C:white}x#1#{} the original amount!"
+                }
+            },
+            j_perfect_loaf = {
+                name = "The Perfect Loaf",
+                text = {
+                    "Gives {C:dark_edition}Polychrome{} to any",
+                    "Duncan Jokers adjacent to it"
+                }
+            },
+            j_morally_complex = {
+                name = "Morally Complex Joker",
+                text = {
+                    "All {C:attention}Straights{} are now",
+                    "considered {C:attention}Straight Flushes{}"
+                }
+            },
+            j_freaky = {
+                name = "Freaky Joker",
+                text = {
+                    "When sold, all cards in your",
+                    "hand become {C:attention}Wild{} cards"
+                }
+            },
+            j_captured_joker = {
+                name = "Captured Joker",
+                text = {
+                    "Sell this card to get one item",
+                    "in the shop for {C:attention}free{}"
+                }
+            },
+            j_habibi_duncan = {
+                name = "Habibi Duncan",
+                text = {
+                    "Lets you choose {C:attention}1{} extra",
+                    "card for {C:tarot}The Lovers{}"
                 }
             }
         },
@@ -1897,6 +1922,20 @@
                     "Reduce hand size",
                     "down to {C:attention}#1#{} cards"
                 }
+            },
+            v_bestiary = {
+                name = "Bestiary",
+                text = {
+                    "{C:attention}-2{} needed hands",
+                    "for {C:polygon}Polygon Cards"
+                }
+            },
+            v_grimoire = {
+                name = "Grimoire",
+                text = {
+                    "{C:attention}-2{} needed hands",
+                    "for {C:polygon}Polygon Cards"
+                }
             }
         },
         Tarot = {
@@ -1984,9 +2023,9 @@
                 name = "The Wheel of Fortune",
                 text = {
                     "{C:green}#1# in #2#{} chance to add",
-                    "{C:dark_edition}Foil{}, {C:dark_edition}Holographic{}, or",
-                    "{C:dark_edition}Polychrome{} edition",
-                    "to a random {C:attention}Joker"
+                    "{C:dark_edition}Foil{}, {C:dark_edition}Holographic{},",
+                    "{C:dark_edition}Polychrome{} or {C:dark_edition}Shaded",
+                    "edition to a random {C:attention}Joker"
                 }
             },
             c_strength = {
@@ -2076,6 +2115,23 @@
                     "Converts up to",
                     "{C:attention}#1#{} selected cards",
                     "to {V:1}#2#{}"
+                }
+            },
+            c_clown = {
+                name = "The Clown",
+                text = {
+                    "Select up to {C:attention}#1#{} cards; trigger the following:",
+                    "{C:attention}1 in 8 chance{} to {C:red}destroy a random joker",
+                    "{C:attention}5 in 8 chance{} to {C:blue}destroy selected cards",
+                    "{C:attention}2 in 8 chance{} to {C:green}convert selected cards",
+                    "{C:green}into glass cards"
+                }
+            },
+            c_gooby = {
+                name = "The Gooby Guy",
+                text = {
+                    "Gain {C:blue}+#1# Hands",
+                    "{C:inactive}(Usable during Blind)"
                 }
             }
         },
@@ -2229,8 +2285,8 @@
                 name = "Aura",
                 text = {
                     "Add {C:dark_edition}Foil{}, {C:dark_edition}Holographic{},",
-                    "or {C:dark_edition}Polychrome{} effect to",
-                    "{C:attention}1{} selected card in hand"
+                    "{C:dark_edition}Polychrome{} or {C:dark_edition}Shaded{} effect",
+                    "to {C:attention}1{} selected card in hand"
                 }
             },
             c_wraith = {
@@ -2341,8 +2397,8 @@
             c_cat_toy = {
                 name = "Cat Toy",
                 text = {"Add a {C:attention}Biscuit Seal{}",
-                    "to {C:attention}1{} selected",
-                    "card in your hand"
+                    "to {C:attention}1{} selected card",
+                    "in your hand"
                 }
             }
         },
@@ -2352,44 +2408,46 @@
                 text = {
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
-                    "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    "{C:polygon}Copy{} or {C:polygon}Destroy",
+                    "{C:attention}#2#{} selected card"
                 }
             },
             c_tetragon = {
-                name = "Quadruped Beast",
+                name = "Quadra Beast",
                 text = {
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
-                    "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    "{C:polygon}Convert{} up to {C:attention}#2#",
+                    "selected cards into",
+                    "{C:dark_edition}Random {C:attention}Suits"
                 }
             },
             c_pentagon = {
-                name = "Pentastar Hand",
+                name = "Penta Hand",
                 text = {
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
-                    "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    "{C:polygon}Retrigger {C:attention}Next Hand",
+                    "{C:polygon}#2#{} extra time"
                 }
             },
             c_hexagon = {
-                name = "Hex-winged Angel",
+                name = "Hexwing Angel",
                 text = {
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
-                    "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    "Completely {C:polygon}Randomize all",
+                    "Jokers currently held"
                 }
             },
             c_septagon = {
                 name = "Septabug",
                 text = {
-                    "After {C:attention}#1#{} Hhands played,",
+                    "After {C:attention}#1#{} Hands played,",
                     "use this card to",
-                    "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    "{C:polygon}Devour Right{} card,",
+                    "{C:polygon}Converting Left{} card",
+                    "into {C:attention}Bugged Card"
                 }
             },
             c_octagon = {
@@ -2397,44 +2455,51 @@
                 text = {
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
-                    "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    "{C:polygon}Remove Enhancement",
+                    "from selected card",
+                    "and {C:polygon}receive {C:dark_edition}Blessing",
+                    "{C:inactive}Blessing is determined",
+                    "{C:inactive}by {C:dark_edition}selected Suit",
                 }
             },
             c_nonagon = {
                 name = "Nonagon Lion",
                 text = {
                     "After {C:attention}#1#{} Hands played,",
-                    "use this card to",
-                    "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    "use this card to {C:polygon}Upgrade",
+                    "{C:attention}Most used Hand{} by {C:polygon}2 levels{}",
+                    "for each selected {C:attention}Stone Card",
+                    "{C:inactive}Max of #2# selected"
                 }
             },
             c_decagon = {
                 name = "Charybdis",
                 text = {
                     "After {C:attention}#1#{} Hands played,",
-                    "use this card to",
-                    "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    "use this card to {C:polygon}Add",
+                    "{C:dark_edition}Shaded{} effect to {C:attention}#2#",
+                    "selected card in hand"
                 }
             },
             c_hendecagon = {
                 name = "Echidna",
                 text = {
                     "After {C:attention}#1#{} Hands played,",
-                    "use this card to",
-                    "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    "use this card to {C:polygon}Remove{}",
+                    "selected Joker and {C:polygon}Create{}",
+                    "{C:attention}next{} Joker in {C:attention}Collection",
+                    "{C:inactive}Joker > Greedy Joker >",
+                    "{C:inactive}Lusty Joker > etc"
                 }
             },
             c_dodecagon = {
                 name = "Typhon",
                 text = {
                     "After {C:attention}#1#{} Hands played,",
-                    "use this card to",
-                    "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    "use this card to {C:polygon}Destroy {C:attention}#2#{}",
+                    "random cards in your deck,",
+                    "{C:polygon}Add {C:attention}#3#{} random {C:attention}Enhanced Cards{} ",
+                    "to your hand"
                 }
             },
             c_hectogon = {
@@ -2442,26 +2507,30 @@
                 text = {
                     "After {C:attention}#1#{} Hands played,",
                     "use this card to",
-                    "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    "add {C:dark_edition}Negative{} to a",
+                    "{C:polygon}Selected Joker"
                 }
             },
             c_myriagon = {
                 name = "Fractal",
                 text = {
                     "After {C:attention}#1#{} Hands played,",
-                    "use this card to",
-                    "{C:attention}PLACEHOLDER",
-                    --"{C:inactive}(Currently {C:attention}#2#{C:inactive}/#1#)"
+                    "use this card to {C:polygon}Remove{}",
+                    "selected Joker and {C:polygon}Create",
+                    "a {C:attention}Higher Rarity{} Joker",
+                    "{C:inactive}Common > Uncommon >",
+                    "{C:inactive}Rare > Legendary"
                 }
             },
             c_apeirogon = {
                 name = "Infinity",
                 text = {
                     "After {C:attention}#1#{} Hands played,",
-                    "use this card to Return",
-                    "{C:blue}Hands{} and {C:red}Discards{} Equal to",
-                    "{C:attention}Double{} the amount used this round",
+                    "use this card to {E:1,C:polygon}Reset",
+                    "{C:attention}Discarded or Used{} cards",
+                    "and {E:1,C:polygon}Add{} {C:blue}Hands{} + {C:red}Discards{}",
+                    "equal to {C:attention}Double{} the amount",
+                    "used this round",
                     "{C:inactive}(Currently {C:blue}#2#{}/{C:red}#3#{})"
                 }
             }
@@ -2489,6 +2558,12 @@
                 name = "Polychrome",
                 text = {
                     "{X:mult,C:white} X#1# {} Mult"
+                }
+            },
+            e_shaded = {
+                name = "Shaded",
+                text = {
+                    "{X:mult,C:white} X2.5 {} Mult?"
                 }
             },
             e_negative = {
@@ -2560,6 +2635,12 @@
                     "for {C:mult}+#2#{} Mult",
                     "{C:green}#1# in #5#{} chance",
                     "to win {C:money}$#4#"
+                }
+            },
+            m_bugged = {
+                name = "Bugged Card",
+                text = {
+                    "   {C:dark_edition}+#1#?{} Mult   "
                 }
             }
         },
@@ -2671,6 +2752,14 @@
                     "Next base edition shop",
                     "Joker is free and",
                     "becomes {C:dark_edition}Polychrome"
+                }
+            },
+            tag_shaded = {
+                name = "Shaded Tag",
+                text = {
+                    "Next base edition shop",
+                    "Joker is free and",
+                    "becomes {C:dark_edition}Shaded"
                 }
             },
             tag_investment = {
@@ -3027,6 +3116,41 @@
                     "Every time you discard",
                     "lose $2"
                 }
+            },
+            bl_noble = {
+                name = "The Noble",
+                text = {
+                    "Add 1 Permanently",
+                    "debuffed Queen per hand"
+                }
+            },
+            bl_hail = {
+                name = "The Hail",
+                text = {
+                    "Destroys 1 random",
+                    "card per discard"
+                }
+            },
+            bl_marshal = {
+                name = "The Marshal",
+                text = {
+                    "Randomize Rank of",
+                    "3 cards every hand"
+                }
+            },
+            bl_traitor = {
+                name = "The Traitor",
+                text = {
+                    "Randomize Suit of",
+                    "3 cards every hand"
+                }
+            },
+            bl_final_timer = {
+                name = "Saffron Timer",
+                text = {
+                    "Blind gets larger",
+                    "every hand"
+                }
             }
         },
         Back = {
@@ -3195,9 +3319,8 @@
             biscuit_seal = {
                 name = "Biscuit Seal",
                 text = {
-                    "{C:attention}Discards{} this card and",
-                    "{C:attention}draws{} a card if held in hand",
-                    "after all scoring is finished"
+                    "Discarded {C:attention}after{} scoring",
+                    "hand, if held in hand"
                 }
             },
             eternal = {
@@ -3614,25 +3737,22 @@
             p_friendly_buffoon_normal = {
                 name = "Friendly Buffoon Pack",
                 text = {
-                    "Choose {C:attention}#1#{} of up to",
-                    "{C:attention}#2#{C:joker} Joker{} cards",
-                    "made by your friends!"
+                    "Choose {C:attention}#1#{} of up to {C:attention}#2#{C:joker} Joker{} cards",
+                    "made by your {C:green}friends!"
                 }
             },
             p_friendly_buffoon_jumbo = {
                 name = "Jumbo Friendly Buffoon Pack",
                 text = {
-                    "Choose {C:attention}#1#{} of up to",
-                    "{C:attention}#2#{C:joker} Joker{} cards",
-                    "made by your friends!"
+                    "Choose {C:attention}#1#{} of up to {C:attention}#2#{C:joker} Joker{} cards",
+                    "made by your {C:green}friends!"
                 }
             },
             p_friendly_buffoon_mega = {
                 name = "Mega Friendly Buffoon Pack",
                 text = {
-                    "Choose {C:attention}#1#{} of up to",
-                    "{C:attention}#2#{C:joker} Joker{} cards",
-                    "made by your friends!"
+                    "Choose {C:attention}#1#{} of up to {C:attention}#2#{C:joker} Joker{} cards",
+                    "made by your {C:green}friends!"
                 }
             },
             
@@ -3683,6 +3803,28 @@
             ['4'] = "4",
             ['3'] = "3",
             ['2'] = "2"
+        },
+        collabs = {
+            Clubs = {
+                ["1"]="Default",
+                ["2"]="Vampire Survivors",
+                ["3"]="Slay the Spire",
+            },
+            Diamonds = {
+                ["1"]="Default",
+                ["2"]="Dave the Diver",
+                ["3"]="Stardew Valley",
+            },
+            Hearts = {
+                ["1"]="Default",
+                ["2"]="Among Us",
+                ["3"]="The Binding of Isaac",
+            },
+            Spades = {
+                ["1"]="Default",
+                ["2"]="The Witcher",
+                ["3"]="Cyberpunk 2077",
+            },
         },
         high_scores = {
             hand = "Best Hand",
@@ -3782,6 +3924,7 @@
             c_golden_needle_1 = "Golden Needle",
             c_cruelty_1 = "Cruelty",
             c_jokerless_1 = "Jokerless",
+            c_blind_faith_1 = "Blind Faith"
         },
         poker_hands = {
             ['Flush Five'] = "Flush Five",
@@ -3859,6 +4002,7 @@
             foil = "Foil",
             holographic = "Holographic",
             polychrome = "Polychrome",
+            shaded = "Shaded",
             negative = "Negative",
             gold_seal = "Gold Seal",
             blue_seal = "Blue Seal",
@@ -3899,6 +4043,7 @@
             b_copy = "Copy",
             b_credits = "Credits",
             b_stats = "Stats",
+            b_customize_deck = "Customize Deck",
             b_settings = "Settings",
             b_set_game = "Game",
             b_set_video = "Video",
@@ -4072,6 +4217,7 @@
             k_choose = "Choose",
             k_achievements_disabled = "Achievements Disabled",
             k_trophies_disabled = "Trophies Disabled",
+            ph_display_stickers = "Display Stake Stickers during Run",
             ph_improve_run = "Improve your run!",
             ph_no_boss_active = "no boss active",
             ph_sneak_peek = "Sneak Peek",
@@ -4178,6 +4324,18 @@
                 "Playing cards may each have one",
                 "Enhancement, Edition, and Seal"
             },
+            ml_power_in_pledges = {
+                "Power in Pledges"
+            },
+            ml_power_in_gambles = {
+                "Power in Gambles"
+            },
+            ml_power_in_formations = {
+                "Power in Formations"
+            },
+            ml_power_in_ingenuity = {
+                "Power in Ingenuity"
+            },
             ml_unlock_all_explanation = {
                 "WARNING! Unlocking the complete Collection",
                 "will disable achievements for this profile!"
@@ -4191,6 +4349,7 @@
             k_duplicated_ex = "Duplicated!",
             k_no_room_ex = "No Room!",
             k_no_space_ex = "No Space!",
+            k_no_suit = "No Suit!",
             k_no_other_jokers = "No other Jokers!",
             k_plus_tarot = "+1 Tarot",
             k_plus_stone = "+1 Stone",
@@ -4218,6 +4377,33 @@
             k_drank_ex = "Drank!",
             k_eroded_ex = "Eroded!",
             k_sacrificed_ex = "Sacrificed!",
+            k_no_jokers = "No Joker Found",
+            k_destroyed = "Destroyed!",
+            k_glass = "Glass!",
+            k_trigon = "Trigon!",
+            k_tetragon = "Tetragon!",
+            k_pentagon = "Pentagon!",
+            k_hexagon = "Hexagon!",
+            k_septagon = "Septagon!",
+            k_octagon = "Octagon!",
+            k_nonagon = "Nonagon!",
+            k_decagon = "Decagon!",
+            k_hendecagon = "Hendecagon!",
+            k_dodecagon = "Dodecagon!",
+            k_hectogon = "Hectogon!",
+            k_myriagon = "Myriagon!",
+            k_apeirogon = "Apeirogon!",
+            k_super = "SUPER",
+            k_super_denied = "SUPER DENIED",
+            k_not_enhanced = "Not Enhanced!",
+            k_hearts = "Justice!",
+            k_diamonds = "Temperance!",
+            k_spades = "Wisdom!",
+            k_clubs = "Fortitude!",
+            k_handsize_plus_one = "+1 Hand Size!",
+            k_plus_two_levels = "+2 Levels",
+            k_not_stone = "Not Stone",
+            k_none_found = "None Found!"
         },
         v_dictionary = {
             a_xmult = "X#1# Mult",
@@ -4231,6 +4417,8 @@
             a_hands = "+#1# Hands",
             a_sold_tally = "#1#/#2# Sold",
             a_remaining = "#1# Remaining",
+            a_rank = "#1#",
+            a_suit = "#1#",
             ante_x_voucher = "ANTE #1# VOUCHER",
             loyalty_active = "Active!",
             loyalty_inactive = "#1# remaining",
@@ -4253,6 +4441,10 @@
             ml_polychrome_desc = {
                 "Polychrome",
                 "X#1# Mult"
+            },
+            ml_shaded_desc = {
+                "Shaded",
+                "X2.5 Mult"
             },
             ml_negative_desc = {
                 "Negative",
@@ -4338,6 +4530,12 @@
             },
             ch_c_set_joker_slots_ante = {
                 "When ante {C:attention}#1#{} boss is defeated, set Joker slots to {C:attention}0"
+            },
+            ch_c_hexwing_every_hand = {
+                "{C:polygon}Hexwing Angel{} effect {C:attention}after{} every hand played"
+            },
+            ch_c_cheaper_polygons = {
+                "{C:polygon}Polygon Cards{} take {C:attention}-4{} hands to play"
             }
         },
         quips = {

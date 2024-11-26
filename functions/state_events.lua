@@ -26,6 +26,9 @@ function win_game()
     G.E_MANAGER:add_event(Event({
         trigger = 'immediate',
         func = (function()
+            for k, v in pairs(G.I.CARD) do
+                v.sticker_run = nil
+            end
             play_sound('win')
             G.SETTINGS.paused = true
 
@@ -287,8 +290,8 @@ function new_round()
     G.RESET_JIGGLES = nil
     delay(0.4)
     G.E_MANAGER:add_event(Event({
-      trigger = 'immediate',
-      func = function()
+        trigger = 'immediate',
+        func = function()
             G.GAME.current_round.discards_left = math.max(0, G.GAME.round_resets.discards + G.GAME.round_bonus.discards)
             G.GAME.current_round.hands_left = (math.max(1, G.GAME.round_resets.hands + G.GAME.round_bonus.next_hands))
             G.GAME.current_round.hands_played = 0
@@ -302,6 +305,12 @@ function new_round()
 
             for k, v in pairs(G.playing_cards) do
                 v.ability.wheel_flipped = nil
+                
+                -- Clear the temporary_debuff flag for each card
+                if v.temporary_debuff then
+                    v.temporary_debuff = false
+                    --v:set_debuff(false) -- Optionally clear the active debuff as well
+                end
             end
 
             local chaos = find_joker('Chaos the Clown')
@@ -344,8 +353,8 @@ function new_round()
                 end
             }))
             return true
-            end
-        }))
+        end
+    }))
 end
 
 G.FUNCS.draw_from_deck_to_hand = function(e)
@@ -423,6 +432,22 @@ G.FUNCS.discard_cards_from_highlighted = function(e, hook)
             end
         end
 
+        if G.GAME.blind:press_discard() then
+            G.E_MANAGER:add_event(Event({
+                trigger = 'immediate',
+                func = (function()
+                    G.HUD_blind:get_UIE_by_ID('HUD_blind_debuff_1'):juice_up(0.3, 0)
+                    G.HUD_blind:get_UIE_by_ID('HUD_blind_debuff_2'):juice_up(0.3, 0)
+                    G.GAME.blind:juice_up()
+                    G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.06*G.SETTINGS.GAMESPEED, blockable = false, blocking = false, func = function()
+                        play_sound('tarot2', 0.76, 0.4);return true end}))
+                    play_sound('tarot2', 1, 0.4)
+                    return true
+                end)
+            }))
+            delay(0.4)
+        end
+
         G.GAME.round_scores.cards_discarded.amt = G.GAME.round_scores.cards_discarded.amt + #cards
         check_for_unlock({type = 'discard_custom', cards = cards})
         if not hook then
@@ -462,6 +487,7 @@ G.FUNCS.play_cards_from_highlighted = function(e)
         trigger = 'immediate',
         func = function()
             G.STATE = G.STATES.HAND_PLAYED
+            G.GAME.current_round.hand_played = 1
             G.STATE_COMPLETE = true
             return true
         end
@@ -565,7 +591,7 @@ G.FUNCS.get_poker_hand_info = function(_cards)
 end
   
 G.FUNCS.evaluate_play = function(e)
-    local text,disp_text,poker_hands,scoring_hand,non_loc_disp_text = G.FUNCS.get_poker_hand_info(G.play.cards)
+    local text, disp_text, poker_hands, scoring_hand, non_loc_disp_text = G.FUNCS.get_poker_hand_info(G.play.cards)
     
     G.GAME.hands[text].played = G.GAME.hands[text].played + 1
     G.GAME.hands[text].played_this_round = G.GAME.hands[text].played_this_round + 1
@@ -662,11 +688,50 @@ G.FUNCS.evaluate_play = function(e)
                 local reps = {1}
                 
                 --From Red seal
-                local eval = eval_card(scoring_hand[i], {repetition_only = true,cardarea = G.play, full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands, repetition = true})
-                if next(eval) then 
+                local eval = eval_card(scoring_hand[i], {
+                    repetition_only = true,
+                    cardarea = G.play,
+                    full_hand = G.play.cards,
+                    scoring_hand = scoring_hand,
+                    scoring_name = text,
+                    poker_hands = poker_hands,
+                    repetition = true
+                })
+                if eval.seals and eval.seals.repetitions then
                     for h = 1, eval.seals.repetitions do
                         reps[#reps+1] = eval
                     end
+                end
+
+                -- Penta Hand: Apply globally to all cards if flag is active
+                local penta_bonus_applied = false
+                if G.GAME.next_hand_penta_bonus == 1 then
+                    for i = 1, #scoring_hand do
+                        local eval = eval_card(scoring_hand[i], {
+                            repetition_only = true,
+                            cardarea = G.play,
+                            full_hand = G.play.cards,
+                            scoring_hand = scoring_hand,
+                            scoring_name = text,
+                            poker_hands = poker_hands,
+                            other_card = G.hand.cards[i],
+                            repetition = true
+                        })
+
+                        -- Apply the pentahand bonus to all repetitions of this card
+                        if eval.pentahand and eval.pentahand.repetitions then
+                            for h = 1, eval.pentahand.repetitions do
+                                reps[#reps + 1] = eval
+                            end
+
+                            penta_bonus_applied = true
+                        end
+                    end
+                end
+
+                -- Reset the flag after application
+                if penta_bonus_applied then
+                    G.GAME.next_hand_penta_bonus = 0
                 end
                 --From jokers
                 for j=1, #G.jokers.cards do
@@ -681,7 +746,10 @@ G.FUNCS.evaluate_play = function(e)
                 for j=1,#reps do
                     percent = percent + percent_delta
                     if reps[j] ~= 1 then
-                        card_eval_status_text((reps[j].jokers or reps[j].seals).card, 'jokers', nil, nil, nil, (reps[j].jokers or reps[j].seals))
+                        local current_rep = reps[j].jokers or reps[j].seals or reps[j].pentahand
+                        if current_rep and current_rep.card then
+                            card_eval_status_text(current_rep.card, 'jokers', nil, nil, nil, current_rep)
+                        end
                     end
                     
                     --calculate the hand effects
@@ -753,6 +821,36 @@ G.FUNCS.evaluate_play = function(e)
 
                         --calculate the card edition effects
                         if effects[ii].edition then
+                            if effects[ii].edition.debuff_mod then
+                                local card_to_debuff = {}
+                                card_to_debuff[#card_to_debuff+1] = pseudorandom_element(G.hand.cards, pseudoseed('debuffrandom'))
+                                for i=#card_to_debuff, 1, -1 do
+                                    local target_card = card_to_debuff[i]
+                                    if target_card.debuff then
+                                        card_eval_status_text(target_card, 'extra', nil, nil, nil, {message = localize('k_destroyed'), colour = G.C.SECONDARY_SET.Polygon})
+                                        G.E_MANAGER:add_event(Event({
+                                            trigger = 'after',
+                                            delay = 0.1,
+                                            func = function() 
+                                                if target_card.ability.name == 'Glass Card' then 
+                                                    target_card:shatter()
+                                                else
+                                                    target_card:start_dissolve(nil, i ~= #card_to_debuff)
+                                                end
+                                        return true end }))
+                                    else
+                                        card_eval_status_text(target_card, 'extra', nil, nil, nil, {message = localize('k_debuffed'), colour = G.C.SECONDARY_SET.Polygon})
+                                        G.E_MANAGER:add_event(Event({
+                                            trigger = 'after',
+                                            delay = 0.1,
+                                            func = function() 
+                                                target_card:set_debuff(true)
+                                                target_card.temporary_debuff = true -- flag for debuffing. This ensures the selected card doesn't get reset with deck changes.
+                                                target_card:juice_up()
+                                        return true end }))
+                                    end
+                                end
+                            end
                             hand_chips = mod_chips(hand_chips + (effects[ii].edition.chip_mod or 0))
                             mult = mult + (effects[ii].edition.mult_mod or 0)
                             mult = mod_mult(mult*(effects[ii].edition.x_mult_mod or 1))
@@ -777,95 +875,152 @@ G.FUNCS.evaluate_play = function(e)
 
         delay(0.3)
         local mod_percent = false
-            for i=1, #G.hand.cards do
-                if mod_percent then percent = percent + percent_delta end
-                mod_percent = false
+        for i=1, #G.hand.cards do
+            if mod_percent then percent = percent + percent_delta end
+            mod_percent = false
 
-                --Check for hand doubling
-                local reps = {1}
-                local j = 1
-                while j <= #reps do
-                    if reps[j] ~= 1 then
-                        card_eval_status_text((reps[j].jokers or reps[j].seals).card, 'jokers', nil, nil, nil, (reps[j].jokers or reps[j].seals))
-                        percent = percent + percent_delta
+            -- Check for hand doubling
+            local reps = {1}
+            local j = 1
+
+            -- Penta Hand: Apply globally to all cards if flag is active
+            local penta_bonus_applied = false
+            if G.GAME.next_hand_penta_bonus == 1 then
+                local eval = eval_card(G.hand.cards[i], {
+                    repetition_only = true,
+                    cardarea = G.hand,
+                    full_hand = G.play.cards,
+                    scoring_hand = scoring_hand,
+                    scoring_name = text,
+                    poker_hands = poker_hands,
+                    repetition = false,
+                    other_card = G.hand.cards[i],
+                    card_effects = effects
+                })
+        
+                if eval.pentahand and eval.pentahand.repetitions then
+                    for h = 1, eval.pentahand.repetitions do
+                        reps[#reps + 1] = eval
                     end
-
-                    --calculate the hand effects
-                    local effects = {eval_card(G.hand.cards[i], {cardarea = G.hand, full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands})}
-
-                    for k=1, #G.jokers.cards do
-                        --calculate the joker individual card effects
-                        local eval = G.jokers.cards[k]:calculate_joker({cardarea = G.hand, full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands, other_card = G.hand.cards[i], individual = true})
-                        if eval then 
-                            mod_percent = true
-                            table.insert(effects, eval)
-                        end
-                    end
-
-                    if reps[j] == 1 then 
-                        --Check for hand doubling
-
-                        --From Red seal
-                        local eval = eval_card(G.hand.cards[i], {repetition_only = true,cardarea = G.hand, full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands, repetition = true, card_effects = effects})
-                        if next(eval) and (next(effects[1]) or #effects > 1) then 
-                            for h  = 1, eval.seals.repetitions do
-                                reps[#reps+1] = eval
-                            end
-                        end
-
-                        --From Joker
-                        for j=1, #G.jokers.cards do
-                            --calculate the joker effects
-                            local eval = eval_card(G.jokers.cards[j], {cardarea = G.hand, full_hand = G.play.cards, scoring_hand = scoring_hand, scoring_name = text, poker_hands = poker_hands, other_card = G.hand.cards[i], repetition = true, card_effects = effects})
-                            if next(eval) then 
-                                for h  = 1, eval.jokers.repetitions do
-                                    reps[#reps+1] = eval
-                                end
-                            end
-                        end
-                    end
-    
-                    for ii = 1, #effects do
-                        --if this effect came from a joker
-                        if effects[ii].card then
-                            mod_percent = true
-                            G.E_MANAGER:add_event(Event({
-                                trigger = 'immediate',
-                                func = (function() effects[ii].card:juice_up(0.7);return true end)
-                            }))
-                        end
-                        
-                        --If hold mult added, do hold mult add event and add the mult to the total
-                        
-                        --If dollars added, add dollars to total
-                        if effects[ii].dollars then 
-                            ease_dollars(effects[ii].dollars)
-                            card_eval_status_text(G.hand.cards[i], 'dollars', effects[ii].dollars, percent)
-                        end
-
-                        if effects[ii].h_mult then
-                            mod_percent = true
-                            mult = mod_mult(mult + effects[ii].h_mult)
-                            update_hand_text({delay = 0}, {mult = mult})
-                            card_eval_status_text(G.hand.cards[i], 'h_mult', effects[ii].h_mult, percent)
-                        end
-
-                        if effects[ii].x_mult then
-                            mod_percent = true
-                            mult = mod_mult(mult*effects[ii].x_mult)
-                            update_hand_text({delay = 0}, {mult = mult})
-                            card_eval_status_text(G.hand.cards[i], 'x_mult', effects[ii].x_mult, percent)
-                        end
-
-                        if effects[ii].message then
-                            mod_percent = true
-                            update_hand_text({delay = 0}, {mult = mult})
-                            card_eval_status_text(G.hand.cards[i], 'extra', nil, percent, nil, effects[ii])
-                        end
-                    end
-                    j = j +1
+                    penta_bonus_applied = true
                 end
             end
+
+            -- Reset the pentahand flag after application
+            if penta_bonus_applied then
+                G.GAME.next_hand_penta_bonus = 0
+            end
+
+            while j <= #reps do
+                if reps[j] ~= 1 then
+                    card_eval_status_text((reps[j].jokers or reps[j].seals).card, 'jokers', nil, nil, nil, (reps[j].jokers or reps[j].seals))
+                    percent = percent + percent_delta
+                end
+
+                -- Calculate the hand effects
+                local effects = {eval_card(G.hand.cards[i], {
+                    cardarea = G.hand,
+                    full_hand = G.play.cards,
+                    scoring_hand = scoring_hand,
+                    scoring_name = text,
+                    poker_hands = poker_hands
+                })}
+
+                -- Process jokers
+                for k=1, #G.jokers.cards do
+                    local eval = G.jokers.cards[k]:calculate_joker({
+                        cardarea = G.hand,
+                        full_hand = G.play.cards,
+                        scoring_hand = scoring_hand,
+                        scoring_name = text,
+                        poker_hands = poker_hands,
+                        other_card = G.hand.cards[i],
+                        individual = true
+                    })
+                    if eval then 
+                        mod_percent = true
+                        table.insert(effects, eval)
+                    end
+                end
+
+                if reps[j] == 1 then
+                    -- Check for Red seal hand doubling
+                    local eval = eval_card(G.hand.cards[i], {
+                        repetition_only = true,
+                        cardarea = G.hand,
+                        full_hand = G.play.cards,
+                        scoring_hand = scoring_hand,
+                        scoring_name = text,
+                        poker_hands = poker_hands,
+                        repetition = true,
+                        card_effects = effects
+                    })
+                    if next(eval) and (next(effects[1]) or #effects > 1) then 
+                        for h  = 1, eval.seals.repetitions do
+                            reps[#reps + 1] = eval
+                        end
+                    end
+
+                    -- From Joker
+                    for j=1, #G.jokers.cards do
+                        local eval = eval_card(G.jokers.cards[j], {
+                            cardarea = G.hand,
+                            full_hand = G.play.cards,
+                            scoring_hand = scoring_hand,
+                            scoring_name = text,
+                            poker_hands = poker_hands,
+                            other_card = G.hand.cards[i],
+                            repetition = true,
+                            card_effects = effects
+                        })
+                        if next(eval) then 
+                            for h  = 1, eval.jokers.repetitions do
+                                reps[#reps + 1] = eval
+                            end
+                        end
+                    end
+                end
+
+                -- Process effects
+                for ii = 1, #effects do
+                    if effects[ii].card then
+                        mod_percent = true
+                        G.E_MANAGER:add_event(Event({
+                            trigger = 'immediate',
+                            func = (function() effects[ii].card:juice_up(0.7); return true end)
+                        }))
+                    end
+
+                    -- Process dollars, multipliers, and other effects
+                    if effects[ii].dollars then 
+                        ease_dollars(effects[ii].dollars)
+                        card_eval_status_text(G.hand.cards[i], 'dollars', effects[ii].dollars, percent)
+                    end
+
+                    if effects[ii].h_mult then
+                        mod_percent = true
+                        mult = mod_mult(mult + effects[ii].h_mult)
+                        update_hand_text({delay = 0}, {mult = mult})
+                        card_eval_status_text(G.hand.cards[i], 'h_mult', effects[ii].h_mult, percent)
+                    end
+
+                    if effects[ii].x_mult then
+                        mod_percent = true
+                        mult = mod_mult(mult * effects[ii].x_mult)
+                        update_hand_text({delay = 0}, {mult = mult})
+                        card_eval_status_text(G.hand.cards[i], 'x_mult', effects[ii].x_mult, percent)
+                    end
+
+                    if effects[ii].message then
+                        mod_percent = true
+                        update_hand_text({delay = 0}, {mult = mult})
+                        card_eval_status_text(G.hand.cards[i], 'extra', nil, percent, nil, effects[ii])
+                    end
+                end
+
+                j = j + 1
+            end
+        end
         --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
         --Joker Effects
         --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
@@ -884,6 +1039,35 @@ G.FUNCS.evaluate_play = function(e)
                         chip_mod =  edition_effects.jokers.chip_mod,
                         colour =  G.C.EDITION,
                         edition = true})
+                end
+                if edition_effects.jokers.debuff_mod then
+                    local card_to_debuff = {}
+                    card_to_debuff[#card_to_debuff+1] = pseudorandom_element(G.hand.cards, pseudoseed('debuffrandom'))
+                    for i=#card_to_debuff, 1, -1 do
+                        local target_card = card_to_debuff[i]
+                        if target_card.debuff then
+                            card_eval_status_text(target_card, 'extra', nil, nil, nil, {message = localize('k_destroyed'), colour = G.C.SECONDARY_SET.Polygon})
+                            G.E_MANAGER:add_event(Event({
+                                trigger = 'after',
+                                delay = 0.1,
+                                func = function() 
+                                    if target_card.ability.name == 'Glass Card' then 
+                                        target_card:shatter()
+                                    else
+                                        target_card:start_dissolve(nil, i ~= #card_to_debuff)
+                                    end
+                            return true end }))
+                        else
+                            card_eval_status_text(target_card, 'extra', nil, nil, nil, {message = localize('k_debuffed'), colour = G.C.SECONDARY_SET.Polygon})
+                            G.E_MANAGER:add_event(Event({
+                                trigger = 'after',
+                                delay = 0.1,
+                                func = function() 
+                                    target_card:set_debuff(true)
+                                    target_card:juice_up()
+                            return true end }))
+                        end
+                    end
                 end
                 if edition_effects.jokers.mult_mod then
                     mult = mod_mult(mult + edition_effects.jokers.mult_mod)

@@ -887,6 +887,15 @@ G.FUNCS.change_crt_bloom = function(args)
   G:save_settings()
 end
 
+G.FUNCS.change_collab = function(args)
+  G.SETTINGS.CUSTOM_DECK.Collabs[args.cycle_config.curr_suit] = G.COLLABS.options[args.cycle_config.curr_suit][args.to_key] or 'default'
+  for k, v in pairs(G.I.CARD) do
+    if v.config and v.config.card and v.children.front and v.ability.effect ~= 'Stone Card' then 
+      v:set_sprites(nil, v.config.card)
+    end
+  end
+  G:save_settings()
+end
 --||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 --                                         TEXT ENTRY
 --||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
@@ -1557,6 +1566,13 @@ G.FUNCS.high_scores = function(e)
   }
 end
 
+G.FUNCS.customize_deck = function(e)
+  G.SETTINGS.paused = true
+  G.FUNCS.overlay_menu{
+    definition = create_UIBox_customize_deck(),
+  }
+end
+
 G.FUNCS.usage = function(e)
   G.SETTINGS.paused = true
   G.FUNCS.overlay_menu{
@@ -1748,6 +1764,19 @@ G.FUNCS.reset_achievements = function(e)
   G.SETTINGS.ACHIEVEMENTS_EARNED = {}
   G:save_progress()
   G.FUNCS.exit_overlay_menu()
+end
+
+G.FUNCS.refresh_contrast_mode = function()
+  local new_colour_proto = G.C["SO_"..(G.SETTINGS.colourblind_option and 2 or 1)]
+  G.C.SUITS.Hearts = new_colour_proto.Hearts
+  G.C.SUITS.Diamonds = new_colour_proto.Diamonds
+  G.C.SUITS.Spades = new_colour_proto.Spades
+  G.C.SUITS.Clubs = new_colour_proto.Clubs
+  for k, v in pairs(G.I.CARD) do
+    if v.config and v.config.card and v.children.front and v.ability.effect ~= 'Stone Card' then 
+      v:set_sprites(nil, v.config.card)
+    end
+  end
 end
 
 G.FUNCS.warn_lang = function(e)
@@ -2093,22 +2122,21 @@ end
     end
   end
 
-  G.FUNCS.can_select_consumeable = function(e)
-    if e.config.ref_table.ability.set == 'Polygon' then
-      if #G.consumeables < G.consumeables.config.card_limit then
-        e.config.colour = G.C.GREEN
-        e.config.button = 'use_card'
-      else
-        e.config.colour = G.C.UI.BACKGROUND_INACTIVE
-        e.config.button = nil
-      end
-    end
-  end
-
   G.FUNCS.can_select_card = function(e)
-    if e.config.ref_table.ability.set ~= 'Joker' or (e.config.ref_table.edition and e.config.ref_table.edition.negative) or #G.jokers.cards < G.jokers.config.card_limit then 
+    if e.config.ref_table.ability.set ~= 'Joker' or (e.config.ref_table.edition and e.config.ref_table.edition.negative) or #G.jokers.cards < G.jokers.config.card_limit then
+      -- Unique check for consumables that you add instead of insta-use (add names here lol)
+      if e.config.ref_table.ability.set == 'Polygon' or e.config.ref_table.ability.name == 'The Gooby Guy' then
+        if #G.consumeables.cards < G.consumeables.config.card_limit then
+          e.config.colour = G.C.GREEN
+          e.config.button = 'use_card'
+        else
+          e.config.colour = G.C.UI.BACKGROUND_INACTIVE
+          e.config.button = nil
+        end
+      else
         e.config.colour = G.C.GREEN
         e.config.button = 'use_card'
+      end
     else
       e.config.colour = G.C.UI.BACKGROUND_INACTIVE
       e.config.button = nil
@@ -2224,13 +2252,22 @@ end
         delay_fac = 0.2
       end
     elseif card.ability.consumeable then
-      if G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.PLANET_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.POLYGON_PACK then
+      if (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.PLANET_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.POLYGON_PACK) then
         card.T.x = G.hand.T.x + G.hand.T.w/2 - card.T.w/2
         card.T.y = G.hand.T.y + G.hand.T.h/2 - card.T.h/2 - 0.5
         discover_card(card.config.center)
       else draw_card(G.hand, G.play, 1, 'up', true, card, nil, mute) end
       delay(0.2)
-      e.config.ref_table:use_consumeable(area)
+      if card.ability.name == 'The Gooby Guy' and (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.PLANET_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.POLYGON_PACK) then
+        card:add_to_deck()
+        G.consumeables:emplace(card)
+        play_sound('card1', 0.8, 0.6)
+        play_sound('generic1')
+        dont_dissolve = true
+        delay_fac = 0.2
+      else
+        e.config.ref_table:use_consumeable(area)
+      end
       for i = 1, #G.jokers.cards do
         G.jokers.cards[i]:calculate_joker({using_consumeable = true, consumeable = card})
       end
@@ -2487,6 +2524,23 @@ G.FUNCS.buy_from_shop = function(e)
           if e.config.id == 'buy_and_use' then 
             G.FUNCS.use_card(e, true)
           end
+
+          if G.GAME.shop.captured_joker_charges > 0 then
+            G.GAME.shop.captured_joker_charges = G.GAME.shop.captured_joker_charges - 1
+            for k, v in ipairs(G.shop_booster.cards) do
+                v:set_cost()
+                create_shop_card_ui(v)
+            end
+            for k, v in ipairs(G.shop_vouchers.cards) do
+                v:set_cost()
+                create_shop_card_ui(v)
+            end
+            for k, v in ipairs(G.shop_jokers.cards) do
+                v:set_cost()
+                create_shop_card_ui(v)
+            end
+          end
+          
           return true
         end
       }))

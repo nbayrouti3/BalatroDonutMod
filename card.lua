@@ -119,6 +119,10 @@ function Card:set_base(card, initial)
         times_played = 0
     }
 
+    -- Initialize permanent_debuff and temporary_debuff flag to false
+    self.permanent_debuff = false -- This flag is for debuffs that last the entire run
+    self.temporary_debuff = false -- This flag is for debuffs that last 1 round (For instance: Shaded cards.)
+
     if self.base.value == '2' then self.base.nominal = 2; self.base.id = 2
     elseif self.base.value == '3' then self.base.nominal = 3; self.base.id = 3
     elseif self.base.value == '4' then self.base.nominal = 4; self.base.id = 4
@@ -146,11 +150,12 @@ end
 
 function Card:set_sprites(_center, _front)
     if _front then 
+        local _atlas, _pos = get_front_spriteinfo(_front)
         if self.children.front then
-            self.children.front.atlas = G.ASSET_ATLAS[_front.atlas] or G.ASSET_ATLAS["cards_"..(G.SETTINGS.colourblind_option and 2 or 1)]
-            self.children.front:set_sprite_pos(self.config.card.pos)
+            self.children.front.atlas = _atlas
+            self.children.front:set_sprite_pos(_pos)
         else
-            self.children.front = Sprite(self.T.x, self.T.y, self.T.w, self.T.h, _front.atlas and G.ASSET_ATLAS[_front.atlas] or G.ASSET_ATLAS["cards_"..(G.SETTINGS.colourblind_option and 2 or 1)], self.config.card.pos)
+            self.children.front = Sprite(self.T.x, self.T.y, self.T.w, self.T.h, _atlas, _pos)
             self.children.front.states.hover = self.states.hover
             self.children.front.states.click = self.states.click
             self.children.front.states.drag = self.states.drag
@@ -177,7 +182,7 @@ function Card:set_sprites(_center, _front)
                     (_center.set == 'Tarot' and G.t_undiscovered.pos) or 
                     (_center.set == 'Planet' and G.p_undiscovered.pos) or 
                     (_center.set == 'Spectral' and G.s_undiscovered.pos) or 
-                    (_center.set == 'Polygon' and G.s_undiscovered.pos) or  
+                    (_center.set == 'Polygon' and G.po_undiscovered.pos) or  
                     (_center.set == 'Voucher' and G.v_undiscovered.pos) or 
                     (_center.set == 'Booster' and G.booster_undiscovered.pos))
                 elseif _center.set == 'Joker' or _center.consumeable or _center.set == 'Voucher' then
@@ -234,6 +239,7 @@ function Card:set_ability(center, initial, delay_sprites)
 
     local old_center = self.config.center
     self.config.center = center
+    self.sticker_run = nil
     for k, v in pairs(G.P_CENTERS) do
         if center == v then self.config.center_key = k end
     end
@@ -300,6 +306,7 @@ function Card:set_ability(center, initial, delay_sprites)
         extra_value = 0,
         type = center.config.type or '',
         order = center.order or nil,
+        rarity = center.rarity or nil,
         forced_selection = self.ability and self.ability.forced_selection or nil,
         perma_bonus = self.ability and self.ability.perma_bonus or 0,
     }
@@ -314,7 +321,14 @@ function Card:set_ability(center, initial, delay_sprites)
         check_for_unlock({type = 'double_gold'})
     end
     if self.ability.set == "Polygon" then
-        self.ability.polygon_rounds = 0
+        if G.GAME.modifiers.cheaper_polygons then
+            G.GAME.polygon_voucher_bonus = 4
+            self.ability.polygon_rounds = 0 + G.GAME.polygon_voucher_bonus
+            self.ability.polygon_shader_flag = false
+        else
+            self.ability.polygon_rounds = 0 + G.GAME.polygon_voucher_bonus
+            self.ability.polygon_shader_flag = false
+        end
     end
     if self.ability.name == "Invisible Joker" then 
         self.ability.invis_rounds = 0
@@ -381,7 +395,7 @@ function Card:set_cost()
     self.extra_cost = 0 + G.GAME.inflation
     if self.edition then
         self.extra_cost = self.extra_cost + (self.edition.holo and 3 or 0) + (self.edition.foil and 2 or 0) + 
-        (self.edition.polychrome and 5 or 0) + (self.edition.negative and 5 or 0)
+        (self.edition.polychrome and 5 or 0) + (self.edition.negative and 5 or 0) + (self.edition.shaded and 5 or 0)
     end
     self.cost = math.max(1, math.floor((self.base_cost + self.extra_cost + 0.5)*(100-G.GAME.discount_percent)/100))
     if self.ability.set == 'Booster' and G.GAME.modifiers.booster_ante_scaling then self.cost = self.cost + G.GAME.round_resets.ante - 1 end
@@ -392,6 +406,7 @@ function Card:set_cost()
     if self.ability.rental then self.cost = 1 end
     self.sell_cost = math.max(1, math.floor(self.cost/2)) + (self.ability.extra_value or 0)
     if self.area and self.ability.couponed and (self.area == G.shop_jokers or self.area == G.shop_booster) then self.cost = 0 end
+    if G.GAME.shop.captured_joker_charges > 0 then self.cost = 0 end
     self.sell_cost_label = self.facing == 'back' and '?' or self.sell_cost
 end
 
@@ -413,6 +428,12 @@ function Card:set_edition(edition, immediate, silent)
         self.edition.x_mult = G.P_CENTERS.e_polychrome.config.extra
         self.edition.polychrome = true
         self.edition.type = 'polychrome'
+    elseif edition.shaded then
+        if not self.edition then self.edition = {} end
+        self.edition.x_mult = G.P_CENTERS.e_shaded.config.extra.shaded_xmult
+        self.edition.debuff = G.P_CENTERS.e_shaded.config.extra.shaded_debuff
+        self.edition.shaded = true
+        self.edition.type = 'shaded'
     elseif edition.negative then
         if not self.edition then
             self.edition = {}
@@ -451,6 +472,7 @@ function Card:set_edition(edition, immediate, silent)
                 if self.edition.foil then play_sound('foil1', 1.2, 0.4) end
                 if self.edition.holo then play_sound('holo1', 1.2*1.58, 0.4) end
                 if self.edition.polychrome then play_sound('polychrome1', 1.2, 0.7) end
+                if self.edition.shaded then play_sound('shady', 1.2, 0.7) end
                 if self.edition.negative then play_sound('negative', 1.5, 0.4) end
                return true
             end
@@ -502,6 +524,18 @@ function Card:set_seal(_seal, silent, immediate)
                 }))
             end
         end
+        if self:is_face(false) then
+            for i = 1, #G.jokers.cards do
+                local joker = G.jokers.cards[i]
+                if joker.ability.name == "Shirtless Benzon" then
+                    joker.ability.x_mult = joker.ability.x_mult + joker.ability.extra
+                    G.E_MANAGER:add_event(Event({
+                        func = function() card_eval_status_text(joker, 'extra', nil, nil, nil, {message = localize{type='variable',key='a_xmult',vars={joker.ability.x_mult}}}); return true
+                        end}))
+                    return
+                end
+            end
+        end
     end
     if self.ability.name == 'Gold Card' and self.seal == 'Gold' and self.playing_card then 
         check_for_unlock({type = 'double_gold'})
@@ -535,15 +569,31 @@ function Card:set_rental(_rental)
 end
 
 function Card:set_debuff(should_debuff)
-    if self.ability.perishable and self.ability.perish_tally <= 0 then 
+    -- If the card is flagged as permanently or temporarily debuffed, force it to remain debuffed
+    if self.permanent_debuff or self.temporary_debuff then
+        should_debuff = true
+    end
+
+    -- Handle perishable cards
+    if self.ability.perishable and self.ability.perish_tally <= 0 then
         if not self.debuff then
             self.debuff = true
-            if self.area == G.jokers then self:remove_from_deck(true) end
+            if self.area == G.jokers then
+                self:remove_from_deck(true)
+            end
         end
         return
     end
+
+    -- Update debuff state only if it has changed
     if should_debuff ~= self.debuff then
-        if self.area == G.jokers then if should_debuff then self:remove_from_deck(true) else self:add_to_deck(true) end end
+        if self.area == G.jokers then
+            if should_debuff then
+                self:remove_from_deck(true)
+            else
+                self:add_to_deck(true)
+            end
+        end
         self.debuff = should_debuff
     end
 end
@@ -947,10 +997,19 @@ function Card:generate_UIBox_ability_table()
         elseif self.ability.name == 'Freeze Dried Strawberry' then loc_vars = {self.ability.extra.chips, ''..(G.GAME and G.GAME.probabilities.normal or 1), self.ability.extra.odds}
         elseif self.ability.name == 'Part of You' then loc_vars = {self.ability.x_mult, self.ability.extra + self.ability.x_mult*(self.ability.dupe_tally or 0)}
         elseif self.ability.name == 'The Singularity' then loc_vars = {self.ability.extra}
+        elseif self.ability.name == 'Shirtless Benzon' then loc_vars = {self.ability.extra, self.ability.x_mult}
         elseif self.ability.name == 'Sacrificial Joker' then
         elseif self.ability.name == 'Monochromatic Joker' then loc_vars = {self.ability.extra, 1 + self.ability.extra*(self.ability.mono_tally or 0)}
+        elseif self.ability.name == 'Moist Chan' then loc_vars = {self.ability.extra.chips, self.ability.extra.mult}
+        elseif self.ability.name == 'Stonks' then loc_vars = {self.ability.extra}
+        elseif self.ability.name == 'The Perfect Loaf' then
+        elseif self.ability.name == 'Freaky Joker' then loc_vars = self.ability.extra 
+        elseif self.ability.name == 'Morally Complex Joker' then
+        elseif self.ability.name == 'Captured Joker' then
+        elseif self.ability.name == 'Habibi Duncan' then
         end
     end
+
     local badges = {}
     if (card_type ~= 'Locked' and card_type ~= 'Undiscovered' and card_type ~= 'Default') or self.debuff then
         badges.card_type = card_type
@@ -974,7 +1033,7 @@ function Card:generate_UIBox_ability_table()
     if self.ability.rental then badges[#badges + 1] = 'rental' end
     if self.pinned then badges[#badges + 1] = 'pinned_left' end
 
-    if self.sticker then loc_vars = loc_vars or {}; loc_vars.sticker=self.sticker end
+    if self.sticker or ((self.sticker_run and self.sticker_run~='NONE') and G.SETTINGS.run_stake_stickers)  then loc_vars = loc_vars or {}; loc_vars.sticker=(self.sticker or self.sticker_run) end
 
     return generate_card_ui(self.config.center, nil, loc_vars, card_type, badges, hide_desc, main_start, main_end)
 end
@@ -1023,6 +1082,8 @@ function Card:get_chip_mult()
         else
             return 0
         end
+    elseif self.ability.effect == "Bugged Card" then
+        return pseudorandom('bugged', self.ability.extra.min, self.ability.extra.max)
     else  
         return self.ability.mult
     end
@@ -1057,6 +1118,9 @@ function Card:get_edition()
         end
         if self.edition.chips then 
             ret.chip_mod = self.edition.chips
+        end
+        if self.edition.debuff then
+            ret.debuff_mod = self.edition.debuff
         end
         return ret
     end
@@ -1231,16 +1295,6 @@ function Card:use_consumeable(area, copier)
             used_tarot:juice_up(0.3, 0.5)
         return true end }))
     end
-    if self.ability.name == 'Infinity' then
-        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
-            play_sound('polyuse')
-            used_tarot:juice_up(0.3, 0.5)
-            self.hands_sub = G.GAME.current_round.hands_played
-            ease_hands_played(self.hands_sub*2)
-            self.discards_sub = G.GAME.current_round.discards_used
-            ease_discard(self.discards_sub*2)
-        return true end }))
-    end
     if self.ability.name == 'Cryptid' then
         G.E_MANAGER:add_event(Event({
             func = function()
@@ -1372,7 +1426,7 @@ function Card:use_consumeable(area, copier)
                         _suit = _suit or 'S'; _rank = _rank or 'A'
                         local cen_pool = {}
                         for k, v in pairs(G.P_CENTER_POOLS["Enhanced"]) do
-                            if v.key ~= 'm_stone' then 
+                            if v.key ~= 'm_stone' and v.key ~= 'm_bugged' then 
                                 cen_pool[#cen_pool+1] = v
                             end
                         end
@@ -1590,6 +1644,752 @@ function Card:use_consumeable(area, copier)
         end
         delay(0.5)
     end
+
+    if self.ability.name == 'The Clown' then
+        G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function() used_tarot:flip();play_sound('card1', percent);return true end }))
+        G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.90,func = function() used_tarot:flip();play_sound('card1', percent);return true end }))
+        delay(1)
+        local clown_random = pseudorandom('clowncard')
+        if clown_random < G.GAME.probabilities.normal/8 then -- Probability (1) divided by 8 so everything under 0.125 is triggered
+            local destructable_jokers = {}
+                for i = 1, #G.jokers.cards do
+                    if G.jokers.cards[i] ~= G.jokers.cards[i].ability.eternal and not G.jokers.cards[i].getting_sliced then destructable_jokers[#destructable_jokers+1] = G.jokers.cards[i] end
+                end
+                local joker_to_destroy = #destructable_jokers > 0 and pseudorandom_element(destructable_jokers, pseudoseed('madness')) or nil
+
+                if joker_to_destroy then 
+                    joker_to_destroy.getting_sliced = true
+                    G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.5, func = function()
+                        used_tarot:juice_up(0.8, 0.8)
+                        joker_to_destroy:start_dissolve({G.C.RED}, nil, 1.6)
+                        attention_text({
+                            text = localize('k_joker'),
+                            scale = 1.3, 
+                            hold = 1.4,
+                            major = used_tarot,
+                            backdrop_colour = G.C.SECONDARY_SET.Tarot,
+                            align = (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.POLYGON_PACK) and 'tm' or 'cm', 
+                            offset = {x = 0, y = (G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.POLYGON_PACK) and -0.2 or 0},
+                            silent = true
+                            })
+                            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.06*G.SETTINGS.GAMESPEED, blockable = false, blocking = false, func = function()
+                                play_sound('tarot2', 0.76, 0.4);return true end}))
+                            play_sound('tarot2', 1, 0.4)
+                            used_tarot:juice_up(0.3, 0.5)
+                    return true end }))
+                else
+                    card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_no_jokers'), colour = G.C.RED})
+                end
+        
+        elseif clown_random >= G.GAME.probabilities.normal/8 and clown_random < (G.GAME.probabilities.normal/2+0.25) then -- Inversion of the first If statemment, then checks if nmber under 0.75
+            local destroyed_cards = {}
+                for i=#G.hand.highlighted, 1, -1 do
+                    destroyed_cards[#destroyed_cards+1] = G.hand.highlighted[i]
+                end
+                card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_destroyed'), colour = G.C.BLUE})
+                G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                    play_sound('tarot1')
+                    used_tarot:juice_up(0.3, 0.5)
+                    return true end }))
+                G.E_MANAGER:add_event(Event({
+                    trigger = 'after',
+                    delay = 0.2,
+                    func = function() 
+                        for i=#G.hand.highlighted, 1, -1 do
+                            local card = G.hand.highlighted[i]
+                            card:start_dissolve(nil, i == #G.hand.highlighted)
+                        end
+                return true end }))
+
+        elseif clown_random >= (G.GAME.probabilities.normal/2+0.25) and clown_random <= G.GAME.probabilities.normal then -- final inversion of second and safety net for going above 1
+            card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_glass'), colour = G.C.GREEN})
+            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                play_sound('tarot1')
+                used_tarot:juice_up(0.3, 0.5)
+                return true end }))
+            for i=1, #G.hand.highlighted do
+                G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function()
+                    G.hand.highlighted[i]:flip()
+                    play_sound('card1', percent)
+                    G.hand.highlighted[i]:juice_up(0.3, 0.3)
+                return true end }))
+            end
+            delay(0.8)
+            for i=1, #G.hand.highlighted do
+                G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function()
+                    G.hand.highlighted[i]:set_ability(G.P_CENTERS['m_glass'])
+                    G.hand.highlighted[i]:flip()
+                    play_sound('card1', percent)
+                return true end }))
+            end
+        end
+        delay(0.6)
+    end
+
+    if self.ability.name == 'The Gooby Guy' then
+        card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize{type='variable',key='a_hands',vars={self.ability.extra}},colour = G.C.SECONDARY_SET.Tarot,delay = 0.4})
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+            play_sound('timpani')
+            used_tarot:juice_up(0.3, 0.5)
+            self.hands_sub = self.ability.extra
+            ease_hands_played(self.hands_sub)
+        return true end }))
+        delay(0.5)
+    end
+
+    if self.ability.name == 'Tri-Eyed Cat' then
+        local trigon_random = pseudorandom('trigon')
+        if trigon_random <= G.GAME.probabilities.normal/2 then
+            if G.hand.highlighted[1]:get_id() == 3 then
+                G.E_MANAGER:add_event(Event({
+                    func = function()
+                        local _first_dissolve = nil
+                        local new_cards = {}
+                        for i = 1, self.ability.extra.dupes_secret do
+                            G.playing_card = (G.playing_card and G.playing_card + 1) or 1
+                            local _card = copy_card(G.hand.highlighted[1], nil, nil, G.playing_card)
+                            _card:add_to_deck()
+                            G.deck.config.card_limit = G.deck.config.card_limit + 1
+                            table.insert(G.playing_cards, _card)
+                            G.hand:emplace(_card)
+                            _card:start_materialize(nil, _first_dissolve)
+                            _first_dissolve = true
+                            new_cards[#new_cards+1] = _card
+                        end
+                        playing_card_joker_effects(new_cards)
+                        play_sound('polyuse')
+                        delay(0.2)
+                        play_sound('negative', 1.5, 0.4)
+                    return true
+                end }))
+                card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_super'), colour = G.C.SECONDARY_SET.Polygon})
+            else
+                G.E_MANAGER:add_event(Event({
+                    func = function()
+                        local _first_dissolve = nil
+                        local new_cards = {}
+                        for i = 1, self.ability.extra.dupes do
+                            G.playing_card = (G.playing_card and G.playing_card + 1) or 1
+                            local _card = copy_card(G.hand.highlighted[1], nil, nil, G.playing_card)
+                            _card:add_to_deck()
+                            G.deck.config.card_limit = G.deck.config.card_limit + 1
+                            table.insert(G.playing_cards, _card)
+                            G.hand:emplace(_card)
+                            _card:start_materialize(nil, _first_dissolve)
+                            _first_dissolve = true
+                            new_cards[#new_cards+1] = _card
+                        end
+                        playing_card_joker_effects(new_cards)
+                        play_sound('polyuse')
+                    return true
+                end })) 
+            end
+            delay(1)
+        else
+            local destroyed_cards = {}
+            for i=#G.hand.highlighted, 1, -1 do
+                destroyed_cards[#destroyed_cards+1] = G.hand.highlighted[i]
+            end
+            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                play_sound('cancel')
+                used_tarot:juice_up(0.3, 0.5)
+                return true end }))
+            G.E_MANAGER:add_event(Event({
+                trigger = 'after',
+                delay = 0.2,
+                func = function() 
+                    for i=#G.hand.highlighted, 1, -1 do
+                        local card = G.hand.highlighted[i]
+                        if card.ability.name == 'Glass Card' then 
+                            card:shatter()
+                        else
+                            card:start_dissolve(nil, i == #G.hand.highlighted)
+                        end
+                    end
+            return true end })) 
+        end
+        card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_trigon'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.7})
+        delay(0.5)
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2,func = function() G.hand:unhighlight_all(); return true end }))
+        delay(0.5)
+    end
+
+    if self.ability.name == 'Quadra Beast' then
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+            play_sound('polyuse')
+            used_tarot:juice_up(0.3, 0.5)
+            return true end }))
+        for i=1, #G.hand.highlighted do
+            local percent = 1.15 - (i-0.999)/(#G.hand.highlighted-0.998)*0.3
+            G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function() G.hand.highlighted[i]:flip();play_sound('card1', percent);G.hand.highlighted[i]:juice_up(0.3, 0.3);return true end }))
+        end
+        delay(0.2)
+
+        local all_rank_4 = true
+        for i = 1, #G.hand.highlighted do
+            if G.hand.highlighted[i].base.id ~= 4 then
+                all_rank_4 = false
+                break
+            end
+        end
+
+        for i = 1, #G.hand.highlighted do
+        local card = G.hand.highlighted[i]
+            local _suit = pseudorandom_element({'S','H','D','C'}, pseudoseed('tetragon'..i))
+            if all_rank_4 and (#G.hand.highlighted == self.ability.consumeable.max_highlighted) then
+                for i=1, #G.hand.highlighted do
+                    G.E_MANAGER:add_event(Event({func = function()
+                        local suit_prefix = _suit..'_'
+                        local rank_suffix = card.base.id < 10 and tostring(card.base.id) or
+                                card.base.id == 10 and 'T' or card.base.id == 11 and 'J' or
+                                card.base.id == 12 and 'Q' or card.base.id == 13 and 'K' or
+                                card.base.id == 14 and 'A'
+                        local cen_pool = {}
+                        for k, v in pairs(G.P_CENTER_POOLS["Enhanced"]) do
+                            if v.key ~= 'm_stone' and v.key ~= 'm_bugged' then 
+                                cen_pool[#cen_pool+1] = v
+                            end
+                        end
+                        local random_enhanced = cen_pool[math.random(1, #cen_pool)]
+                        card:set_base(G.P_CARDS[suit_prefix .. rank_suffix])
+                        card:set_ability(random_enhanced)
+                    return true end }))
+                end
+            else
+                for i=1, #G.hand.highlighted do
+                    G.E_MANAGER:add_event(Event({func = function()
+                        local suit_prefix = _suit..'_'
+                        local rank_suffix = card.base.id < 10 and tostring(card.base.id) or
+                                card.base.id == 10 and 'T' or card.base.id == 11 and 'J' or
+                                card.base.id == 12 and 'Q' or card.base.id == 13 and 'K' or
+                                card.base.id == 14 and 'A'
+                        card:set_base(G.P_CARDS[suit_prefix..rank_suffix])
+                    return true end }))
+                end
+            end
+        end
+        for i=1, #G.hand.highlighted do
+            local percent = 0.85 + (i-0.999)/(#G.hand.highlighted-0.998)*0.3
+            G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.15,func = function() G.hand.highlighted[i]:flip();play_sound('tarot2', percent, 0.6);G.hand.highlighted[i]:juice_up(0.3, 0.3);return true end }))
+        end
+        if all_rank_4 and (#G.hand.highlighted == self.ability.consumeable.max_highlighted) then
+            card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_super'), colour = G.C.SECONDARY_SET.Polygon})
+            play_sound('negative', 1.5, 0.4)
+        end
+        delay(0.5)
+        card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_tetragon'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.7}) 
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2,func = function() G.hand:unhighlight_all(); return true end }))
+        delay(0.5)
+    end
+
+    if self.ability.name == 'Penta Hand' then
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+            play_sound('polyuse')
+            self:juice_up(0.3, 0.5)
+        return true end }))
+
+        G.GAME.next_hand_penta_bonus = 1 -- Set global flag for Penta Hand Bonus
+
+        card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_pentagon'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.7})
+        delay(0.5)
+    end
+
+    if self.ability.name == 'Hexwing Angel' then
+        local deletable_jokers = {}
+        for k, v in pairs(G.jokers.cards) do
+            if not v.ability.eternal and not v:get_edition(polychrome) then deletable_jokers[#deletable_jokers + 1] = v end
+        end
+
+        G.E_MANAGER:add_event(Event({trigger = 'immediate', delay = 0.75, func = function()
+            for k, v in pairs(G.jokers.cards) do
+                if v:get_edition(polychrome) then
+                    if #deletable_jokers ~= 0 then
+                        card_eval_status_text(v, 'extra', nil, nil, nil, {message = localize('k_super'), colour = G.C.SECONDARY_SET.Polygon})
+                        play_sound('negative', 1.5, 0.4)
+                    else
+                        card_eval_status_text(v, 'extra', nil, nil, nil, {message = localize('k_super_denied'), colour = G.C.SECONDARY_SET.Polygon})
+                        play_sound('cancel', 1.5, 0.4)
+                    end
+                end  
+            end
+            return true 
+        end }))
+        G.E_MANAGER:add_event(Event({trigger = 'before', delay = 0.75, func = function()
+            for k, v in pairs(deletable_jokers) do
+                v:start_dissolve({G.C.SECONDARY_SET.Polygon})
+            end
+            return true 
+        end }))
+
+
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.9, func = function()
+            play_sound('polyuse')
+            used_tarot:juice_up(0.3, 0.5)
+                for i = 1, #deletable_jokers do
+                    local card = create_card('Joker', G.jokers, nil, pseudorandom('createrandom'), nil, nil, nil, 'hexa')
+                    card:add_to_deck()
+                    G.jokers:emplace(card)
+                    card:start_materialize()
+                    G.GAME.consumeable_buffer = 0
+                end
+            return true
+        end}))
+        card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_hexagon'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.7})
+        delay(0.6)
+    end
+
+    if self.ability.name == 'Septabug' then
+        local rightmost = G.hand.highlighted[1]
+        local othercards = G.hand.highlighted[1]
+        local percent = 1.15 - (0.001)/(#G.hand.highlighted-0.998)*0.3
+        --Determine the difference between rightmost and other cards, using T.x as a position check
+        for i=1, #G.hand.highlighted do
+            if G.hand.highlighted[i].T.x > rightmost.T.x then 
+                rightmost = G.hand.highlighted[i]
+            end 
+            if G.hand.highlighted[i].T.x < rightmost.T.x then 
+                othercards = G.hand.highlighted[i]
+            end
+        end
+
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2, func = function()
+            play_sound('polyuse')
+            used_tarot:juice_up(0.3, 0.5)
+            return true end }))
+
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2, func = function()
+            othercards:flip()
+            play_sound('card1', percent)
+            othercards:juice_up(0.3, 0.3)
+            return true end }))
+
+        card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_septagon'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.2})
+
+        if rightmost then
+            G.E_MANAGER:add_event(Event({
+                trigger = 'after',
+                delay = 0.4,
+                func = function() 
+                    if rightmost.ability.name == 'Glass Card' then 
+                        rightmost:shatter()
+                    else
+                        rightmost:start_dissolve(nil, i == #rightmost)
+                    end
+                return true end }))
+        end
+        if othercards then
+            G.E_MANAGER:add_event(Event({
+                trigger = 'after',
+                delay = 0.4,
+                func = function() 
+                    othercards:set_ability(G.P_CENTERS[self.ability.consumeable.septa_mod])
+                return true end }))
+
+            if rightmost.base.id == 9 and othercards.base.id == 7 then
+                G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2, func = function()
+                    local seal_type = pseudorandom(pseudoseed('septa'..G.GAME.round_resets.ante))
+                    if seal_type > 0.8 then othercards:set_seal('Red')
+                    elseif seal_type > 0.6 then othercards:set_seal('Blue')
+                    elseif seal_type > 0.4 then othercards:set_seal('Gold')
+                    elseif seal_type > 0.2 then othercards:set_seal('Purple')
+                    else othercards:set_seal('Biscuit')
+                    end
+                return true end }))
+                card_eval_status_text(used_tarot, 'above_consumeable', nil, nil, nil, {message = localize('k_super'), colour = G.C.SECONDARY_SET.Polygon})
+                play_sound('negative', 1.5, 0.4)
+            end
+            percent = 0.85 + (0.001)/(#G.hand.highlighted-0.998)*0.3
+            G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.6,func = function()
+                othercards:flip()
+                play_sound('card1', percent, 0.6)
+                othercards:juice_up(0.3, 0.3)
+                return true end }))
+        end
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2,func = function() G.hand:unhighlight_all(); return true end }))
+        delay(0.5)
+    end
+
+    if self.ability.name == 'Octoclops' then
+        local selected_card = G.hand.highlighted[1]
+        local percent = 1.15 - (0.001)/(#G.hand.highlighted-0.998)*0.3
+
+        --Checks if card is Enhanced and not Debuffed
+        if selected_card.config.center ~= G.P_CENTERS.c_base and not selected_card.debuff then
+            --Check if not stone
+            if selected_card.config.center ~= G.P_CENTERS.m_stone then
+                card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_octagon'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.2})
+                --Juicing
+                G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2, func = function()
+                    play_sound('polyuse')
+                    used_tarot:juice_up(0.3, 0.5)
+                    return true end }))
+                --Flipping
+                G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2, func = function()
+                    selected_card:flip()
+                    play_sound('card1', percent)
+                    selected_card:juice_up(0.3, 0.3)
+                    return true end }))
+
+                --If the selected card is Hearts, Create 4 eight of hearts with random enhancements
+                if selected_card:is_suit('Hearts', nil, true) and selected_card.config.center ~= G.P_CENTERS.m_wild then
+                    G.E_MANAGER:add_event(Event({
+                    trigger = 'after',
+                    delay = 0.7,
+                    func = function() 
+                        local cards = {}
+                        for i=1, self.ability.extra.eoh_created do
+                            cards[i] = true
+                            local _suit, _rank = 'H', '8'
+                            local cen_pool = {}
+                            for k, v in pairs(G.P_CENTER_POOLS["Enhanced"]) do
+                                if v.key ~= 'm_stone' and v.key ~= 'm_bugged' then 
+                                    cen_pool[#cen_pool+1] = v
+                                end
+                            end
+                            create_playing_card({front = G.P_CARDS[_suit..'_'.._rank], center = pseudorandom_element(cen_pool, pseudoseed('octo_card'))}, G.hand, nil, i ~= 1, {G.C.SECONDARY_SET.Polygon})
+                        end
+                        playing_card_joker_effects(cards)
+                        return true end }))
+                    card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_hearts'), colour = G.C.SUITS.Hearts, delay = 0.2})
+
+                --If the selected card is Diamonds, Create 2 random Polygon cards (must have room)
+                elseif selected_card:is_suit('Diamonds', nil, true) and selected_card.config.center ~= G.P_CENTERS.m_wild then
+                    for i = 1, math.min(2, G.consumeables.config.card_limit - #G.consumeables.cards) do
+                        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                            if G.consumeables.config.card_limit > #G.consumeables.cards then
+                                play_sound('timpani')
+                                local card = create_card((self.ability.name == 'Octoclops' and 'Polygon'), G.consumeables, nil, nil, nil, nil, nil, (self.ability.name == 'Octoclops' and 'oct'))
+                                card:add_to_deck()
+                                G.consumeables:emplace(card)
+                                used_tarot:juice_up(0.3, 0.5)
+                            end
+                        return true end }))
+                    end
+                    card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_diamonds'), colour = G.C.SUITS.Diamonds, delay = 0.2})
+
+                --If the selected card is Spades, Add random edition and seal to highlighted card
+                elseif selected_card:is_suit('Spades', nil, true) and selected_card.config.center ~= G.P_CENTERS.m_wild then
+                    G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                        local over = false
+                        local edition = poll_edition('octoclops', nil, true, true)
+                        local seal_type = pseudorandom(pseudoseed('certsl'))
+                        selected_card:set_edition(edition, true)
+                        if seal_type > 0.8 then selected_card:set_seal('Red', true)
+                        elseif seal_type > 0.6 then selected_card:set_seal('Blue', true)
+                        elseif seal_type > 0.4 then selected_card:set_seal('Gold', true)
+                        elseif seal_type > 0.2 then selected_card:set_seal('Purple', true)
+                        else selected_card:set_seal('Biscuit', true)
+                        end
+                        used_tarot:juice_up(0.3, 0.5)
+                    return true end }))
+                    card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_spades'), colour = G.C.SUITS.Spades, delay = 0.2})
+
+                --If the selected card is Clubs, Add 3 Stone Cards to hand
+                elseif selected_card:is_suit('Clubs', nil, true) and selected_card.config.center ~= G.P_CENTERS.m_wild then
+                    G.E_MANAGER:add_event(Event({
+                    trigger = 'after',
+                    delay = 0.7,
+                    func = function() 
+                        local cards = {}
+                        for i=1, self.ability.extra.stone_created do
+                            cards[i] = true
+                            local _suit, _rank = nil, nil
+                            _rank = pseudorandom_element({'2','3','4','5','6','7','8','9','T','J','Q','K','A'}, pseudoseed('octo_stone'))
+                            _suit = 'C'; _rank = _rank or 'A'
+                            local cen_pool = {}
+                            for k, v in pairs(G.P_CENTER_POOLS["Enhanced"]) do
+                                if v.key == 'm_stone' then
+                                    cen_pool[#cen_pool+1] = v
+                                end
+                            end
+                            create_playing_card({front = G.P_CARDS[_suit..'_'.._rank], center = pseudorandom_element(cen_pool, pseudoseed('octo_stone'))}, G.hand, nil, i ~= 1, {G.C.SECONDARY_SET.Polygon})
+                        end
+                        playing_card_joker_effects(cards)
+                        return true end }))
+                    card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_clubs'), colour = G.C.SUITS.Clubs, delay = 0.2})
+
+                --If the selected card is specifically a Wild Card
+                elseif selected_card.config.center == G.P_CENTERS.m_wild then
+                    card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_super'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.2})
+                    play_sound('negative', 1.5, 0.4)
+                    G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                        G.hand:change_size(1)
+                        card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_handsize_plus_one'), colour = G.C.BLUE, delay = 0.2})
+                        play_sound('tarot1')
+                    return true end }))
+                end
+
+                --Flipping again; if spades, do not change enhanced type
+                percent = 0.85 + (0.001)/(#G.hand.highlighted-0.998)*0.3
+                G.E_MANAGER:add_event(Event({trigger = 'after',delay = 1.5,func = function()
+                    if selected_card:is_suit('Spades', nil, true) and selected_card.config.center ~= G.P_CENTERS.m_wild then
+                        --Leave blank to skip (since the previous rules already changed suit)
+                    else
+                        selected_card:set_ability(G.P_CENTERS.c_base)
+                    end
+                    selected_card:flip()
+                    play_sound('card1', percent, 0.6)
+                    selected_card:juice_up(0.3, 0.3)
+                    return true end }))
+            --If stone        
+            else
+                card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_no_suit'), colour = G.C.JOKER_GREY, delay = 0.2})
+                G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.5, func = function()
+                    play_sound('cancel')
+                    used_tarot:juice_up(0.3, 0.5)
+                    return true end }))
+            end
+
+        --If not Enhanced:
+        else
+            card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_not_enhanced'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.2})
+            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.5, func = function()
+                play_sound('cancel')
+                used_tarot:juice_up(0.3, 0.5)
+                return true end }))
+        end
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2,func = function() G.hand:unhighlight_all(); return true end }))
+        delay(0.5)
+    end
+
+    if self.ability.name == 'Nonagon Lion' then
+        -- Juicing
+        card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_nonagon'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.2})
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2, func = function()
+            play_sound('polyuse')
+            used_tarot:juice_up(0.3, 0.5)
+            return true end }))
+            
+        -- Check each selected card for Stone, then sort them.
+        local stone_count = 0  -- Keep track of the number of stone cards selected
+        for i=1, #G.hand.highlighted do
+            local card = G.hand.highlighted[i]
+
+            -- If stone, go here
+            if card.config.center == G.P_CENTERS.m_stone then 
+                stone_count = stone_count + 1  -- Count the stone cards
+                card_eval_status_text(card, 'extra', nil, nil, nil, {message = localize('k_plus_two_levels'), colour = G.C.BLUE, delay = 0.4})
+            else
+                card_eval_status_text(card, 'extra', nil, nil, nil, {message = localize('k_not_stone'), colour = G.C.JOKER_GREY, delay = 0.4})
+            end
+        end
+
+        -- Now, after looping through selected cards, apply levels to the hand based on the stone count
+        if stone_count > 0 then
+            local _hand, _tally = nil, 0
+            -- Find the most played hand
+            for k, v in ipairs(G.handlist) do
+                if G.GAME.hands[v].visible and G.GAME.hands[v].played > _tally then
+                    _hand = v
+                    _tally = G.GAME.hands[v].played
+                end
+            end
+
+            if _hand then
+                -- Calculate the total level increment
+                local initial_level = G.GAME.hands[_hand].level
+                local level_increase = stone_count * 2
+                local new_level = initial_level + level_increase
+
+                -- Check for Lion Joker to double the final result
+                for k, v in pairs(G.jokers.cards) do
+                    if v.ability.name == 'Lion Joker' then
+                        G.E_MANAGER:add_event(Event({
+                            trigger = 'after',
+                            delay = 0.4,
+                            func = function() 
+                                v:start_dissolve({G.C.SECONDARY_SET.Polygon})
+                                card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_super'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.2})
+                                play_sound('negative', 1.5, 0.4)
+                            return true end }))
+                        new_level = new_level * 2
+                        break
+                    end
+                end
+
+                -- Apply the final level to the hand
+                update_hand_text({sound = 'button', volume = 0.7, pitch = 0.8, delay = 0.3}, {
+                    handname = localize(_hand, 'poker_hands'),
+                    chips = _hand.chips,
+                    mult = _hand.mult,
+                    level = new_level
+                })
+
+                level_up_hand(card, _hand, false, new_level - initial_level)
+            end
+        end
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2, func = function() G.hand:unhighlight_all(); return true end}))
+        delay(0.5)
+    end
+
+    if self.ability.name == 'Charybdis' then
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+            local over = false
+            local edition = {shaded = true}
+            local card = G.hand.highlighted[1]
+            card:set_edition(edition, true)
+            used_tarot:juice_up(0.3, 0.5)
+            card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_decagon'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.2})
+            play_sound('polyuse')
+        return true end }))
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2, func = function() G.jokers:unhighlight_all(); return true end}))
+        delay(0.5)
+    end
+
+    if self.ability.name == 'Echidna' or self.ability.name == 'Fractal' then
+        local card = G.jokers.highlighted[1] -- Get Highlighted Joker
+        local card_property = nil
+        local created_property = nil
+        
+        -- Logic for Echidna: Based on order ID
+        if self.ability.name == 'Echidna' then
+            card_property = card.ability.order -- Get order ID from highlighted Joker
+            created_property = card_property + 1 -- Next order ID
+            print("Card ID (Echidna):", card_property, "Created Card ID (Echidna):", created_property)
+        end
+        
+        -- Logic for Fractal: Based on Rarity
+        if self.ability.name == 'Fractal' then
+            card_property = card.ability.rarity -- Get rarity from highlighted Joker
+            created_property = card_property + 1 -- Next rarity level
+            print("Card rarity (Fractal):", card_property, "Created Card rarity (Fractal):", created_property)
+        end
+        
+        -- Find the corresponding card based on order or rarity
+        local new_card_center = nil
+        for k, v in pairs(G.P_CENTERS) do
+            if v.set == "Joker" then 
+                if self.ability.name == 'Echidna' and v.order == created_property then
+                    new_card_center = k
+                    break
+                elseif self.ability.name == 'Fractal' and v.rarity == created_property then
+                    new_card_center = k
+                    break
+                end
+            end
+        end
+
+        -- Use the create_card function to generate the new Joker card with the updated order ID or rarity
+        if new_card_center then
+            G.E_MANAGER:add_event(Event({
+                trigger = 'after',
+                delay = 0.1,
+                func = function() 
+                    if card.ability.name == 'Glass Card' or card.ability.name == 'Glass Joker' then 
+                        card:shatter()
+                    else
+                        card:start_dissolve({G.C.SECONDARY_SET.Polygon}, nil, 1.6)
+                    end
+                    return true end }))
+
+            if card.ability.set == 'Joker' then
+                G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+                    play_sound('polyuse')
+                    local created_card = create_card('Joker', G.jokers, false, nil, false, true, new_card_center)
+                    created_card:add_to_deck()
+                    G.jokers:emplace(created_card)
+                    used_tarot:juice_up(0.3, 0.5)
+                    print("Created new card with property:", created_property, "based on original property:", card_property)
+                    if self.ability.name == 'Echidna' then
+                        card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_hendecagon'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.7})
+                    elseif self.ability.name == 'Fractal' then
+                        card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_myriagon'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.7})
+                    end
+                    return true end }))
+            end
+        else
+            print("No matching card found for the new property:", created_property)
+            card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_none_found'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.2})
+            G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.5, func = function()
+                play_sound('cancel')
+                used_tarot:juice_up(0.3, 0.5)
+                return true
+            end }))
+        end
+        delay(0.6)
+    end
+
+    if self.ability.name == 'Typhon' then
+        local destroyed_cards = {}
+        local temp_hand = {}
+        for k, v in ipairs(G.playing_cards) do temp_hand[#temp_hand+1] = v end
+        table.sort(temp_hand, function (a, b) return not a.playing_card or not b.playing_card or a.playing_card < b.playing_card end)
+        pseudoshuffle(temp_hand, pseudoseed('immolate'))
+
+        for i = 1, self.ability.extra.typhon_cards do destroyed_cards[#destroyed_cards+1] = temp_hand[i] end
+
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2, func = function()
+            play_sound('polyuse')
+            used_tarot:juice_up(0.3, 0.5)
+            card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_dodecagon'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.7})
+            return true end }))
+        G.E_MANAGER:add_event(Event({
+            trigger = 'after',
+            delay = 0.1,
+            func = function() 
+                for i=#destroyed_cards, 1, -1 do
+                    local card = destroyed_cards[i]
+                    if card.ability.name == 'Glass Card' then 
+                        card:shatter()
+                    else
+                        card:start_dissolve({G.C.SECONDARY_SET.Polygon}, i == #destroyed_cards)
+                    end
+                end
+                return true end }))
+        G.E_MANAGER:add_event(Event({
+            trigger = 'after',
+            delay = 0.7,
+            func = function() 
+                local cards = {}
+                for i=1, self.ability.extra.cards_created do
+                    cards[i] = true
+                    local _suit, _rank = nil, nil
+                    _rank = pseudorandom_element({'J', 'Q', 'K', 'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T'}, pseudoseed('typhon_create'))
+                    _suit = pseudorandom_element({'S','H','D','C'}, pseudoseed('typhon_create'))
+                    _suit = _suit or 'S'; _rank = _rank or 'A'
+                    local cen_pool = {}
+                    for k, v in pairs(G.P_CENTER_POOLS["Enhanced"]) do
+                        if v.key ~= 'm_stone' and v.key ~= 'm_bugged' then 
+                            cen_pool[#cen_pool+1] = v
+                        end
+                    end
+                    create_playing_card({front = G.P_CARDS[_suit..'_'.._rank], center = pseudorandom_element(cen_pool, pseudoseed('typhon_card'))}, G.hand, nil, i ~= 1, {G.C.SECONDARY_SET.Polygon})
+                end
+                playing_card_joker_effects(cards)
+                return true
+            end }))
+        for i = 1, #G.jokers.cards do
+        G.jokers.cards[i]:calculate_joker({remove_playing_cards = true, removed = destroyed_cards})
+        end
+    end
+
+    if self.ability.name == 'Parallax' then
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+            local over = false
+            local edition = {negative = true}
+            local card = G.jokers.highlighted[1]
+            card:set_edition(edition, true)
+            used_tarot:juice_up(0.3, 0.5)
+            card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_hectogon'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.2})
+            play_sound('polyuse')
+        return true end }))
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2, func = function() G.jokers:unhighlight_all(); return true end}))
+        delay(0.5)
+    end
+
+    if self.ability.name == 'Infinity' then
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.4, func = function()
+            play_sound('polyuse')
+            used_tarot:juice_up(0.3, 0.5)
+            self.hands_sub = G.GAME.current_round.hands_played
+            ease_hands_played(self.hands_sub*2)
+            self.discards_sub = G.GAME.current_round.discards_used
+            ease_discard(self.discards_sub*2)
+            G.FUNCS.draw_from_discard_to_deck()
+        return true end }))
+        card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_apeirogon'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.7})
+        delay(0.5)
+    end
 end
 
 function Card:can_use_consumeable(any_state, skip_check)
@@ -1635,6 +2435,16 @@ function Card:can_use_consumeable(any_state, skip_check)
         end
         if G.STATE == G.STATES.SELECTING_HAND or G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.PLANET_PACK or G.STATE == G.STATES.POLYGON_PACK then
             if self.ability.consumeable.max_highlighted then
+                if self.ability.name == "The Lovers" then
+                    local not_found = true
+                    for k, v in pairs(G.jokers.cards) do
+                        if v.ability.name == "Habibi Duncan" then 
+                            self.ability.consumeable.max_highlighted = self.ability.consumeable.habibi_bonus
+                            not_found = false
+                        end
+                    end
+                    if not_found then self.ability.consumeable.max_highlighted = 1 end
+                end
                 if self.ability.consumeable.mod_num >= #G.hand.highlighted and #G.hand.highlighted >= (self.ability.consumeable.min_highlighted or 1) then
                     return true
                 end
@@ -1645,12 +2455,63 @@ function Card:can_use_consumeable(any_state, skip_check)
                 and #G.hand.cards > 1 then
                 return true
             end
+            if self.ability.name == 'The Gooby Guy' then
+                if G.STATE == G.STATES.SELECTING_HAND then
+                    return true
+                end
+            end
         end
 
-        if self.ability.set == 'Polygon' and self.ability.polygon_rounds >= self.ability.extra then
-            return true
-        else
+        if self.ability.set == 'Polygon' and self.ability.polygon_rounds >= self.ability.extra.rounds_needed then
+            if (self.ability.name == 'Tri-Eyed Cat' or self.ability.name == 'Quadra Beast'
+            or self.ability.name == 'Octoclops' or self.ability.name == 'Nonagon Lion')
+            and (#G.hand.highlighted > 0) and (#G.hand.highlighted <= self.ability.consumeable.max_highlighted) then
+                return true
+
+            elseif self.ability.name == 'Penta Hand' and G.GAME.next_hand_penta_bonus == 0 then
+                return true
+
+            elseif self.ability.name == 'Hexwing Angel' and #G.jokers.cards > 0 then
+                return true
+
+            elseif (self.ability.name == 'Septabug' or self.ability.name == 'Charybdis') and (#G.hand.highlighted == self.ability.consumeable.min_highlighted) then
+                return true
+
+            elseif self.ability.name == 'Typhon' and #G.playing_cards > self.ability.extra.typhon_cards and #G.hand.cards > 1 then
+                return true
+
+            elseif self.ability.name == 'Echidna' or self.ability.name == 'Fractal' then
+                if #G.hand.highlighted > 0 then
+                    for _, card in ipairs(G.hand.highlighted) do
+                        if not (card.ability and card.ability.set == 'Joker') then
+                            return false  -- If any highlighted card is not a joker, return false
+                        end
+                    end
+                end
+
+                if #G.jokers.highlighted > 0 then
+                    return true
+                end
+
+            elseif self.ability.name == 'Parallax' then
+                if #G.hand.highlighted > 0 then
+                    for _, card in ipairs(G.hand.highlighted) do
+                        if not (card.ability and card.ability.set == 'Joker') then
+                            return false  -- If any highlighted card is not a joker, return false
+                        end
+                    end
+                end
+
+                if next(self.eligible_negative_jokers) and #G.jokers.highlighted > 0 then
+                    return true
+                end
+
+            elseif self.ability.name == 'Infinity' then
+                return true
+
+            else
             return false
+            end
         end
     end
     return false
@@ -1843,6 +2704,7 @@ function Card:open()
                         card = create_card("Polygon", G.pack_cards, nil, nil, true, true, nil, 'poly') 
                     elseif self.ability.name:find('Standard') then
                         card = create_card((pseudorandom(pseudoseed('stdset'..G.GAME.round_resets.ante)) > 0.6) and "Enhanced" or "Base", G.pack_cards, nil, nil, nil, true, nil, 'sta')
+                        if card.ability.name == "Bugged Card" then card:set_ability(G.P_CENTERS['c_base']) end
                         local edition_rate = 2
                         local edition = poll_edition('standard_edition'..G.GAME.round_resets.ante, edition_rate, true)
                         card:set_edition(edition)
@@ -1895,6 +2757,22 @@ function Card:open()
             end
 
         return true end }))
+
+        if G.GAME.shop.captured_joker_charges > 0 then
+            G.GAME.shop.captured_joker_charges = G.GAME.shop.captured_joker_charges - 1
+            for k, v in ipairs(G.shop_booster.cards) do
+                v:set_cost()
+                create_shop_card_ui(v)
+            end
+            for k, v in ipairs(G.shop_vouchers.cards) do
+                v:set_cost()
+                create_shop_card_ui(v)
+            end
+            for k, v in ipairs(G.shop_jokers.cards) do
+                v:set_cost()
+                create_shop_card_ui(v)
+            end
+        end
     end
 end
 
@@ -1962,6 +2840,22 @@ function Card:redeem()
             self.children.bot_disp:remove()
             self.children.bot_disp = nil
         return true end }))
+
+        if G.GAME.shop.captured_joker_charges > 0 then
+            G.GAME.shop.captured_joker_charges = G.GAME.shop.captured_joker_charges - 1
+            for k, v in ipairs(G.shop_booster.cards) do
+                v:set_cost()
+                create_shop_card_ui(v)
+            end
+            for k, v in ipairs(G.shop_vouchers.cards) do
+                v:set_cost()
+                create_shop_card_ui(v)
+            end
+            for k, v in ipairs(G.shop_jokers.cards) do
+                v:set_cost()
+                create_shop_card_ui(v)
+            end
+        end
     end
 end
 
@@ -2055,6 +2949,9 @@ function Card:apply_to_run(center)
             G.GAME.round_resets.discards = G.GAME.round_resets.discards - center_table.extra
             ease_discard(-center_table.extra)
         end
+    end
+    if center_table.name == 'Bestiary' or center_table.name == 'Grimoire' then
+        G.GAME.polygon_voucher_bonus = G.GAME.polygon_voucher_bonus + 2
     end
 end
 
@@ -2328,6 +3225,31 @@ function Card:start_materialize(dissolve_colours, silent, timefac)
     }))
 end
 
+function Card:calculate_penta(context)
+    if self.debuff then return nil end
+    if context.repetition then
+        if context.cardarea == G.play then
+            if G.GAME.next_hand_penta_bonus == 1 then
+                if G.GAME.current_round.hands_left ~= 0 then
+                    return {
+                        message = localize('k_pentagon'),
+                        colour = G.C.SECONDARY_SET.Polygon,
+                        repetitions = G.P_CENTERS.c_pentagon.config.extra.penta_retrigger,
+                        card = self
+                    }
+                else
+                    return {
+                        message = localize('k_super'),
+                        colour = G.C.SECONDARY_SET.Polygon,
+                        repetitions = G.P_CENTERS.c_pentagon.config.extra.penta_retrigger_secret,
+                        card = self
+                    }
+                end
+            end
+        end
+    end
+end
+
 function Card:calculate_seal(context)
     if self.debuff then return nil end
     if context.repetition then
@@ -2339,7 +3261,14 @@ function Card:calculate_seal(context)
                 }
         end
 
-        if self.seal == 'Biscuit'then
+        local in_scoring_hand = false
+        if context.scoring_hand then
+            for i = 1, #context.scoring_hand do
+                if context.scoring_hand[i] == self then in_scoring_hand = true end
+            end
+        end
+        
+        if self.seal == 'Biscuit' and in_scoring_hand == false then
             G.E_MANAGER:add_event(Event({ func = function()
                 G.hand:add_to_highlighted(self, true)
                 play_sound('card1', 1)
@@ -2398,13 +3327,15 @@ function Card:calculate_joker(context)
         end
     end
     if self.ability.set == "Polygon" then
-        local eval = function(card) return (card.ability.polygon_rounds >= card.ability.extra) end
-        juice_card_until(self, eval, true, 0.6)
+        if (self.ability.polygon_rounds >= self.ability.extra.rounds_needed-1) then
+            G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function() self:juice_up(); play_sound('tarot1'); self.ability.polygon_shader_flag = true; return true end }))
+        end
         if context.scoring_hand then
             self.ability.polygon_rounds = self.ability.polygon_rounds + 1
             return {
-                message = (self.ability.polygon_rounds < self.ability.extra) and (self.ability.polygon_rounds..'/'..self.ability.extra) or (localize('k_poly_ready')),
-                colour = G.C.RED
+                message = (self.ability.polygon_rounds < self.ability.extra.rounds_needed) and ((self.ability.polygon_rounds-G.GAME.polygon_voucher_bonus)..'/'..(self.ability.extra.rounds_needed-G.GAME.polygon_voucher_bonus)) or (localize('k_poly_ready')),
+                colour = G.C.RED,
+                scale = 1.3
             }
         end
     end
@@ -2574,9 +3505,38 @@ function Card:calculate_joker(context)
                     card_eval_status_text(context.blueprint_card or self, 'extra', nil, nil, nil, {message = localize('k_no_other_jokers')})
                 end
             end
-            if self.ability.name == 'Lion Joker' then
+            if self.ability.name == 'Lion Joker' or self.ability.name == 'Freaky Joker' then
+                self:juice_up(0.3, 0.3)
                 for i=1, #G.hand.cards do
-                    G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function() G.hand.cards[i]:set_ability(G.P_CENTERS['m_steel']);return true end }))
+                    local percent = 1.15 - (i-0.999)/(#G.hand.cards-0.998)*0.3
+                    G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.05,func = function() G.hand.cards[i]:flip();play_sound('card1', percent);G.hand.cards[i]:juice_up(0.3, 0.3);return true end }))
+                    G.E_MANAGER:add_event(Event({trigger = 'after',func = function()
+                        if self.ability.name == 'Lion Joker' then
+                            G.hand.cards[i]:set_ability(G.P_CENTERS['m_steel'])
+                        elseif self.ability.name == 'Freaky Joker' then
+                            G.hand.cards[i]:set_ability(G.P_CENTERS['m_wild'])
+                        end
+                        return true
+                    end }))
+                    G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.05,func = function() G.hand.cards[i]:flip();G.hand.cards[i]:juice_up(0.3, 0.3);return true end }))
+                end
+            end
+            if self.ability.name == "Captured Joker" then
+                G.GAME.shop.captured_joker_charges = G.GAME.shop.captured_joker_charges + 1
+                local shop_exists = not not G.shop
+                if shop_exists then
+                    for k, v in ipairs(G.shop_booster.cards) do
+                        v:set_cost()
+                        create_shop_card_ui(v)
+                    end
+                    for k, v in ipairs(G.shop_vouchers.cards) do
+                        v:set_cost()
+                        create_shop_card_ui(v)
+                    end
+                    for k, v in ipairs(G.shop_jokers.cards) do
+                        v:set_cost()
+                        create_shop_card_ui(v)
+                    end
                 end
             end
         elseif context.selling_card then
@@ -3428,6 +4388,14 @@ function Card:calculate_joker(context)
                         card = self
                     }
                 end
+                if self.ability.name == 'Moist Chan' and
+                (context.other_card:get_id() == 6 or context.other_card:get_id() == 9) then
+                    return {
+                        chips = self.ability.extra.chips,
+                        mult = self.ability.extra.mult,
+                        card = self
+                    }
+                end
                 if self.ability.name == 'Business Card' and
                     context.other_card:is_face() and
                     pseudorandom('business') < G.GAME.probabilities.normal/self.ability.extra then
@@ -3862,6 +4830,9 @@ function Card:calculate_joker(context)
                         elseif context.scoring_name == 'Two Pair' then
                             self.ability.mult = self.ability.mult + 4
                         end
+                    end
+                    if self.ability.name == 'Morally Complex Joker' then
+                        if context.scoring_name == 'Straight' then context.scoring_name = 'Straight Flush' end
                     end
                     if self.ability.name == 'Obelisk' and not context.blueprint then
                         local reset = true
@@ -4495,6 +5466,10 @@ function Card:update(dt)
     end
 
     self:update_alert()
+    if self.ability.set == 'Joker' and not self.sticker_run then 
+        self.sticker_run = get_joker_win_sticker(self.config.center) or 'NONE'
+    end
+
     if self.ability.consumeable and self.ability.consumeable.max_highlighted then
         self.ability.consumeable.mod_num = math.min(5, self.ability.consumeable.max_highlighted)
     end
@@ -4583,6 +5558,14 @@ function Card:update(dt)
                 end
             end
         end
+        if self.ability.name == 'Parallax' then
+            self.eligible_negative_jokers = EMPTY(self.eligible_negative_jokers)
+            for k, v in pairs(G.jokers.cards) do
+                if v.ability.set == 'Joker' and (not v.edition or v.edition.foil or v.edition.holo or v.edition.polychrome or v.edition.shaded) then
+                    table.insert(self.eligible_negative_jokers, v)
+                end
+            end
+        end
         if self.ability.name == 'Blueprint' or self.ability.name == 'Brainstorm' then
             local other_joker = nil
             if self.ability.name == 'Brainstorm' then
@@ -4598,6 +5581,24 @@ function Card:update(dt)
                 self.ability.blueprint_compat = 'incompatible'
             end
         end
+        if self.ability.name == 'Camou' then
+            local left_joker = nil
+            local right_joker = nil
+            for i = 1, #G.jokers.cards do
+                if G.jokers.cards[i] == self then 
+                    left_joker = G.jokers.cards[i-1]
+                    right_joker = G.jokers.cards[i+1]
+                end
+            end
+            
+            if left_joker and right_joker then
+                if left_joker.config.center.blueprint_compat and right_joker.config.center.blueprint_compat then
+                    self.ability.blueprint_compat = 'compatible'
+                else
+                    self.ability.blueprint_compat = 'incompatible'
+                end
+            end
+        end
         if self.ability.name == 'Swashbuckler' then
             local sell_cost = 0
             for i = 1, #G.jokers.cards do
@@ -4606,6 +5607,43 @@ function Card:update(dt)
                 end
             end
             self.ability.mult = sell_cost
+        end
+        if self.ability.name == "The Perfect Loaf" and ( not self.area or not self.area.config.collection ) then
+            local left_joker = nil
+            local right_joker = nil
+            for i = 1, #G.jokers.cards do
+                if G.jokers.cards[i] == self then 
+                    left_joker = G.jokers.cards[i-1]
+                    right_joker = G.jokers.cards[i+1] 
+                end
+            end
+            
+            local activated = self.config.center.config.activated
+            --clean up polychrome from previous Duncan Jokers that were moved
+            for i = 1, #activated do
+                local curr_joker = activated[i]
+                local still_active = false
+                if left_joker and curr_joker == left_joker then
+                    still_active = true
+                elseif right_joker and curr_joker == right_joker then
+                    still_active = true
+                end
+    
+                if still_active == false then 
+                    curr_joker:set_edition(nil) 
+                    table.remove(activated, i)
+                end
+            end
+    
+            if left_joker and left_joker.config.center.config.duncan and (not left_joker.edition or not left_joker.edition.polychrome)then
+                left_joker:set_edition({polychrome = true}, true)
+                activated[#activated+1] = left_joker
+            end
+    
+            if right_joker and right_joker.config.center.config.duncan and (not right_joker.edition or not right_joker.edition.polychrome) then
+                right_joker:set_edition({polychrome = true}, true)
+                activated[#activated+1] = right_joker
+            end
         end
     else
         if self.ability.name == 'Temperance' then
@@ -4803,15 +5841,19 @@ function Card:draw(layer)
             end
             
             --If the card has any edition/seal, add that here
-            if self.edition or self.seal or self.ability.eternal or self.ability.rental or self.ability.perishable or self.sticker or self.ability.set == 'Spectral' or self.ability.set == 'Polygon' or self.debuff or self.greyed or self.ability.name == 'The Soul' or self.ability.set == 'Voucher' or self.ability.set == 'Booster' or self.config.center.soul_pos or self.config.center.soul_anim_pos or self.config.center.demo then
+            if self.edition or self.seal or self.ability.eternal or self.ability.rental or self.ability.perishable or self.sticker or ((self.sticker_run and self.sticker_run ~= 'NONE') and G.SETTINGS.run_stake_stickers) or self.ability.set == 'Spectral' or self.ability.set == 'Polygon' or self.debuff or self.greyed or self.ability.name == 'The Soul' or self.ability.set == 'Voucher' or self.ability.set == 'Booster' or self.config.center.soul_pos or self.config.center.soul_anim_pos or self.config.center.demo then
                 if (self.ability.set == 'Voucher' or self.config.center.demo) and (self.ability.name ~= 'Antimatter' or not (self.config.center.discovered or self.bypass_discovery_center)) then
                     self.children.center:draw_shader('voucher', nil, self.ARGS.send_to_shader)
                 end
-                if self.ability.set == 'Booster' or self.ability.set == 'Spectral' or self.ability.name == 'Parallax' or self.ability.name == 'Fractal' or self.ability.name == 'Infinity' then
+                if self.ability.set == 'Booster' or self.ability.set == 'Spectral' then
                     self.children.center:draw_shader('booster', nil, self.ARGS.send_to_shader)
                 end
                 if self.ability.set == 'Polygon' then
-                    self.children.center:draw_shader('smoke', nil, self.ARGS.send_to_shader)
+                    if (self.ability.polygon_rounds >= self.ability.extra.rounds_needed) and self.ability.polygon_shader_flag == true then
+                        self.children.center:draw_shader('smoke', nil, self.ARGS.send_to_shader)
+                    elseif self.ability.extra.rounds_needed - G.GAME.polygon_voucher_bonus < 1 then
+                        self.children.center:draw_shader('smoke', nil, self.ARGS.send_to_shader)
+                    end
                 end
                 if self.edition and self.edition.holo then
                     self.children.center:draw_shader('holo', nil, self.ARGS.send_to_shader)
@@ -4825,10 +5867,17 @@ function Card:draw(layer)
                         self.children.front:draw_shader('foil', nil, self.ARGS.send_to_shader)
                     end
                 end
+
                 if self.edition and self.edition.polychrome then
                     self.children.center:draw_shader('polychrome', nil, self.ARGS.send_to_shader)
                     if self.children.front and self.ability.effect ~= 'Stone Card' then
                         self.children.front:draw_shader('polychrome', nil, self.ARGS.send_to_shader)
+                    end
+                end
+                if self.edition and self.edition.shaded then
+                    self.children.center:draw_shader('smoke', nil, self.ARGS.send_to_shader)
+                    if self.children.front and self.ability.effect ~= 'Stone card' then
+                        self.children.front:draw_shader('smoke', nil, self.ARGS.send_to_shader)
                     end
                 end
                 if (self.edition and self.edition.negative) or (self.ability.name == 'Antimatter' and (self.config.center.discovered or self.bypass_discovery_center)) then
@@ -4858,6 +5907,10 @@ function Card:draw(layer)
                     G.shared_stickers[self.sticker].role.draw_major = self
                     G.shared_stickers[self.sticker]:draw_shader('dissolve', nil, nil, nil, self.children.center)
                     G.shared_stickers[self.sticker]:draw_shader('voucher', nil, self.ARGS.send_to_shader, nil, self.children.center)
+                elseif (self.sticker_run and G.shared_stickers[self.sticker_run]) and G.SETTINGS.run_stake_stickers then
+                    G.shared_stickers[self.sticker_run].role.draw_major = self
+                    G.shared_stickers[self.sticker_run]:draw_shader('dissolve', nil, nil, nil, self.children.center)
+                    G.shared_stickers[self.sticker_run]:draw_shader('voucher', nil, self.ARGS.send_to_shader, nil, self.children.center)
                 end
 
                 if self.ability.name == 'The Soul' and (self.config.center.discovered or self.bypass_discovery_center) then
@@ -4893,9 +5946,18 @@ function Card:draw(layer)
                     self.children.animated_sprite:draw_shader('dissolve', nil, nil, true, self.children.center, scale_mod, rotate_mod, x_mod, y_mod, nil, 0)
                 end
                 if self.debuff then
-                    self.children.center:draw_shader('debuff', nil, self.ARGS.send_to_shader)
-                    if self.children.front and self.ability.effect ~= 'Stone Card' then
-                        self.children.front:draw_shader('debuff', nil, self.ARGS.send_to_shader)
+                    if self.debuff and not self.permanent_debuff then
+                        self.children.center:draw_shader('debuff', nil, self.ARGS.send_to_shader)
+                        if self.children.front and self.ability.effect ~= 'Stone Card' then
+                            self.children.front:draw_shader('debuff', nil, self.ARGS.send_to_shader)
+                        end
+                    elseif self.debuff and self.permanent_debuff then
+                        self.children.center:draw_shader('debuff', nil, self.ARGS.send_to_shader)
+                        self.children.center:draw_shader('negative', nil, self.ARGS.send_to_shader)
+                        if self.children.front then
+                            self.children.front:draw_shader('debuff', nil, self.ARGS.send_to_shader)
+                            --self.children.front:draw_shader('hologram', nil, self.ARGS.send_to_shader, nil, self.children.center, 0, 0)
+                        end
                     end
                 end
                 if self.greyed then
@@ -5031,6 +6093,7 @@ function Card:load(cardTable, other_card)
     self.config.center_key = cardTable.save_fields.center
     self.config.center = G.P_CENTERS[self.config.center_key]
     self.params = cardTable.params
+    self.sticker_run = nil
 
     local H = G.CARD_H
     local W = G.CARD_W

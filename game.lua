@@ -251,6 +251,7 @@ function Game:init_item_prototypes()
         --Custom Tags
         tag_friendly_buffoon={name = 'Friendly Buffoon Tag', set = 'Tag', discovered = false, min_ante = 1, order = 25, config = {type = 'new_blind_choice', }, pos = {x = 4, y = 2}},
         tag_polygonal =     {name = 'Polygonal Tag',    set = 'Tag', discovered = false, min_ante = nil, order = 26, config = {type = 'new_blind_choice', }, pos = {x = 0,y = 5}},
+        tag_shaded =        {name = 'Shaded Tag',       set = 'Tag', discovered = false, min_ante = nil, order = 27, config = {type = 'store_joker_modify', edition = 'shaded', odds = 4}, requires = 'e_shaded', pos = {x = 1,y = 5}},
     }
     self.tag_undiscovered = {name = 'Not Discovered', order = 1, config = {type = ''}, pos = {x=3,y=4}}
 
@@ -269,7 +270,7 @@ function Game:init_item_prototypes()
         bl_small =           {name = 'Small Blind',  defeated = false, order = 1, dollars = 3, mult = 1,  vars = {}, debuff_text = '', debuff = {}, pos = {x=0, y=0}},
         bl_big =             {name = 'Big Blind',    defeated = false, order = 2, dollars = 4, mult = 1.5,vars = {}, debuff_text = '', debuff = {}, pos = {x=0, y=1}},
         bl_ox =              {name = 'The Ox',       defeated = false, order = 4, dollars = 5, mult = 2,  vars = {localize('ph_most_played')}, debuff = {}, pos = {x=0, y=2}, boss = {min = 6, max = 10}, boss_colour = HEX('b95b08')},
-        bl_hook =            {name = 'The Hook',     defeated = false, order = 31, dollars = 5, mult = 2,  vars = {}, debuff = {}, pos = {x=0, y=7}, boss = {min = 1, max = 10}, boss_colour = HEX('a84024')},
+        bl_hook =            {name = 'The Hook',     defeated = false, order = 3, dollars = 5, mult = 2,  vars = {}, debuff = {}, pos = {x=0, y=7}, boss = {min = 1, max = 10}, boss_colour = HEX('a84024')},
         bl_mouth =           {name = 'The Mouth',    defeated = false, order = 17, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=18}, boss = {min = 2, max = 10}, boss_colour = HEX('ae718e')},
         bl_fish =            {name = 'The Fish',     defeated = false, order = 10, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=5}, boss = {min = 2, max = 10}, boss_colour = HEX('3e85bd')},
         bl_club =            {name = 'The Club',     defeated = false, order = 9, dollars = 5, mult = 2,  vars = {}, debuff = {suit = 'Clubs'}, pos = {x=0, y=4}, boss = {min = 1, max = 10}, boss_colour = HEX('b9cb92')},
@@ -297,7 +298,12 @@ function Game:init_item_prototypes()
         bl_flint =           {name = 'The Flint',    defeated = false, order = 24, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=24}, boss = {min = 2, max = 10}, boss_colour = HEX('e56a2f')},
         bl_final_acorn =     {name = 'Amber Acorn',  defeated = false, order = 26, dollars = 8, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=27}, boss = {showdown = true, min = 10, max = 10}, boss_colour = HEX('fda200')},
         bl_final_heart =     {name = 'Crimson Heart',defeated = false, order = 29, dollars = 8, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=25}, boss = {showdown = true, min = 10, max = 10}, boss_colour = HEX('ac3232')},
-        bl_smothering_tithe= {name = 'Smothering Tithe', defeated = false, order = 31, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=8}, boss = {min = 1, max = 10}, boss_color = HEX('ac3232')},
+        bl_smothering_tithe= {name = 'Smothering Tithe', defeated = false, order = 31, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=31}, boss = {min = 1, max = 10}, boss_colour = HEX('c5c493')},
+        bl_noble=            {name = 'The Noble',    defeated = false, order = 32, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=32}, boss = {min = 1, max = 10}, boss_colour = HEX('bc4677')},
+        bl_hail=             {name = 'The Hail',     defeated = false, order = 33, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=33}, boss = {min = 3, max = 10}, boss_colour = HEX('7f9db1')},
+        bl_marshal=          {name = 'The Marshal',   defeated = false, order = 34, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=34}, boss = {min = 1, max = 10}, boss_colour = HEX('6681ca')},
+        bl_traitor=          {name = 'The Traitor',   defeated = false, order = 35, dollars = 5, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=35}, boss = {min = 1, max = 10}, boss_colour = HEX('9f353f')},
+        bl_final_timer=      {name = 'Saffron Timer', defeated = false, order = 36, dollars = 8, mult = 2, vars = {}, debuff = {}, pos = {x=0, y=36}, boss = {showdown = true, min = 10, max = 10}, boss_colour = HEX('cca073')},
     }
     self.b_undiscovered = {name = 'Undiscovered', debuff_text = 'Defeat this blind to discover', pos = {x=0,y=30}}
 
@@ -362,7 +368,7 @@ function Game:init_item_prototypes()
     self.j_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=9,y=9}, set = "Joker", cost_mult = 1.0,config = {}}
     self.t_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=6,y=2}, set = "Tarot", cost_mult = 1.0,config = {}}
     self.p_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=7,y=2}, set = "Planet", cost_mult = 1.0,config = {}}
-    self.po_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=9,y=5}, set = "Polygon", cost_mult = 1.0,config = {}}
+    self.po_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=9,y=6}, set = "Polygon", cost_mult = 1.0,config = {}}
     self.s_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=5,y=2}, set = "Spectral", cost_mult = 1.0,config = {}}
     self.v_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=8,y=2}, set = "Voucher", cost_mult = 1.0,config = {}}
     self.booster_undiscovered = {unlocked = false, max = 1, name = "Locked", pos = {x=0,y=5}, set = "Booster", cost_mult = 1.0,config = {}}
@@ -531,19 +537,34 @@ function Game:init_item_prototypes()
         j_chicot=           {order = 149,  unlocked = false, discovered = false, blueprint_compat = false, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Chicot", pos = {x=6,y=8}, soul_pos = {x=6, y=9}, set = "Joker", effect = "", config = {}, unlock_condition = {type = '', extra = '', hidden = true}},
         j_perkeo=           {order = 150,  unlocked = false, discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Perkeo", pos = {x=7,y=8}, soul_pos = {x=7, y=9}, set = "Joker", effect = "", config = {}, unlock_condition = {type = '', extra = '', hidden = true}},
         
-        --Custom Jokers
-        j_hauntedjoker=     {order = 151,  unlocked = true,  discovered = true,  blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = "Haunted Joker", pos = {x=0,y=16}, set = "Joker", effect = "Spawn Tarot", cost_mult = 1.0, config = {extra=10}, friendly = true},
-        j_camou=            {order = 152, unlocked = true, discovered = true,    blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Camou", pos = {x=3,y=16}, soul_pos = {x=4,y=16}, set = "Joker", effect = "Copycat", cost_mult = 1.0, config = {}, friendly = true},
-        j_lion=             {order = 153, unlocked = true, discovered = true,    blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 4, name = "Lion Joker", pos = {x=8, y=16}, set = "Joker", effect = "Steel Card", cost_mult = 1.0, config = {}, friendly = true},
-        j_twin=             {order = 154, unlocked = true, discovered = true,    blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = "Joker Twin", pos = {x=5, y=10}, set = "Joker", effect = "Copycat", cost_mult = 1.0, config = {}, friendly = true},
-        j_phallussy=        {order = 155, unlocked = true, discovered = true,    blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Gambler's Phallussy", pos = {x=0, y=17}, set = "Joker", effect = "", cost_mult = 1.0, config = {}, friendly = true},
-        j_dancing_dunc=     {order = 156, unlocked = true, discovered = true,    blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 4, name = "Dancing Duncan", pos = {x=4, y=12}, soul_anim_pos = {x=0, y=0}, set = "Joker", effect = "Type Mult", cost_mult = 1.0, config = {}, friendly = true},
-        j_strawberry=       {order = 157, unlocked = true, discovered = true,    bluepring_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 3, name = "Freeze Dried Strawberry", pos = {x=5, y=11}, set = "Joker", effect = "", cost_mult = 1.0, config = {extra = {odds = 4, chips = 50}}, no_pool_flag = 'freeze_dried_broke', friendly = true},
-        j_part_of_you=      {order = 158, unlocked = true, discovered = true,    blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 8, name = "Part of You", pos = {x=1, y=17}, set = "Joker", effect = "", cost_mult = 1.0, config = {extra = 1, Xmult = 0.15}, friendly = true},
-        j_singularity=      {order = 159,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = 'The Singularity', pos = {x=5, y=16}, set = 'Joker', effect = "Retrigger", cost_mult = 1.0, config = {extra = 4}, friendly = true},
-        j_sacrificial=      {order = 160,  unlocked = true,  discovered = false, blueprint_compat = false, perishable_compat = true, eternal_compat = false, rarity = 1, cost = 20, name = 'Sacrificial Joker', pos = {x=2, y=16}, set = 'Joker', effect = "", cost_mult = 1.0, config = {}, friendly = true},
-        j_metajoker=        {order = 161,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = 'Meta Joker', pos ={x=6, y=16}, soul_pos = {x=7, y=16}, set = 'Joker', effect = "4 And 8 Retrigger", cost_mult = 1.0, config = {extra = {four = 3, eight = 1, two = 7}}, friendly = true},
-        j_monojoker=        {order = 162,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 6, name = "Monochromatic Joker", pos = {x=1,y=16}, set = "Joker", effect = 'Inverted Suit Multi', cost_mult = 1.0, config = {extra = 2}, friendly = true},
+        -- Custom Jokers ordered by rarity (The order matters because of the Echidna Polygon card effect; when adding new Jokers, please add new ones at the bottom of each rarity.)
+        -- Common
+        j_strawberry=       {order = 151,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 3, name = "Freeze Dried Strawberry", pos = {x=5, y=11}, set = "Joker", effect = "", cost_mult = 1.0, config = {extra = {odds = 4, chips = 50}}, no_pool_flag = 'freeze_dried_broke', friendly = true},
+        j_sacrificial=      {order = 152,  unlocked = true,  discovered = false, blueprint_compat = false, perishable_compat = true, eternal_compat = false, rarity = 1, cost = 20, name = 'Sacrificial Joker', pos = {x=2, y=16}, set = 'Joker', effect = "", cost_mult = 1.0, config = {friendly = true}},
+        j_moist_chan=       {order = 153,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 4, name = "Moist Chan", pos = {x=8, y=15}, set = "Joker", effect = "", cost_mult = 1.0, config = {extra = {chips = 10, mult = 4}, friendly = true}},
+        j_stonks=           {order = 154,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 3, name = "Stonks", pos = {x=5, y=1}, set = 'Joker', effect = "", cost_mult = 1.0, config = {extra = 3, friendly = true}},
+
+        -- Uncommon
+        j_part_of_you=      {order = 155,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 8, name = "Part of You", pos = {x=1, y=17}, set = "Joker", effect = "", cost_mult = 1.0, config = {extra = 1, Xmult = 0.15, friendly = true}},
+        j_monojoker=        {order = 156,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 6, name = "Monochromatic Joker", pos = {x=1, y=16}, set = "Joker", effect = 'Inverted Suit Multi', cost_mult = 1.0, config = {extra = 2, friendly = true}},
+        j_freaky=           {order = 157,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 6, name = "Freaky Joker", pos = {x=9, y=16}, set = "Joker", effect = "Steel Card", cost_mult = 1.0, config = {friendly = true}},
+        j_dancing_dunc=     {order = 158,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 6, name = "Dancing Duncan", pos = {x=4, y=12}, soul_anim_pos = {x=0, y=0}, set = "Joker", effect = "Type Mult", cost_mult = 1.0, config = {duncan = true, friendly = true}},
+        j_morally_complex=  {order = 159,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 5, name = "Morally Complex Joker", pos = {x=6, y=11}, set = 'Joker', effect = "", cost_mult = 1.0, config = {friendly = true}},
+        j_captured_joker=   {order = 160,  unlocked = true,  discovered = false, blurprint_compat = false,perishable_compat = true, eternal_compat = true, rarity = 2, cost = 7, name = "Captured Joker", pos = {x=2, y=17}, set = 'Joker', effect = "", cost_mult = 1.0, config = {friendly = true}},
+        j_habibi_duncan=    {order = 161,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 6, name = "Habibi Duncan", pos ={x=3, y=17}, set = "Joker", effect = '', cost_mult = 1.0, config = {duncan = true, friendly = true}},
+
+        -- Rare
+        j_hauntedjoker=     {order = 162,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = "Haunted Joker", pos = {x=0, y=16}, set = "Joker", effect = "Spawn Tarot", cost_mult = 1.0, config = {extra=10, friendly = true}},
+        j_lion=             {order = 163,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = "Lion Joker", pos = {x=8, y=16}, set = "Joker", effect = "Steel Card", cost_mult = 1.0, config = {friendly = true}},
+        j_twin=             {order = 164,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = "Joker Twin", pos = {x=5, y=10}, set = "Joker", effect = "Copycat", cost_mult = 1.0, config = {friendly = true}},
+        j_singularity=      {order = 165,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = 'The Singularity', pos = {x=5, y=16}, set = 'Joker', effect = "Retrigger", cost_mult = 1.0, config = {extra = 4, friendly = true}},
+        j_shirtless_benzon= {order = 166,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 3, cost = 8, name = "Shirtless Benzon", pos = {x=5, y=17}, set = 'Joker', effect = "Seal Mult", cost_mult = 1.0, config = {extra = 0.25, Xmult = 1, friendly = true}},
+
+        -- Legendary
+        j_camou=            {order = 167,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Camou", pos = {x=3, y=16}, soul_pos = {x=4, y=16}, set = "Joker", effect = "Copycat", cost_mult = 1.0, config = {friendly = true}},
+        j_phallussy=        {order = 168,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "Gambler's Phallussy", pos = {x=0, y=17}, set = "Joker", effect = "", cost_mult = 1.0, config = {friendly = true}},
+        j_metajoker=        {order = 169,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = 'Meta Joker', pos ={x=6, y=16}, soul_pos = {x=7, y=16}, set = 'Joker', effect = "4 And 8 Retrigger", cost_mult = 1.0, config = {extra = {four = 3, eight = 1, two = 7}, friendly = true}},
+        j_perfect_loaf=     {order = 170,  unlocked = true,  discovered = false, blueprint_compat = false, perishable_compat = true, eternal_compat = true, rarity = 4, cost = 20, name = "The Perfect Loaf", pos = {x=5, y=17}, soul_pos = {x=4, y=17}, set = 'Joker', effect = "Duncan Boost", cost_mult = 1.0, config = {activated = {}, friendly = true}},
 
         --All Consumeables
 
@@ -554,7 +575,7 @@ function Game:init_item_prototypes()
         c_empress=          {order = 4,     discovered = false, cost = 3, consumeable = true, name = "The Empress", pos = {x=3,y=0}, set = "Tarot", effect = "Enhance", cost_mult = 1.0, config = {mod_conv = 'm_mult', max_highlighted = 2}},
         c_emperor=          {order = 5,     discovered = false, cost = 3, consumeable = true, name = "The Emperor", pos = {x=4,y=0}, set = "Tarot", effect = "Round Bonus", cost_mult = 1.0, config = {tarots = 2}},
         c_heirophant=       {order = 6,     discovered = false, cost = 3, consumeable = true, name = "The Hierophant", pos = {x=5,y=0}, set = "Tarot", effect = "Enhance", cost_mult = 1.0, config = {mod_conv = 'm_bonus', max_highlighted = 2}},
-        c_lovers=           {order = 7,     discovered = false, cost = 3, consumeable = true, name = "The Lovers", pos = {x=6,y=0}, set = "Tarot", effect = "Enhance", cost_mult = 1.0, config = {mod_conv = 'm_wild', max_highlighted = 1}},
+        c_lovers=           {order = 7,     discovered = false, cost = 3, consumeable = true, name = "The Lovers", pos = {x=6,y=0}, set = "Tarot", effect = "Enhance", cost_mult = 1.0, config = {mod_conv = 'm_wild', max_highlighted = 1, habibi_bonus = 2}},
         c_chariot=          {order = 8,     discovered = false, cost = 3, consumeable = true, name = "The Chariot", pos = {x=7,y=0}, set = "Tarot", effect = "Enhance", cost_mult = 1.0, config = {mod_conv = 'm_steel', max_highlighted = 1}},
         c_justice=          {order = 9,     discovered = false, cost = 3, consumeable = true, name = "Justice", pos = {x=8,y=0}, set = "Tarot", effect = "Enhance", cost_mult = 1.0, config = {mod_conv = 'm_glass', max_highlighted = 1}},
         c_hermit=           {order = 10,    discovered = false, cost = 3, consumeable = true, name = "The Hermit", pos = {x=9,y=0}, set = "Tarot", effect = "Dollar Doubler", cost_mult = 1.0, config = {extra = 20}},
@@ -570,6 +591,8 @@ function Game:init_item_prototypes()
         c_sun=              {order = 20,    discovered = false, cost = 3, consumeable = true, name = "The Sun", pos = {x=9,y=1}, set = "Tarot", effect = "Suit Conversion", cost_mult = 1.0, config = {suit_conv = 'Hearts', max_highlighted = 3}},
         c_judgement=        {order = 21,    discovered = false, cost = 3, consumeable = true, name = "Judgement", pos = {x=0,y=2}, set = "Tarot", effect = "Random Joker", cost_mult = 1.0, config = {}},
         c_world=            {order = 22,    discovered = false, cost = 3, consumeable = true, name = "The World", pos = {x=1,y=2}, set = "Tarot", effect = "Suit Conversion", cost_mult = 1.0, config = {suit_conv = 'Spades', max_highlighted = 3}},
+        c_clown=            {order = 23,    discovered = false, cost = 3, consumeable = true, name = "The Clown", pos = {x=1,y=2}, set = "Tarot", effect = "Random Destructon", cost_mult = 1.0, config = {max_highlighted = 2}},
+        c_gooby=            {order = 24,    discovered = false, cost = 3, consumeable = true, name = "The Gooby Guy", pos = {x=1,y=2}, set = "Tarot", effect = "Extra Hands", cost_mult = 1.0, config = {extra = 2}},
 
         --Planets
         c_mercury=          {order = 1,    discovered = false, cost = 3, consumeable = true, freq = 1, name = "Mercury", pos = {x=0,y=3}, set = "Planet", effect = "Hand Upgrade", cost_mult = 1.0, config = {hand_type = 'Pair'}},
@@ -607,55 +630,57 @@ function Game:init_item_prototypes()
         c_cat_toy=          {order = 19,   discovered = false,  cost = 4, consumeable = true, name = "Cat Toy", pos = {x=9, y=3}, set = "Spectral", config = {extra = 'Biscuit', max_highlighted = 1}},
         
         --Polygonal
-        c_trigon=           {order = 1,    discovered = true,  cost = 4, consumeable = true, name = "Tri-Eyed Cat", pos = {x=6,y=5}, set = "Polygon", config = {extra = 3, max_highlighted = 1}},
-        c_tetragon=         {order = 2,    discovered = true,  cost = 4, consumeable = true, name = "Quadra Beast", pos = {x=7,y=5}, set = "Polygon", config = {extra = 4}},
-        c_pentagon=         {order = 3,    discovered = true,  cost = 4, consumeable = true, name = "Penta Hand", pos = {x=8,y=5}, set = "Polygon", config = {extra = 5}},
-        c_hexagon=          {order = 4,    discovered = true,  cost = 4, consumeable = true, name = "Hexwing Angel", pos = {x=9,y=5}, set = "Polygon", config = {extra = 6}},
-        c_septagon=         {order = 5,    discovered = true,  cost = 4, consumeable = true, name = "Septabug", pos = {x=0,y=6}, set = "Polygon", config = {extra = 7}},
-        c_octagon=          {order = 6,    discovered = true,  cost = 4, consumeable = true, name = "Octoclops", pos = {x=1,y=6}, set = "Polygon", config = {extra = 8}},
-        c_nonagon=          {order = 7,    discovered = true,  cost = 4, consumeable = true, name = "Nonagon Lion", pos = {x=2,y=6}, set = "Polygon", config = {extra = 9}},
-        c_decagon=          {order = 8,    discovered = true,  cost = 4, consumeable = true, name = "Charybdis", pos = {x=3,y=6}, set = "Polygon", config = {extra = 10}},
-        c_hendecagon=       {order = 9,    discovered = true,  cost = 4, consumeable = true, name = "Echidna", pos = {x=4,y=6}, set = "Polygon", config = {extra = 11}},
-        c_dodecagon=        {order = 10,   discovered = true,  cost = 4, consumeable = true, name = "Typhon", pos = {x=5,y=6}, set = "Polygon", config = {extra = 12}},
-        c_hectogon=         {order = 11,   discovered = true,  cost = 4, consumeable = true, name = "Parallax", pos = {x=6,y=6}, set = "Polygon", config = {extra = 13}, hidden = true},
-        c_myriagon=         {order = 12,   discovered = true,  cost = 4, consumeable = true, name = "Fractal", pos = {x=7,y=6}, set = "Polygon", config = {extra = 14}, hidden = true},
-        c_apeirogon=        {order = 13,   discovered = true,  cost = 4, consumeable = true, name = "Infinity", pos = {x=8,y=6}, set = "Polygon", config = {extra = 2}, hidden = true},
+        c_trigon=           {order = 1,    discovered = false,  cost = 4, consumeable = true, name = "Tri-Eyed Cat", pos = {x=6,y=5}, set = "Polygon", config = {extra = {rounds_needed = 3, dupes = 1, dupes_secret = 2}, max_highlighted = 1, remove_card = true}},
+        c_tetragon=         {order = 2,    discovered = false,  cost = 4, consumeable = true, name = "Quadra Beast", pos = {x=7,y=5}, set = "Polygon", config = {extra = {rounds_needed = 4}, max_highlighted = 4}},
+        c_pentagon=         {order = 3,    discovered = false,  cost = 4, consumeable = true, name = "Penta Hand", pos = {x=8,y=5}, set = "Polygon", config = {extra = {rounds_needed = 5, penta_retrigger = 1, penta_retrigger_secret = 2}}},
+        c_hexagon=          {order = 4,    discovered = false,  cost = 4, consumeable = true, name = "Hexwing Angel", pos = {x=9,y=5}, set = "Polygon", config = {extra = {rounds_needed = 6}}},
+        c_septagon=         {order = 5,    discovered = false,  cost = 4, consumeable = true, name = "Septabug", pos = {x=0,y=6}, set = "Polygon", config = {extra = {rounds_needed = 7}, min_highlighted = 2, max_highlighted = 2, septa_mod = 'm_bugged'}},
+        c_octagon=          {order = 6,    discovered = false,  cost = 4, consumeable = true, name = "Octoclops", pos = {x=1,y=6}, set = "Polygon", config = {extra = {rounds_needed = 8, eoh_created = 4, stone_created = 3}, max_highlighted = 1}},
+        c_nonagon=          {order = 7,    discovered = false,  cost = 4, consumeable = true, name = "Nonagon Lion", pos = {x=2,y=6}, set = "Polygon", config = {extra = {rounds_needed = 9,}, max_highlighted = 5}},
+        c_decagon=          {order = 8,    discovered = false,  cost = 4, consumeable = true, name = "Charybdis", pos = {x=3,y=6}, set = "Polygon", config = {extra = {rounds_needed = 10}, min_highlighted = 1, max_highlighted = 1}},
+        c_hendecagon=       {order = 9,    discovered = false,  cost = 4, consumeable = true, name = "Echidna", pos = {x=4,y=6}, set = "Polygon", config = {extra = {rounds_needed = 11}}},
+        c_dodecagon=        {order = 10,   discovered = false,  cost = 4, consumeable = true, name = "Typhon", pos = {x=5,y=6}, set = "Polygon", config = {extra = {rounds_needed = 12, typhon_cards = 15, cards_created = 5}}},
+        c_hectogon=         {order = 11,   discovered = false,  cost = 4, consumeable = true, name = "Parallax", pos = {x=6,y=6}, set = "Polygon", config = {extra = {rounds_needed = 13}, hidden = true}},
+        c_myriagon=         {order = 12,   discovered = false,  cost = 4, consumeable = true, name = "Fractal", pos = {x=7,y=6}, set = "Polygon", config = {extra = {rounds_needed = 14}, hidden = true}},
+        c_apeirogon=        {order = 13,   discovered = false,  cost = 4, consumeable = true, name = "Infinity", pos = {x=8,y=6}, set = "Polygon", config = {extra = {rounds_needed = 15}, hidden = true}},
 
         --Vouchers
 
         v_overstock_norm =  {order = 1,     discovered = false, unlocked = true , available = true, cost = 10, name = "Overstock", pos = {x=0,y=0}, set = "Voucher", config = {}},
         v_clearance_sale=   {order = 3,     discovered = false, unlocked = true , available = true, cost = 10, name = "Clearance Sale", pos = {x=3,y=0}, set = "Voucher", config = {extra = 25}},
         v_hone=             {order = 5,     discovered = false, unlocked = true , available = true, cost = 10, name = "Hone", pos = {x=4,y=0}, set = "Voucher", config = {extra = 2}},
-        v_reroll_surplus=   {order = 7,    discovered = false, unlocked = true , available = true, cost = 10, name = "Reroll Surplus", pos = {x=0,y=2}, set = "Voucher", config = {extra = 2}},
-        v_crystal_ball=     {order = 9,    discovered = false, unlocked = true , available = true, cost = 10, name = "Crystal Ball", pos = {x=2,y=2}, set = "Voucher", config = {extra = 3}},
+        v_reroll_surplus=   {order = 7,     discovered = false, unlocked = true , available = true, cost = 10, name = "Reroll Surplus", pos = {x=0,y=2}, set = "Voucher", config = {extra = 2}},
+        v_crystal_ball=     {order = 9,     discovered = false, unlocked = true , available = true, cost = 10, name = "Crystal Ball", pos = {x=2,y=2}, set = "Voucher", config = {extra = 3}},
         v_telescope=        {order = 11,    discovered = false, unlocked = true , available = true, cost = 10, name = "Telescope", pos = {x=3,y=2}, set = "Voucher", config = {extra = 3}},
         v_grabber=          {order = 13,    discovered = false, unlocked = true , available = true, cost = 10, name = "Grabber", pos = {x=5,y=0}, set = "Voucher", config = {extra = 1}},
         v_wasteful=         {order = 15,    discovered = false, unlocked = true , available = true, cost = 10, name = "Wasteful", pos = {x=6,y=0}, set = "Voucher", config = {extra = 1}},
-        v_tarot_merchant=   {order = 17,     discovered = false, unlocked = true , available = true, cost = 10, name = "Tarot Merchant", pos = {x=1,y=0}, set = "Voucher", config = {extra = 9.6/4, extra_disp = 2}},
-        v_planet_merchant=  {order = 19,     discovered = false, unlocked = true , available = true, cost = 10, name = "Planet Merchant", pos = {x=2,y=0}, set = "Voucher", config = {extra = 9.6/4, extra_disp = 2}},
+        v_tarot_merchant=   {order = 17,    discovered = false, unlocked = true , available = true, cost = 10, name = "Tarot Merchant", pos = {x=1,y=0}, set = "Voucher", config = {extra = 9.6/4, extra_disp = 2}},
+        v_planet_merchant=  {order = 19,    discovered = false, unlocked = true , available = true, cost = 10, name = "Planet Merchant", pos = {x=2,y=0}, set = "Voucher", config = {extra = 9.6/4, extra_disp = 2}},
         v_seed_money=       {order = 21,    discovered = false, unlocked = true , available = true, cost = 10, name = "Seed Money", pos = {x=1,y=2}, set = "Voucher", config = {extra = 50}},
         v_blank=            {order = 23,    discovered = false, unlocked = true , available = true, cost = 10, name = "Blank", pos = {x=7,y=0}, set = "Voucher", config = {extra = 5}},
         v_magic_trick=      {order = 25,    discovered = false, unlocked = true , available = true, cost = 10, name = "Magic Trick", pos = {x=4,y=2}, set = "Voucher", config = {extra = 4}},
         v_hieroglyph=       {order = 27,    discovered = false, unlocked = true , available = true, cost = 10, name = "Hieroglyph", pos = {x=5,y=2}, set = "Voucher", config = {extra = 1}},
         v_directors_cut=    {order = 29,    discovered = false, unlocked = true , available = true, cost = 10, name = "Director's Cut", pos = {x=6,y=2}, set = "Voucher", config = {extra = 10}},
         v_paint_brush=      {order = 31,    discovered = false, unlocked = true , available = true, cost = 10, name = "Paint Brush", pos = {x=7,y=2}, set = "Voucher", config = {extra = 1}},
+        v_bestiary=         {order = 33,    discovered = false, unlocked = true , available = true, cost = 10, name = "Bestiary", pos = {x=0,y=4}, set = "Voucher", config = {}},
   
         v_overstock_plus=   {order = 2,     discovered = false, unlocked = false, available = true, cost = 10, name = "Overstock Plus", pos = {x=0,y=1}, set = "Voucher", config = {}, requires = {'v_overstock_norm'},unlock_condition = {type = 'c_shop_dollars_spent', extra = 2500}},
         v_liquidation=      {order = 4,     discovered = false, unlocked = false, available = true, cost = 10, name = "Liquidation", pos = {x=3,y=1}, set = "Voucher", config = {extra = 50}, requires = {'v_clearance_sale'},unlock_condition = {type = 'run_redeem', extra = 10}},
-        v_glow_up=          {order = 6,    discovered = false, unlocked = false, available = true,  cost = 10, name = "Glow Up", pos = {x=4,y=1}, set = "Voucher", config = {extra = 4}, requires = {'v_hone'},unlock_condition = {type = 'have_edition', extra = 5}},
-        v_reroll_glut=      {order = 8,    discovered = false, unlocked = false, available = true,  cost = 10, name = "Reroll Glut", pos = {x=0,y=3}, set = "Voucher", config = {extra = 2}, requires = {'v_reroll_surplus'},unlock_condition = {type = 'c_shop_rerolls', extra = 100}},
+        v_glow_up=          {order = 6,     discovered = false, unlocked = false, available = true, cost = 10, name = "Glow Up", pos = {x=4,y=1}, set = "Voucher", config = {extra = 4}, requires = {'v_hone'},unlock_condition = {type = 'have_edition', extra = 5}},
+        v_reroll_glut=      {order = 8,     discovered = false, unlocked = false, available = true, cost = 10, name = "Reroll Glut", pos = {x=0,y=3}, set = "Voucher", config = {extra = 2}, requires = {'v_reroll_surplus'},unlock_condition = {type = 'c_shop_rerolls', extra = 100}},
         v_omen_globe=       {order = 10,    discovered = false, unlocked = false, available = true, cost = 10, name = "Omen Globe", pos = {x=2,y=3}, set = "Voucher", config = {extra = 4}, requires = {'v_crystal_ball'},unlock_condition = {type = 'c_tarot_reading_used', extra = 25}},
         v_observatory=      {order = 12,    discovered = false, unlocked = false, available = true, cost = 10, name = "Observatory", pos = {x=3,y=3}, set = "Voucher", config = {extra = 1.5}, requires = {'v_telescope'},unlock_condition = {type = 'c_planetarium_used', extra = 25}},
         v_nacho_tong=       {order = 14,    discovered = false, unlocked = false, available = true, cost = 10, name = "Nacho Tong", pos = {x=5,y=1}, set = "Voucher", config = {extra = 1}, requires = {'v_grabber'},unlock_condition = {type = 'c_cards_played', extra = 2500}},
         v_recyclomancy=     {order = 16,    discovered = false, unlocked = false, available = true, cost = 10, name = "Recyclomancy", pos = {x=6,y=1}, set = "Voucher", config = {extra = 1}, requires = {'v_wasteful'},unlock_condition = {type = 'c_cards_discarded', extra = 2500}},
-        v_tarot_tycoon=     {order = 18,     discovered = false, unlocked = false, available = true,cost = 10, name = "Tarot Tycoon", pos = {x=1,y=1}, set = "Voucher", config = {extra = 32/4, extra_disp = 4}, requires = {'v_tarot_merchant'},unlock_condition = {type = 'c_tarots_bought', extra = 50}},
-        v_planet_tycoon=    {order = 20,     discovered = false, unlocked = false, available = true,cost = 10, name = "Planet Tycoon", pos = {x=2,y=1}, set = "Voucher", config = {extra = 32/4, extra_disp = 4}, requires = {'v_planet_merchant'},unlock_condition = {type = 'c_planets_bought', extra = 50}},
+        v_tarot_tycoon=     {order = 18,    discovered = false, unlocked = false, available = true, cost = 10, name = "Tarot Tycoon", pos = {x=1,y=1}, set = "Voucher", config = {extra = 32/4, extra_disp = 4}, requires = {'v_tarot_merchant'},unlock_condition = {type = 'c_tarots_bought', extra = 50}},
+        v_planet_tycoon=    {order = 20,    discovered = false, unlocked = false, available = true, cost = 10, name = "Planet Tycoon", pos = {x=2,y=1}, set = "Voucher", config = {extra = 32/4, extra_disp = 4}, requires = {'v_planet_merchant'},unlock_condition = {type = 'c_planets_bought', extra = 50}},
         v_money_tree=       {order = 22,    discovered = false, unlocked = false, available = true, cost = 10, name = "Money Tree", pos = {x=1,y=3}, set = "Voucher", config = {extra = 100}, requires = {'v_seed_money'},unlock_condition = {type = 'interest_streak', extra = 10}},
         v_antimatter=       {order = 24,    discovered = false, unlocked = false, available = true, cost = 10, name = "Antimatter", pos = {x=7,y=1}, set = "Voucher", config = {extra = 15}, requires = {'v_blank'},unlock_condition = {type = 'blank_redeems', extra = 10}},
         v_illusion=         {order = 26,    discovered = false, unlocked = false, available = true, cost = 10, name = "Illusion", pos = {x=4,y=3}, set = "Voucher", config = {extra = 4}, requires = {'v_magic_trick'},unlock_condition = {type = 'c_playing_cards_bought', extra = 20}},
         v_petroglyph=       {order = 28,    discovered = false, unlocked = false, available = true, cost = 10, name = "Petroglyph", pos = {x=5,y=3}, set = "Voucher", config = {extra = 1}, requires = {'v_hieroglyph'},unlock_condition = {type = 'ante_up', ante = 12, extra = 12}},
         v_retcon=           {order = 30,    discovered = false, unlocked = false, available = true, cost = 10, name = "Retcon", pos = {x=6,y=3}, set = "Voucher", config = {extra = 10}, requires = {'v_directors_cut'},unlock_condition = {type = 'blind_discoveries', extra = 25}},
         v_palette=          {order = 32,    discovered = false, unlocked = false, available = true, cost = 10, name = "Palette", pos = {x=7,y=3}, set = "Voucher", config = {extra = 1}, requires = {'v_paint_brush'},unlock_condition = {type = 'min_hand_size', extra = 5}},
+        v_grimoire=         {order = 34,    discovered = false, unlocked = true,  available = true, cost = 10, name = "Grimoire", pos = {x=0,y=5}, set = "Voucher", config = {}, requires = {'v_bestiary'}},
 
         --Backs
 
@@ -687,6 +712,7 @@ function Game:init_item_prototypes()
         m_stone =   {max = 500, order = 7, name = "Stone Card", set = "Enhanced", pos = {x=5,y=0}, effect = "Stone Card", label = "Stone Card", config = {bonus = 50}},
         m_gold =    {max = 500, order = 8, name = "Gold Card", set = "Enhanced", pos = {x=6,y=0}, effect = "Gold Card", label = "Gold Card", config = {h_dollars = 3}},
         m_lucky =   {max = 500, order = 9, name = "Lucky Card", set = "Enhanced", pos = {x=4,y=1}, effect = "Lucky Card", label = "Lucky Card", config = {mult=20, p_dollars = 20}},
+        m_bugged =  {max = 500, order = 10, name = "Bugged Card", set = "Enhanced", pos = {x=0,y=5}, effect = "Bugged Card", label = "Bugged Card", config = {extra = {max = 10, min = 0}, mult = nil or 0}},
 
         --editions
         e_base =       {order = 1,  unlocked = true, discovered = false, name = "Base", pos = {x=0,y=0}, atlas = 'Joker', set = "Edition", config = {}},
@@ -694,6 +720,7 @@ function Game:init_item_prototypes()
         e_holo =       {order = 3,  unlocked = true, discovered = false, name = "Holographic", pos = {x=0,y=0}, atlas = 'Joker', set = "Edition", config = {extra = 10}},
         e_polychrome = {order = 4,  unlocked = true, discovered = false, name = "Polychrome", pos = {x=0,y=0}, atlas = 'Joker', set = "Edition", config = {extra = 1.5}},
         e_negative =   {order = 5,  unlocked = true, discovered = false, name = "Negative", pos = {x=0,y=0}, atlas = 'Joker', set = "Edition", config = {extra = 1}},
+        e_shaded =      {order = 6,  unlocked = true, discovered = false, name = "Shaded", pos = {x=0,y=0}, atlas = 'Joker', set = "Edition", config = {extra = {shaded_debuff = 1, shaded_xmult = 2.5}}},
 
         --booster packs
         p_arcana_normal_1 =         {order = 1,  discovered = false, name = "Arcana Pack", weight = 1, kind = 'Arcana', cost = 4, pos = {x=0,y=0}, atlas = 'Booster', set = 'Booster', config = {extra = 3, choose = 1}},
@@ -728,10 +755,10 @@ function Game:init_item_prototypes()
         p_buffoon_normal_2 =        {order = 26, discovered = false, name = "Buffoon Pack", weight = 0.6, kind = 'Buffoon', cost = 4, pos = {x=1,y=8}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
         p_buffoon_jumbo_1 =         {order = 27, discovered = false, name = "Jumbo Buffoon Pack", weight = 0.6, kind = 'Buffoon', cost = 6, pos = {x=2,y=8}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 1}},
         p_buffoon_mega_1 =          {order = 28, discovered = false, name = "Mega Buffoon Pack", weight = 0.15, kind = 'Buffoon', cost = 8, pos = {x=3,y=8}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 2}},
-        p_friendly_buffoon_normal_1 =        {order = 33, discovered = false, name = "Friendly Buffoon Pack", weight = 0.6, kind = 'Friendly Buffoon', cost = 4, pos = {x=0,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
-        p_friendly_buffoon_normal_2 =        {order = 34, discovered = false, name = "Friendly Buffoon Pack", weight = 0.6, kind = 'Friendly Buffoon', cost = 4, pos = {x=1,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
-        p_friendly_buffoon_jumbo_1 =         {order = 35, discovered = false, name = "Jumbo Friendly Buffoon Pack", weight = 0.6, kind = 'Friendly Buffoon', cost = 6, pos = {x=2,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 1}},
-        p_friendly_buffoon_mega_1 =          {order = 36, discovered = false, name = "Mega Friendly Buffoon Pack", weight = 0.15, kind = 'Friendly Buffoon', cost = 8, pos = {x=3,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 2}},
+        p_friendly_buffoon_normal_1 =        {order = 33, discovered = false, name = "Friendly Buffoon Pack", weight = 0.6, kind = 'Friendly Buffoon', cost = 4, pos = {x=0,y=10}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
+        p_friendly_buffoon_normal_2 =        {order = 34, discovered = false, name = "Friendly Buffoon Pack", weight = 0.6, kind = 'Friendly Buffoon', cost = 4, pos = {x=1,y=10}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
+        p_friendly_buffoon_jumbo_1 =         {order = 35, discovered = false, name = "Jumbo Friendly Buffoon Pack", weight = 0.6, kind = 'Friendly Buffoon', cost = 6, pos = {x=2,y=10}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 1}},
+        p_friendly_buffoon_mega_1 =          {order = 36, discovered = false, name = "Mega Friendly Buffoon Pack", weight = 0.15, kind = 'Friendly Buffoon', cost = 8, pos = {x=3,y=10}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 2}},
         p_polygon_normal_1 =        {order = 37, discovered = true,  name = "Polygon Pack", weight = 0.4, kind = 'Polygon', cost = 4, pos = {x=0,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
         p_polygon_normal_2 =        {order = 38, discovered = true,  name = "Polygon Pack", weight = 0.4, kind = 'Polygon', cost = 4, pos = {x=1,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 2, choose = 1}},
         p_polygon_jumbo_1 =         {order = 39, discovered = true,  name = "Jumbo Polygon Pack", weight = 0.4, kind = 'Polygon', cost = 4, pos = {x=2,y=9}, atlas = 'Booster', set = 'Booster', config = {extra = 4, choose = 1}},
@@ -868,7 +895,7 @@ function Game:init_item_prototypes()
             if v.consumeable then table.insert(self.P_CENTER_POOLS['Consumeables'], v) end
             if v.rarity and v.set == 'Joker' and not v.demo then 
                 table.insert(self.P_JOKER_RARITY_POOLS[v.rarity], v) 
-                if v.friendly then table.insert(self.P_FRIENDLY_JOKER_RARITY_POOLS[v.rarity], v) end
+                if v.config.friendly then table.insert(self.P_FRIENDLY_JOKER_RARITY_POOLS[v.rarity], v) end
             end
         end
     end
@@ -1001,7 +1028,7 @@ function Game:set_language()
             ['id'] = {font = 1, label = "Bahasa Indonesia", key = 'id', beta = true, button = "Umpan Balik Bahasa", warning = {'Bahasa ini masih dalam tahap Beta. Untuk membantu','kami meningkatkannya, silakan klik tombol umpan balik.', "Klik lagi untuk mengonfirmasi"}},
             ['it'] = {font = 1, label = "Italiano", key = 'it', beta = nil, button = "Feedback traduzione", warning = {'Questa traduzione è ancora in Beta. Per','aiutarci a migliorarla, clicca il tasto feedback', "Fai clic di nuovo per confermare"}},
             ['ja'] = {font = 5, label = "日本語", key = 'ja', beta = nil, button = "提案する", warning = {'この翻訳は現在ベータ版です。提案があった場合、','ボタンをクリックしてください。', "もう一度クリックして確認"}},
-            ['ko'] = {font = 4, label = "한국어", key = 'ko', beta = true, button = "번역 피드백", warning = {'이 언어는 아직 베타 단계에 있습니다. ','번역을 도와주시려면 피드백 버튼을 눌러주세요.', "다시 클릭해서 확인하세요"}},
+            ['ko'] = {font = 4, label = "한국어", key = 'ko', beta = nil, button = "번역 피드백", warning = {'이 언어는 아직 베타 단계에 있습니다. ','번역을 도와주시려면 피드백 버튼을 눌러주세요.', "다시 클릭해서 확인하세요"}},
             ['nl'] = {font = 1, label = "Nederlands", key = 'nl', beta = nil, button = "Taal suggesties", warning = {'Deze taal is nog in de Beta fase. Help ons het te ','verbeteren door op de suggestie knop te klikken.', "Klik opnieuw om te bevestigen"}},
             ['pl'] = {font = 1, label = "Polski", key = 'pl', beta = nil, button = "Wyślij uwagi do tłumaczenia", warning = {'Polska wersja językowa jest w fazie Beta. By pomóc nam poprawić',' jakość tłumaczenia, kliknij przycisk i podziel się swoją opinią i uwagami.', "Kliknij ponownie, aby potwierdzić"}},
             ['pt_BR'] = {font = 1, label = "Português", key = 'pt_BR', beta = nil, button = "Feedback de Tradução", warning = {'Esta tradução ainda está em Beta. Se quiser nos ajudar','a melhorá-la, clique no botão de feedback por favor', "Clique novamente para confirmar"}},
@@ -1079,7 +1106,24 @@ function Game:set_render_settings()
         {name = 'icons', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/icons.png",px=66,py=66},
         {name = 'tags', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/tags.png",px=34,py=34},
         {name = 'stickers', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/stickers.png",px=71,py=95},
-        {name = 'chips', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/chips.png",px=29,py=29}
+        {name = 'chips', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/chips.png",px=29,py=29},
+
+        {name = 'collab_AU_1', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/collabs/collab_AU_1.png",px=71,py=95},
+        {name = 'collab_AU_2', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/collabs/collab_AU_2.png",px=71,py=95},
+        {name = 'collab_TW_1', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/collabs/collab_TW_1.png",px=71,py=95},
+        {name = 'collab_TW_2', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/collabs/collab_TW_2.png",px=71,py=95},
+        {name = 'collab_VS_1', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/collabs/collab_VS_1.png",px=71,py=95},
+        {name = 'collab_VS_2', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/collabs/collab_VS_2.png",px=71,py=95},
+        {name = 'collab_DTD_1', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/collabs/collab_DTD_1.png",px=71,py=95},
+        {name = 'collab_DTD_2', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/collabs/collab_DTD_2.png",px=71,py=95},
+        {name = 'collab_CYP_1', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/collabs/collab_CYP_1.png",px=71,py=95},
+        {name = 'collab_CYP_2', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/collabs/collab_CYP_2.png",px=71,py=95},
+        {name = 'collab_STS_1', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/collabs/collab_STS_1.png",px=71,py=95},
+        {name = 'collab_STS_2', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/collabs/collab_STS_2.png",px=71,py=95},
+        {name = 'collab_TBoI_1', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/collabs/collab_TBoI_1.png",px=71,py=95},
+        {name = 'collab_TBoI_2', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/collabs/collab_TBoI_2.png",px=71,py=95},
+        {name = 'collab_SV_1', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/collabs/collab_SV_1.png",px=71,py=95},
+        {name = 'collab_SV_2', path = "resources/textures/"..self.SETTINGS.GRAPHICS.texture_scaling.."x/collabs/collab_SV_2.png",px=71,py=95},
     }
     self.asset_images = {
         {name = "playstack_logo", path = "resources/textures/1x/playstack-logo.png", px=1417,py=1417},
@@ -1358,7 +1402,7 @@ function Game:sandbox()
                 create_text_input({prompt_text = 'Joker key', extended_corpus = true, ref_table = G.SANDBOX, ref_value = 'joker_text', text_scale = 0.3, w = 1.5, h = 0.6}),
                 UIBox_button{ label = {"-"}, button = "rem_joker", minw = 0.7, col = true},
               }},
-              create_option_cycle({options = {'base', 'foil', 'holo', 'polychrome','negative'}, opt_callback = 'edition_change', current_option = 1, colour = G.C.RED, w = 2, scale = 0.7}),
+              create_option_cycle({options = {'base', 'foil', 'holo', 'polychrome','negative', 'shaded'}, opt_callback = 'edition_change', current_option = 1, colour = G.C.RED, w = 2, scale = 0.7}),
             }}
           }}
         return t
@@ -1906,6 +1950,7 @@ function Game:init_game_object()
         planet_rate = 4, 
         spectral_rate = 0,
         polygon_rate = 1,
+        polygon_voucher_bonus = 0,
         playing_card_rate = 0,
         consumeable_buffer = 0,
         joker_buffer = 0,
@@ -1923,6 +1968,8 @@ function Game:init_game_object()
         voucher_text = '',
         dollars = 0,
         max_jokers = 0,
+        next_hand_penta_bonus = 0,
+        penta_last_hand = 0,
         bankrupt_at = 0,
         current_boss_streak = 0,
         base_reroll_cost = 5,
@@ -1945,6 +1992,7 @@ function Game:init_game_object()
                 chip_total = 0,
                 chip_total_text = '',
                 handname = "",
+                hand_played = 0, -- ((NOT TO BE CONFUSED WITH HANDS_PLAYED)) This can be used to trigger effects that depend on a hand having been played. (For Example: Saffron Timer juice up fx excluding discard draw) 
                 hand_level = ''
             },
             used_packs = {},
@@ -1955,7 +2003,7 @@ function Game:init_game_object()
             ancient_card = {suit = 'Spades'},
             castle_card = {suit = 'Spades'},
             hands_left = 0,
-            hands_played = 0,
+            hands_played = 0, -- ((NOT TO BE CONFUSED WITH HAND_PLAYED))
             discards_left = 0,
             discards_used = 0,
             dollars = 0,
@@ -1986,6 +2034,7 @@ function Game:init_game_object()
         },
         shop = {
             joker_max = 2,
+            captured_joker_charges = 0,
         },
         cards_played = {
             ['Ace'] = {suits = {}, total = 0},
@@ -2677,6 +2726,21 @@ function Game:update(dt)
         end
     end    
 
+    if G.DEBUG then 
+        local text_count,uie_count, card_count, uib_count, all = 0,0, 0, 0,0
+        for k, v in pairs(G.STAGE_OBJECTS[G.STAGE]) do
+            all = all + 1
+            if v:is(DynaText) then text_count = text_count + 1 end
+            if v:is(Card) then card_count = card_count + 1 end
+            if v:is(UIElement) then uie_count = uie_count + 1 end
+            if v:is(UIBox) then uib_count = uib_count + 1 end
+        end
+
+            G.DEBUG_VALUE = 'text: '..text_count..'\n'..
+                            'uie: '..uie_count..'\n'..
+                            'card: '..card_count..'\n'..
+                            'uib: '..uib_count..'\n'..'all: '..all
+    end
     
     --Save every 10 seconds, unless forced or paused/unpaused
     if G.FILE_HANDLER and G.FILE_HANDLER and G.FILE_HANDLER.update_queued and (
@@ -2964,7 +3028,7 @@ love.graphics.pop()
 
     timer_checkpoint('canvas', 'draw')
 
-    if not _RELEASE_MODE and not G.video_control and G.F_VERBOSE then 
+    if not _RELEASE_MODE and G.DEBUG and not G.video_control and G.F_VERBOSE then 
         love.graphics.push()
         love.graphics.setColor(0, 1, 1,1)
         local fps = love.timer.getFPS( )
@@ -3091,7 +3155,6 @@ function Game:update_shop(dt)
                                 end
                                 local nosave_shop = nil
                                 if not shop_exists then
-                                
                                     if G.load_shop_jokers then 
                                         nosave_shop = true
                                         G.shop_jokers:load(G.load_shop_jokers)

@@ -442,6 +442,11 @@ function evaluate_poker_hand(hand)
     if not results.top then results.top = results["Straight Flush"] end
   end
 
+  if next(parts._straight) and next(find_joker('Morally Complex Joker')) then
+    results["Straight Flush"] = parts._straight
+    if not results.top then results.top = results["Straight Flush"] end
+  end
+
   if next(parts._4) then
     results["Four of a Kind"] = parts._4
     if not results.top then results.top = results["Four of a Kind"] end
@@ -902,6 +907,9 @@ end
 
 function find_joker(name, non_debuff)
   local jokers = {}
+  if name == "Morally Complex Joker" then
+    local random_var = 1
+  end
   if not G.jokers or not G.jokers.cards then return {} end
   for k, v in pairs(G.jokers.cards) do
     if v and type(v) == 'table' and v.ability.name == name and (non_debuff or not v.debuff) then
@@ -1697,8 +1705,8 @@ utf8.chars =
 
 function localize(args, misc_cat)
   if args and not (type(args) == 'table') then
-    if misc_cat and G.localization.misc[misc_cat] then return G.localization.misc[misc_cat][args] or 'ERROR' end
-    return G.localization.misc.dictionary[args] or 'ERROR'
+    if misc_cat and G.localization.misc[misc_cat] then return G.localization.misc[misc_cat][args] or 'ERROR 1' end
+    return G.localization.misc.dictionary[args] or 'ERROR 2'
   end
 
   local loc_target = nil
@@ -1720,7 +1728,7 @@ function localize(args, misc_cat)
         for _, part in ipairs(lines) do
           local assembled_string = ''
           for _, subpart in ipairs(part.strings) do
-            assembled_string = assembled_string..(type(subpart) == 'string' and subpart or args.vars[tonumber(subpart[1])] or 'ERROR')
+            assembled_string = assembled_string..(type(subpart) == 'string' and subpart or args.vars[tonumber(subpart[1])] or 'ERROR 3')
           end
           final_line = final_line..assembled_string
         end
@@ -1732,7 +1740,7 @@ function localize(args, misc_cat)
     loc_target = G.localization.misc.v_text_parsed[args.key]
   elseif args.type == 'variable' then 
     loc_target = G.localization.misc.v_dictionary_parsed[args.key]
-    if not loc_target then return 'ERROR' end 
+    if not loc_target then return 'ERROR 4' end 
     if loc_target.multi_line then
       local assembled_strings = {}
       for k, v in ipairs(loc_target) do
@@ -1742,17 +1750,17 @@ function localize(args, misc_cat)
         end
         assembled_strings[k] = assembled_string
       end
-      return assembled_strings or {'ERROR'}
+      return assembled_strings or {'ERROR 5'}
     else
       local assembled_string = ''
       for _, subpart in ipairs(loc_target[1].strings) do
         assembled_string = assembled_string..(type(subpart) == 'string' and subpart or args.vars[tonumber(subpart[1])])
       end
-      ret_string = assembled_string or 'ERROR'
+      ret_string = assembled_string or 'ERROR 6'
     end
   elseif args.type == 'name_text' then
     if pcall(function() ret_string = G.localization.descriptions[(args.set or args.node.config.center.set)][args.key or args.node.config.center.key].name end) then
-    else ret_string = "ERROR" end
+    else ret_string = "ERROR 7" end
   elseif args.type == 'name' then
     loc_target = G.localization.descriptions[(args.set or args.node.config.center.set)][args.key or args.node.config.center.key]
   end
@@ -1765,7 +1773,7 @@ function localize(args, misc_cat)
       for _, part in ipairs(lines) do
         local assembled_string = ''
         for _, subpart in ipairs(part.strings) do
-          assembled_string = assembled_string..(type(subpart) == 'string' and subpart or args.vars[tonumber(subpart[1])] or 'ERROR')
+          assembled_string = assembled_string..(type(subpart) == 'string' and subpart or args.vars[tonumber(subpart[1])] or 'ERROR 8')
         end
         local desc_scale = G.LANG.font.DESCSCALE
         if G.F_MOBILE_UI then desc_scale = desc_scale*1.5 end
@@ -1838,6 +1846,19 @@ function get_stake_sprite(_stake, _scale)
     end
   end
   return stake_sprite
+end
+
+function get_front_spriteinfo(_front)
+  if _front and _front.suit and (_front.value == 'Jack' or _front.value == 'Queen' or _front.value == 'King') then
+    if G.SETTINGS.CUSTOM_DECK and G.SETTINGS.CUSTOM_DECK.Collabs[_front.suit] then
+      local _collab = G.SETTINGS.CUSTOM_DECK.Collabs[_front.suit]
+      if (_collab == 'default') or (not G.ASSET_ATLAS[_collab..'_'..(G.SETTINGS.colourblind_option and 2 or 1)]) then 
+      else
+        return G.ASSET_ATLAS[_collab..'_'..(G.SETTINGS.colourblind_option and 2 or 1)], G.COLLABS.pos[_front.value]
+      end
+    end
+  end
+  return G.ASSET_ATLAS[_front.atlas] or G.ASSET_ATLAS["cards_"..(G.SETTINGS.colourblind_option and 2 or 1)], _front.pos
 end
 
 function get_stake_col(_stake)
@@ -2021,7 +2042,7 @@ function GET_TOTAL_DUPLICATES_IN_DECK()
   local dupes = {}
   local count = 0
   for _, v in pairs(G.playing_cards) do
-    if v.config.center == G.P_CENTERS.c_base then
+    if v.config.center == G.P_CENTERS.c_base or G.P_CENTERS.c_base then
       if #dupes == 0 then
         table.insert(dupes, v.config.card.name)
       else
