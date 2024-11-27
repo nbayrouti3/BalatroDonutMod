@@ -5204,6 +5204,20 @@ function Card:calculate_joker(context)
                                 colour = G.C.MULT
                             }
                         end
+                        if self.ability.name == 'Linear Aljoka' then
+                            if #context.full_hand == 4 then
+                                local a = context.full_hand[1]:get_id()
+                                local b = context.full_hand[2]:get_id()
+                                local c = context.full_hand[3]:get_id()
+                                local d = context.full_hand[4]:get_id()
+                                local det = a * d - (b * c)
+                                return {
+                                    message = localize{type='variable',key=((det > 0) and 'a_mult' or 'a_mult_minus'),vars={det}},
+                                    mult_mod = det, 
+                                    colour = G.C.MULT
+                                }
+                            end
+                        end
                         if self.ability.name == 'Square Joker' then
                             return {
                                 message = localize{type='variable',key='a_chips',vars={self.ability.extra.chips}},
