@@ -1594,6 +1594,14 @@
                     "Lets you choose {C:attention}1{} extra",
                     "card for {C:tarot}The Lovers{}"
                 }
+            },
+            j_linear_aljoka = {
+                name = "Linear Aljoka",
+                text = {
+                    "When you play exactly 4 cards, gives",
+                    "{C:mult}+mult{} equal to the determinant",
+                    "of the 4 cards"
+                }
             }
         },
         Voucher = {
