@@ -1598,9 +1598,9 @@
             j_linear_aljoka = {
                 name = "Linear Aljoka",
                 text = {
-                    "When you play exactly 4 cards, gives",
-                    "{C:mult}+mult{} equal to the determinant",
-                    "of the 4 cards"
+                    "When you play {C:attention}exactly 4 cards{},",
+                    "gives {C:mult}+mult{} equal to the",
+                    "determinant of the 4 cards"
                 }
             }
         },
