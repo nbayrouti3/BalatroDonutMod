@@ -3924,7 +3924,8 @@
             c_golden_needle_1 = "Golden Needle",
             c_cruelty_1 = "Cruelty",
             c_jokerless_1 = "Jokerless",
-            c_blind_faith_1 = "Blind Faith"
+            c_blind_faith_1 = "Blind Faith",
+            c_rated_e_1 = "Rated E",
         },
         poker_hands = {
             ['Flush Five'] = "Flush Five",
@@ -4419,6 +4420,7 @@
             a_remaining = "#1# Remaining",
             a_rank = "#1#",
             a_suit = "#1#",
+            blind_counter_challenge =  "+#1# Blinds",
             ante_x_voucher = "ANTE #1# VOUCHER",
             loyalty_active = "Active!",
             loyalty_inactive = "#1# remaining",
@@ -4536,6 +4538,9 @@
             },
             ch_c_cheaper_polygons = {
                 "{C:polygon}Polygon Cards{} take {C:attention}-4{} hands to play"
+            },
+            ch_c_rated_e = {
+                "Makes the game {C:attention}Rated E{}, for everyone. {C:inactive}Especially, Lucas."
             }
         },
         quips = {

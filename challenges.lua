@@ -766,5 +766,104 @@ G.CHALLENGES = {
             banned_other = {
             }
         }
+    },
+    {
+        name = "Rated E",
+        id = 'c_rated_e_1',
+        rules = {
+            custom = {
+                {id = 'rated_e'},
+            },
+            modifiers = {
+            }
+        },
+        jokers = {
+            {id = 'j_wee'},
+        },
+        consumeables = {
+        },
+        vouchers = {
+        },
+        deck = {
+            type = 'Challenge Deck'
+        },
+        restrictions = {
+            banned_cards = {
+                {id = 'j_greedy_joker'},
+                {id = 'j_lusty_joker'},
+                {id = 'j_wrathful_joker'},
+                {id = 'j_gluttenous_joker'},
+                {id = 'j_half'},
+                {id = 'j_credit_card'},
+                {id = 'j_ceremonial'},
+                {id = 'j_8_ball'},
+                {id = 'j_misprint'},
+                {id = 'j_raised_fist'},
+                {id = 'j_scary_face'},
+                {id = 'j_pareidolia'},
+                {id = 'j_gros_michel'},
+                {id = 'j_business'},
+                {id = 'j_supernova'},
+                {id = 'j_burglar'},
+                {id = 'j_cavendish'},
+                {id = 'j_madness'},
+                {id = 'j_midas_mask'},
+                {id = 'j_reserved_parking'},
+                {id = 'j_to_the_moon'},
+                {id = 'j_hallucination'},
+                {id = 'j_fortune_teller'},
+                {id = 'j_drunkard'},
+                {id = 'j_ticket'},
+                {id = 'j_mr_bones'},
+                {id = 'j_hanging_chad'},
+                {id = 'j_bloodstone'},
+                {id = 'j_glass'},
+                {id = 'j_oops'},
+                {id = 'j_stuntman'},
+                {id = 'j_shoot_the_moon'},
+                {id = 'j_drivers_license'},
+                {id = 'j_burnt'},
+                {id = 'j_sacrificial'},
+                {id = 'j_moist_chan'},
+                {id = 'j_stonks'},
+                {id = 'j_freaky'},
+                {id = 'j_captured_joker'},
+                {id = 'j_habibi_duncan'},
+                {id = 'j_shirtless_benzon'},
+                {id = 'j_phallussy'},
+                {id = 'c_justice'},
+                {id = 'c_wheel_of_fortune'},
+                {id = 'c_hanged_man'},
+                {id = 'c_death'},
+                {id = 'c_devil'},
+                {id = 'c_grim'},
+                {id = 'c_wraith'},
+                {id = 'c_ouija'},
+                {id = 'c_immolate'},
+                {id = 'c_cryptid'},
+                {id = 'c_trigon'},
+                {id = 'c_tetragon'},
+                {id = 'c_hexagon'},
+                {id = 'c_septagon'},
+                {id = 'c_decagon'},
+                {id = 'c_hendecagon'},
+                {id = 'c_dodecagon'},
+                {id = 'm_glass'},
+            },
+            banned_tags = {
+                {id = 'tag_shaded'},            
+            },
+            banned_other = {
+                {id = 'bl_hook', type = 'blind'},
+                {id = 'bl_wheel', type = 'blind'},
+                {id = 'bl_arm', type = 'blind'},
+                {id = 'bl_serpent', type = 'blind'},
+                {id = 'bl_final_acorn', type = 'blind'},
+                {id = 'bl_final_heart', type = 'blind'},
+                {id = 'bl_hail', type = 'blind'},
+                {id = 'bl_marshal', type = 'blind'},
+                {id = 'bl_traitor', type = 'blind'},            
+            }
+        }
     }
 }

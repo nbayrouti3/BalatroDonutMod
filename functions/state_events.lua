@@ -1064,6 +1064,7 @@ G.FUNCS.evaluate_play = function(e)
                                 delay = 0.1,
                                 func = function() 
                                     target_card:set_debuff(true)
+                                    target_card.temporary_debuff = true
                                     target_card:juice_up()
                             return true end }))
                         end

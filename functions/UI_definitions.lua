@@ -5963,7 +5963,7 @@ function G.UIDEF.challenge_description_tab(args)
         local other_tab = {}
         for k, v in pairs(challenge.restrictions.banned_other) do
           if v.type == 'blind' then
-            other_tab[#other_tab+1] = G.P_BLINDS[v.id]
+            other_tab[math.min(#other_tab+1,3)] = G.P_BLINDS[v.id]
           end
         end
       

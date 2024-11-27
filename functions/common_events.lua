@@ -2423,7 +2423,7 @@ function get_new_boss()
     local eligible_bosses = {}
     local forced_boss = nil
     for k, v in pairs(G.P_BLINDS) do
-        --if v.name == "Saffron Timer" then
+        --if v.name == "The Noble" then
         --    forced_boss = k
         --end
         if not v.boss then
