@@ -5850,6 +5850,13 @@ function Card:draw(layer)
                 end
                 if self.ability.set == 'Polygon' then
                     if (self.ability.polygon_rounds >= self.ability.extra.rounds_needed) and self.ability.polygon_shader_flag == true then
+                        if self.edition and self.edition.negative then
+                            print("Changed to 1")
+                            G.SHADERS["smoke" or 'dissolve']:send("is_negative", 1)
+                        else
+                            print("Changed to 0")
+                            G.SHADERS["smoke" or 'dissolve']:send("is_negative", 0)
+                        end
                         self.children.center:draw_shader('smoke', nil, self.ARGS.send_to_shader)
                     elseif self.ability.extra.rounds_needed - G.GAME.polygon_voucher_bonus < 1 then
                         self.children.center:draw_shader('smoke', nil, self.ARGS.send_to_shader)
@@ -5875,6 +5882,13 @@ function Card:draw(layer)
                     end
                 end
                 if self.edition and self.edition.shaded then
+                    if self.edition and self.edition.negative then
+                        print("Changed to 1")
+                        G.SHADERS["smoke" or 'dissolve']:send("is_negative", 1)
+                    else
+                        print("Changed to 0")
+                        G.SHADERS["smoke" or 'dissolve']:send("is_negative", 0)
+                    end
                     self.children.center:draw_shader('smoke', nil, self.ARGS.send_to_shader)
                     if self.children.front and self.ability.effect ~= 'Stone card' then
                         self.children.front:draw_shader('smoke', nil, self.ARGS.send_to_shader)
