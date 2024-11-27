@@ -541,7 +541,7 @@ function Game:init_item_prototypes()
         -- Common
         j_strawberry=       {order = 151,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 3, name = "Freeze Dried Strawberry", pos = {x=5, y=11}, set = "Joker", effect = "", cost_mult = 1.0, config = {extra = {odds = 4, chips = 50}}, no_pool_flag = 'freeze_dried_broke', friendly = true},
         j_sacrificial=      {order = 152,  unlocked = true,  discovered = false, blueprint_compat = false, perishable_compat = true, eternal_compat = false, rarity = 1, cost = 20, name = 'Sacrificial Joker', pos = {x=2, y=16}, set = 'Joker', effect = "", cost_mult = 1.0, config = {friendly = true}},
-        j_moist_chan=       {order = 153,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 4, name = "Moist Chan", pos = {x=8, y=15}, set = "Joker", effect = "", cost_mult = 1.0, config = {extra = {chips = 10, mult = 4}, friendly = true}},
+        j_moist_chan=       {order = 153,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 4, name = "Moist Chan", pos = {x=7, y=17}, set = "Joker", effect = "", cost_mult = 1.0, config = {extra = {chips = 10, mult = 4}, friendly = true}},
         j_stonks=           {order = 154,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 3, name = "Stonks", pos = {x=5, y=1}, set = 'Joker', effect = "", cost_mult = 1.0, config = {extra = 3, friendly = true}},
 
         -- Uncommon
@@ -591,8 +591,8 @@ function Game:init_item_prototypes()
         c_sun=              {order = 20,    discovered = false, cost = 3, consumeable = true, name = "The Sun", pos = {x=9,y=1}, set = "Tarot", effect = "Suit Conversion", cost_mult = 1.0, config = {suit_conv = 'Hearts', max_highlighted = 3}},
         c_judgement=        {order = 21,    discovered = false, cost = 3, consumeable = true, name = "Judgement", pos = {x=0,y=2}, set = "Tarot", effect = "Random Joker", cost_mult = 1.0, config = {}},
         c_world=            {order = 22,    discovered = false, cost = 3, consumeable = true, name = "The World", pos = {x=1,y=2}, set = "Tarot", effect = "Suit Conversion", cost_mult = 1.0, config = {suit_conv = 'Spades', max_highlighted = 3}},
-        c_clown=            {order = 23,    discovered = false, cost = 3, consumeable = true, name = "The Clown", pos = {x=1,y=2}, set = "Tarot", effect = "Random Destructon", cost_mult = 1.0, config = {max_highlighted = 2}},
-        c_gooby=            {order = 24,    discovered = false, cost = 3, consumeable = true, name = "The Gooby Guy", pos = {x=1,y=2}, set = "Tarot", effect = "Extra Hands", cost_mult = 1.0, config = {extra = 2}},
+        c_clown=            {order = 23,    discovered = false, cost = 3, consumeable = true, name = "The Clown", pos = {x=0,y=7}, set = "Tarot", effect = "Random Destructon", cost_mult = 1.0, config = {max_highlighted = 2}},
+        c_gooby=            {order = 24,    discovered = false, cost = 3, consumeable = true, name = "The Gooby Guy", pos = {x=1,y=7}, set = "Tarot", effect = "Extra Hands", cost_mult = 1.0, config = {extra = 2}},
 
         --Planets
         c_mercury=          {order = 1,    discovered = false, cost = 3, consumeable = true, freq = 1, name = "Mercury", pos = {x=0,y=3}, set = "Planet", effect = "Hand Upgrade", cost_mult = 1.0, config = {hand_type = 'Pair'}},

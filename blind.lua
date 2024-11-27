@@ -722,12 +722,12 @@ function Blind:drawn_to_hand()
             if G.GAME.modifiers.hexwing_every_hand then
                 local deletable_jokers = {}
                 for k, v in pairs(G.jokers.cards) do
-                    if not v.ability.eternal and not v:get_edition(polychrome) then deletable_jokers[#deletable_jokers + 1] = v end
+                    if not v.ability.eternal and not (v.edition and v.edition.polychrome) then deletable_jokers[#deletable_jokers + 1] = v end
                 end
 
                 G.E_MANAGER:add_event(Event({trigger = 'immediate', delay = 0.75, func = function()
                     for k, v in pairs(G.jokers.cards) do
-                        if v:get_edition(polychrome) then
+                        if v.edition and v.edition.polychrome then
                             if #deletable_jokers ~= 0 then
                                 card_eval_status_text(v, 'extra', nil, nil, nil, {message = localize('k_super'), colour = G.C.SECONDARY_SET.Polygon})
                                 play_sound('negative', 1.5, 0.4)
