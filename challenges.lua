@@ -865,5 +865,35 @@ G.CHALLENGES = {
                 {id = 'bl_traitor', type = 'blind'},            
             }
         }
+    },
+    {
+        name = "Stonk Market Syndrome",
+        id = 'c_stonk_market_1',
+        rules = {
+            custom = {
+            },
+            modifiers = {
+            }
+        },
+        jokers = {
+            {id = 'j_stonks', eternal = true, edition = 'negative'},
+            {id = 'j_stonks', eternal = true, edition = 'negative'},
+            {id = 'j_stonks', eternal = true, edition = 'negative'},
+        },
+        consumeables = {
+        },
+        vouchers = {
+        },
+        deck = {
+            type = 'Challenge Deck'
+        },
+        restrictions = {
+            banned_cards = {
+            },
+            banned_tags = {
+            },
+            banned_other = {
+            }
+        }
     }
 }
