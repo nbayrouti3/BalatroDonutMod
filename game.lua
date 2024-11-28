@@ -541,7 +541,7 @@ function Game:init_item_prototypes()
         -- Common
         j_strawberry=       {order = 151,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 3, name = "Freeze Dried Strawberry", pos = {x=5, y=11}, set = "Joker", effect = "", cost_mult = 1.0, config = {extra = {odds = 4, chips = 50}}, no_pool_flag = 'freeze_dried_broke', friendly = true},
         j_moist_chan=       {order = 152,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 4, name = "Moist Chan", pos = {x=7, y=17}, set = "Joker", effect = "", cost_mult = 1.0, config = {extra = {chips = 10, mult = 4}, friendly = true}},
-        j_stonks=           {order = 153,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 3, name = "Stonks", pos = {x=5, y=1}, set = 'Joker', effect = "", cost_mult = 1.0, config = {extra = 3, friendly = true}},
+        j_stonks=           {order = 153,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 3, name = "Stonks", pos = {x=1, y=18}, set = 'Joker', effect = "", cost_mult = 1.0, config = {extra = 3, friendly = true}},
 
         -- Uncommon
         j_part_of_you=      {order = 154,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 8, name = "Part of You", pos = {x=1, y=17}, set = "Joker", effect = "", cost_mult = 1.0, config = {extra = 1, Xmult = 0.15, friendly = true}},

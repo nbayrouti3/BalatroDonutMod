@@ -3934,6 +3934,7 @@
             c_jokerless_1 = "Jokerless",
             c_blind_faith_1 = "Blind Faith",
             c_rated_e_1 = "Rated E",
+            c_stonk_market_1 = "Stonk Market Syndrome",
         },
         poker_hands = {
             ['Flush Five'] = "Flush Five",
