@@ -994,7 +994,7 @@ function Card:generate_UIBox_ability_table()
         elseif self.ability.name == 'Joker Twin' then loc_vars = self.ability.extra
         elseif self.ability.name == "Gambler's Phallussy" then loc_vars = {2, 0.5}
         elseif self.ability.name == 'Dancing Duncan' then loc_vars = {2, 4, self.ability.mult}
-        elseif self.ability.name == 'Freeze Dried Strawberry' then loc_vars = {self.ability.extra.chips, ''..(G.GAME and G.GAME.probabilities.normal or 1), self.ability.extra.odds}
+        elseif self.ability.name == 'Freeze Dried Strawberry' or self.ability.name == 'Sopping Wett' then loc_vars = {self.ability.extra.chips, ''..(G.GAME and G.GAME.probabilities.normal or 1), self.ability.extra.odds}
         elseif self.ability.name == 'Part of You' then loc_vars = {self.ability.x_mult, self.ability.extra + self.ability.x_mult*(self.ability.dupe_tally or 0)}
         elseif self.ability.name == 'The Singularity' then loc_vars = {self.ability.extra}
         elseif self.ability.name == 'Shirtless Benzon' then loc_vars = {self.ability.extra, self.ability.x_mult}
@@ -2886,7 +2886,8 @@ function Card:apply_to_run(center)
     end
     if center_table.name == 'Magic Trick' or center_table.name == 'Illusion' then
         G.E_MANAGER:add_event(Event({func = function()
-            G.GAME.playing_card_rate = center_table.extra
+            G.GAME.playing_card_rate = center_table.extra*(G.GAME.modifiers.deckbuilder or 1)
+            print("current rate is:", G.GAME.playing_card_rate)
             return true end }))
     end
     if center_table.name == 'Telescope' or center_table.name == 'Observatory' then
@@ -4195,7 +4196,7 @@ function Card:calculate_joker(context)
                         }
                     end
                 end
-                if self.ability.name == 'Freeze Dried Strawberry' then
+                if self.ability.name == 'Freeze Dried Strawberry' or self.ability.name == 'Sopping Wett' then
                     if pseudorandom('freezedried') < G.GAME.probabilities.normal/self.ability.extra.odds then 
                         G.E_MANAGER:add_event(Event({
                             func = function()
@@ -5004,7 +5005,7 @@ function Card:calculate_joker(context)
                                 chip_mod = G.GAME.current_round.discards_left*self.ability.extra
                             }
                         end
-                        if self.ability.name == 'Freeze Dried Strawberry' then
+                        if self.ability.name == 'Freeze Dried Strawberry' or self.ability.name == 'Sopping Wett' then
                             return {
                                 message = localize{type='variable', key='a_chips', vars={self.ability.extra.chips}},
                                 chip_mod = self.ability.extra.chips,

@@ -1495,6 +1495,13 @@
                     "is destroyed at end of round"
                 }
             },
+            j_sopping_wett = {
+                name = "Sopping Wett",
+                text = {
+                    "{C:chips}+#1#{} Chips {C:green}#2# in #3#{} chance this card",
+                    "is destroyed at end of round"
+                }
+            },
             j_part_of_you = {
                 name = "Part of You",
                 text = {
@@ -1514,8 +1521,8 @@
             j_shirtless_benzon = {
                 name = "Shirtless Benzon",
                 text = {
-                    "Gains {X:mult,C:white} X#1#{} Mult",
-                    "every time a face card gets a seal",
+                    "Gains {X:mult,C:white} X#1#{} Mult every time",
+                    "a {C:attention}Face Card{} gets a seal",
                     "{C:inactive}(Currently {X:mult,C:white} X#2# {C:inactive} Mult)"
                 }
             },
@@ -3935,6 +3942,7 @@
             c_blind_faith_1 = "Blind Faith",
             c_rated_e_1 = "Rated E",
             c_stonk_market_1 = "Stonk Market Syndrome",
+            c_deckbuilder_1 = "Deckbuilder",
         },
         poker_hands = {
             ['Flush Five'] = "Flush Five",
@@ -4549,7 +4557,10 @@
                 "{C:polygon}Polygon Cards{} take {C:attention}-4{} hands to play"
             },
             ch_c_rated_e = {
-                "Makes the game {C:attention}Rated E{}, for everyone. {C:inactive}Especially, Lucas."
+                "Makes the game {C:attention}Rated E{}, for everyone. {C:inactive}Especially, Lucas"
+            },
+            ch_c_deckbuilder = {
+                "The effect of {C:attention}Magic Trick{} & {C:attention}Illusion{} is doubled"
             }
         },
         quips = {
