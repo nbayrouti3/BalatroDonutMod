@@ -895,5 +895,38 @@ G.CHALLENGES = {
             banned_other = {
             }
         }
+    },
+    {
+        name = "Deckbuilder",
+        id = 'c_deckbuilder_1',
+        rules = {
+            custom = {
+                {id = 'deckbuilder', value = 2}
+            },
+            modifiers = {
+                {id = 'dollars', value = 15},
+            }
+        },
+        jokers = {
+        },
+        consumeables = {
+        },
+        vouchers = {
+            {id = 'v_overstock_norm'},
+            {id = 'v_clearance_sale'},
+            {id = 'v_magic_trick'}
+        },
+        deck = {
+            cards = {{s='D',r='2',},{s='S',r='2',},{s='C',r='2',},{s='H',r='2',}},
+            type = 'Challenge Deck'
+        },
+        restrictions = {
+            banned_cards = {
+            },
+            banned_tags = {
+            },
+            banned_other = {
+            }
+        }
     }
 }
