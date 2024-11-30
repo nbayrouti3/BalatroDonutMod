@@ -1609,6 +1609,13 @@
                     "gives {C:mult}+mult{} equal to the",
                     "determinant of the 4 cards"
                 }
+            },
+            j_autistic = {
+                name = "Autistic Joker",
+                text = {
+                    "{C:chips}+#1#{} chips if played hand contains",
+                    "a {C:attention}Straight{} with an {C:attention}Ace"
+                }
             }
         },
         Voucher = {
