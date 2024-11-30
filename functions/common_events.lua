@@ -100,8 +100,8 @@ function ease_dollars(mod, instant)
         for k, v in ipairs(G.jokers.cards) do
             if v.ability.name == "Stonks" then
                 local decimal_add = math.random()
-                local percent_effect = math.floor( math.random(0, v.ability.extra) + decimal_add )
-                mod = mod * percent_effect
+                local percent_effect = math.random(0, v.ability.extra*4)/4
+                mod = math.ceil( mod * percent_effect)
             end
         end
     end
