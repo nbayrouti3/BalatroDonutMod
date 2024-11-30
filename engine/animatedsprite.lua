@@ -93,12 +93,12 @@ function AnimatedSprite:animate()
 end
 
 function AnimatedSprite:remove()
-    for _, v in pairs(G.ANIMATIONS) do
+    for k, v in pairs(G.ANIMATIONS) do
         if v == self then
             table.remove(G.ANIMATIONS, k)
         end
     end
-    for _, v in pairs(G.I.SPRITE) do
+    for k, v in pairs(G.I.SPRITE) do
         if v == self then
             table.remove(G.I.SPRITE, k)
         end
