@@ -1618,6 +1618,14 @@
                     "a {C:attention}Straight{}. {C:mult}+#2#{} Mult if played hand",
                     "contains a {C:attention}Flush{}"
                 }
+            },
+            j_cool_duncan = {
+                name = "Cool Duncan",
+                text = {
+                    "{C:chips}+#2#{} Chips per hand played",
+                    "{C:chips}-#3#{} Chips per discard",
+                    "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
+                }
             }
         },
         Voucher = {

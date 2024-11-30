@@ -801,6 +801,7 @@ function Card:generate_UIBox_ability_table()
         self.ability.name == 'Crafty Joker' then 
             loc_vars = {self.ability.t_chips, localize(self.ability.type, 'poker_hands')}
         elseif self.ability.name == 'Autistic Joker' then loc_vars = {self.ability.t_chips, self.ability.t_mult}
+        elseif self.ability.name == 'Cool Duncan' then loc_vars = {self.ability.extra.chips_total, self.ability.extra.chips_add, self.ability.extra.chips_sub}
         elseif self.ability.name == 'Half Joker' then loc_vars = {self.ability.extra.mult, self.ability.extra.size}
         elseif self.ability.name == 'Fortune Teller' then loc_vars = {self.ability.extra, (G.GAME.consumeable_usage_total and G.GAME.consumeable_usage_total.tarot or 0)}
         elseif self.ability.name == 'Steel Joker' then loc_vars = {self.ability.extra, 1 + self.ability.extra*(self.ability.steel_tally or 0)}
@@ -4007,7 +4008,17 @@ function Card:calculate_joker(context)
                     }
                 end
             end
-            
+            if self.ability.name == 'Cool Duncan' and not context.blueprint and context.other_card == context.full_hand[#context.full_hand] then
+                local prev_chips_total = self.ability.extra.chips_total
+                self.ability.extra.chips_total = math.max(0, self.ability.extra.chips_total - self.ability.extra.chips_sub)
+                if self.ability.extra.chips_total ~= prev_chips_total then
+                    return {
+                        message = localize{type='variable',key='a_chips_minus',vars={self.ability.extra.chips_sub}},
+                        colour = G.C.RED,
+                        card = self
+                    }
+                end
+            end
             if self.ability.name == 'Faceless Joker' and context.other_card == context.full_hand[#context.full_hand] then
                 local face_cards = 0
                 for k, v in ipairs(context.full_hand) do
@@ -4863,6 +4874,13 @@ function Card:calculate_joker(context)
                             message = localize{type='variable',key='a_mult',vars={self.ability.extra.hand_add}}
                         }
                     end
+                    if self.ability.name == 'Cool Duncan' and not context.blueprint then
+                        self.ability.extra.chips_total = self.ability.extra.chips_total + self.ability.extra.chips_add
+                        return {
+                            card = self,
+                            message = localize{type='variable',key='a_chips',vars={self.ability.extra.chips_add}}
+                        }
+                    end
                 elseif context.after then
                     if self.ability.name == 'Ice Cream' and not context.blueprint then
                         if self.ability.extra.chips - self.ability.extra.chip_mod <= 0 then 
@@ -5365,6 +5383,12 @@ function Card:calculate_joker(context)
                             return {
                                 message = localize{type='variable',key='a_mult',vars={self.ability.mult}},
                                 mult_mod = self.ability.mult
+                            }
+                        end
+                        if self.ability.name == 'Cool Duncan' and self.ability.extra.chips_total > 0 then
+                            return {
+                                message = localize{type='variable',key='a_chips',vars={self.ability.extra.chips_total}},
+                                chip_mod = self.ability.extra.chips_total
                             }
                         end
                         if self.ability.name == 'Fortune Teller' and G.GAME.consumeable_usage_total and G.GAME.consumeable_usage_total.tarot > 0 then
