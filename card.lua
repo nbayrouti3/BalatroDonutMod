@@ -5886,10 +5886,8 @@ function Card:draw(layer)
                 if self.ability.set == 'Polygon' then
                     if (self.ability.polygon_rounds >= self.ability.extra.rounds_needed) and self.ability.polygon_shader_flag == true then
                         if self.edition and self.edition.negative then
-                            print("Changed to 1")
                             G.SHADERS["smoke" or 'dissolve']:send("is_negative", 1)
                         else
-                            print("Changed to 0")
                             G.SHADERS["smoke" or 'dissolve']:send("is_negative", 0)
                         end
                         self.children.center:draw_shader('smoke', nil, self.ARGS.send_to_shader)

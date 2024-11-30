@@ -714,7 +714,6 @@ G.FUNCS.evaluate_play = function(e)
                             scoring_hand = scoring_hand,
                             scoring_name = text,
                             poker_hands = poker_hands,
-                            other_card = G.hand.cards[i],
                             repetition = true
                         })
 
@@ -883,33 +882,6 @@ G.FUNCS.evaluate_play = function(e)
             local reps = {1}
             local j = 1
 
-            -- Penta Hand: Apply globally to all cards if flag is active
-            local penta_bonus_applied = false
-            if G.GAME.next_hand_penta_bonus == 1 then
-                local eval = eval_card(G.hand.cards[i], {
-                    repetition_only = true,
-                    cardarea = G.hand,
-                    full_hand = G.play.cards,
-                    scoring_hand = scoring_hand,
-                    scoring_name = text,
-                    poker_hands = poker_hands,
-                    repetition = false,
-                    other_card = G.hand.cards[i],
-                    card_effects = effects
-                })
-        
-                if eval.pentahand and eval.pentahand.repetitions then
-                    for h = 1, eval.pentahand.repetitions do
-                        reps[#reps + 1] = eval
-                    end
-                    penta_bonus_applied = true
-                end
-            end
-
-            -- Reset the pentahand flag after application
-            if penta_bonus_applied then
-                G.GAME.next_hand_penta_bonus = 0
-            end
 
             while j <= #reps do
                 if reps[j] ~= 1 then

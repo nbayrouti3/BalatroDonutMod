@@ -1498,8 +1498,9 @@
             j_sopping_wett = {
                 name = "Sopping Wett",
                 text = {
-                    "{C:chips}+#1#{} Chips {C:green}#2# in #3#{} chance this card",
-                    "is destroyed at end of round"
+                    "{C:chips}+#1#{} Chips {C:green}#2# in #3#{} chance",
+                    "this card is destroyed",
+                    "at end of round"
                 }
             },
             j_part_of_you = {
@@ -1613,8 +1614,9 @@
             j_autistic = {
                 name = "Autistic Joker",
                 text = {
-                    "{C:chips}+#1#{} chips if played hand contains",
-                    "a {C:attention}Straight{} with an {C:attention}Ace"
+                    "{C:chips}+#1#{} Chips if played hand contains",
+                    "a {C:attention}Straight{}. {C:mult}+#2#{} Mult if played hand",
+                    "contains a {C:attention}Flush{}"
                 }
             }
         },
