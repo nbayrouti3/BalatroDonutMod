@@ -4430,6 +4430,7 @@
             a_mult_minus = "-#1# Mult",
             a_chips = "+#1#",
             a_chips_minus = "-#1#",
+            a_chips_mult = "+#1# & +#2#",
             a_handsize = "+#1# Hand Size",
             a_handsize_minus = "-#1# Hand Size",
             a_hands = "+#1# Hands",

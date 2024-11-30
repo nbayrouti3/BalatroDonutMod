@@ -800,6 +800,7 @@ function Card:generate_UIBox_ability_table()
         self.ability.name == 'Clever Joker' or self.ability.name == 'Devious Joker'  or 
         self.ability.name == 'Crafty Joker' then 
             loc_vars = {self.ability.t_chips, localize(self.ability.type, 'poker_hands')}
+        elseif self.ability.name == 'Autistic Joker' then loc_vars = {self.ability.t_chips, self.ability.t_mult}
         elseif self.ability.name == 'Half Joker' then loc_vars = {self.ability.extra.mult, self.ability.extra.size}
         elseif self.ability.name == 'Fortune Teller' then loc_vars = {self.ability.extra, (G.GAME.consumeable_usage_total and G.GAME.consumeable_usage_total.tarot or 0)}
         elseif self.ability.name == 'Steel Joker' then loc_vars = {self.ability.extra, 1 + self.ability.extra*(self.ability.steel_tally or 0)}
@@ -4952,17 +4953,36 @@ function Card:calculate_joker(context)
                                 Xmult_mod = self.ability.x_mult
                             }
                         end
-                        if self.ability.t_mult > 0 and next(context.poker_hands[self.ability.type]) then
+                        if self.ability.t_mult > 0 and self.ability.name ~= 'Autistic Joker' and next(context.poker_hands[self.ability.type]) then
                             return {
                                 message = localize{type='variable',key='a_mult',vars={self.ability.t_mult}},
                                 mult_mod = self.ability.t_mult
                             }
                         end
-                        if self.ability.t_chips > 0 and next(context.poker_hands[self.ability.type]) then
+                        if self.ability.t_chips > 0 and self.ability.name ~= 'Autistic Joker' and next(context.poker_hands[self.ability.type]) then
                             return {
                                 message = localize{type='variable',key='a_chips',vars={self.ability.t_chips}},
                                 chip_mod = self.ability.t_chips
                             }
+                        end
+                        if self.ability.name == 'Autistic Joker' then
+                            if self.ability.t_chips > 0 and self.ability.t_mult > 0 and next(context.poker_hands["Straight Flush"]) then
+                                return {
+                                    message = localize{type = 'variable', key = 'a_chips_mult', vars = {self.ability.t_chips, self.ability.t_mult}, colour = G.C.PURPLE},
+                                    chip_mod = self.ability.t_chips,
+                                    mult_mod = self.ability.t_mult
+                                }
+                            elseif self.ability.t_chips > 0 and next(context.poker_hands["Straight"]) then
+                                return {
+                                    message = localize{type = 'variable', key = 'a_chips', vars = {self.ability.t_chips}},
+                                    chip_mod = self.ability.t_chips
+                                }
+                            elseif self.ability.t_mult > 0 and next(context.poker_hands["Flush"]) then
+                                return {
+                                    message = localize{type = 'variable', key = 'a_mult', vars = {self.ability.t_mult}},
+                                    mult_mod = self.ability.t_mult
+                                }
+                            end
                         end
                         if self.ability.name == 'Half Joker' and #context.full_hand <= self.ability.extra.size then
                             return {
