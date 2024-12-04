@@ -1009,6 +1009,7 @@ function Card:generate_UIBox_ability_table()
         elseif self.ability.name == 'Morally Complex Joker' then
         elseif self.ability.name == 'Captured Joker' then
         elseif self.ability.name == 'Habibi Duncan' then
+        elseif self.ability.name == 'Concentration' then loc_vars = {self.ability.extra, localize(G.GAME.current_round.concentration_card.rank, 'ranks'), self.ability.mult}
         end
     end
 
@@ -4519,6 +4520,10 @@ function Card:calculate_joker(context)
                         card = self
                     }
                 end
+                if self.ability.name == 'Concentration' and
+                context.other_card:get_id() == G.GAME.current_round.concentration_card.id then
+                    self.ability.mult = self.ability.mult + self.ability.extra
+                end
                 if self.ability.name == 'Triboulet' and
                     (context.other_card:get_id() == 12 or context.other_card:get_id() == 13) then
                         return {
@@ -4964,38 +4969,114 @@ function Card:calculate_joker(context)
                                 end
                             end
                         end
-                        if self.ability.name ~= 'Seeing Double' and self.ability.x_mult > 1 and (self.ability.type == '' or next(context.poker_hands[self.ability.type])) then
-                            return {
-                                message = localize{type='variable',key='a_xmult',vars={self.ability.x_mult}},
-                                colour = G.C.RED,
-                                Xmult_mod = self.ability.x_mult
-                            }
+                        
+                        if self.ability.name ~= 'Seeing Double' and self.ability.x_mult > 1 then
+                            local has_the_tribe = false
+                            local has_morally_complex_joker = false
+
+                            -- Check for the presence of both jokers in the joker area
+                            for _, v in pairs(G.jokers.cards) do
+                                if v.ability.name == 'The Tribe' then
+                                    has_the_tribe = true
+                                end
+                                if v.ability.name == 'Morally Complex Joker' then
+                                    has_morally_complex_joker = true
+                                end
+                            end
+
+                            -- If both jokers are present, activate The Tribe's multiplier for Straights seen as Straight Flushes
+                            if has_the_tribe and has_morally_complex_joker and self.ability.name == 'The Tribe' then
+                                if next(context.poker_hands[self.ability.type]) or next(context.poker_hands['Straight Flush']) then
+                                    return {
+                                        message = localize{type='variable', key='a_xmult', vars={self.ability.x_mult}},
+                                        colour = G.C.RED,
+                                        Xmult_mod = self.ability.x_mult
+                                    }
+                                end
+                            elseif self.ability.type == '' or next(context.poker_hands[self.ability.type]) then
+                                -- Default behavior for other cases
+                                return {
+                                    message = localize{type='variable', key='a_xmult', vars={self.ability.x_mult}},
+                                    colour = G.C.RED,
+                                    Xmult_mod = self.ability.x_mult
+                                }
+                            end
                         end
-                        if self.ability.t_mult > 0 and self.ability.name ~= 'Autistic Joker' and next(context.poker_hands[self.ability.type]) then
-                            return {
-                                message = localize{type='variable',key='a_mult',vars={self.ability.t_mult}},
-                                mult_mod = self.ability.t_mult
-                            }
+
+                        if self.ability.t_mult > 0 and self.ability.name ~= 'Autistic Joker' then
+                            local has_droll_joker = false
+                            local has_morally_complex_joker = false
+
+                            -- Check for the presence of both jokers in the joker area
+                            for k, v in pairs(G.jokers.cards) do
+                                if v.ability.name == 'Droll Joker' then
+                                    has_droll_joker = true
+                                end
+                                if v.ability.name == 'Morally Complex Joker' then
+                                    has_morally_complex_joker = true
+                                end
+                            end
+
+                            -- If both jokers are present, activate Droll Joker's multiplier for Straights seen as Straight Flushes
+                            if has_droll_joker and has_morally_complex_joker and self.ability.name == 'Droll Joker' then
+                                if next(context.poker_hands[self.ability.type]) or next(context.poker_hands['Straight Flush']) then
+                                    return {
+                                        message = localize{type='variable', key='a_mult', vars={self.ability.t_mult}},
+                                        mult_mod = self.ability.t_mult
+                                    }
+                                end
+                            elseif next(context.poker_hands[self.ability.type]) then
+                                -- Default behavior for other cases
+                                return {
+                                    message = localize{type='variable', key='a_mult', vars={self.ability.t_mult}},
+                                    mult_mod = self.ability.t_mult
+                                }
+                            end
                         end
-                        if self.ability.t_chips > 0 and self.ability.name ~= 'Autistic Joker' and next(context.poker_hands[self.ability.type]) then
-                            return {
-                                message = localize{type='variable',key='a_chips',vars={self.ability.t_chips}},
-                                chip_mod = self.ability.t_chips
-                            }
+
+                        if self.ability.t_chips > 0 and self.ability.name ~= 'Autistic Joker' then
+                            local has_crafty_joker = false
+                            local has_morally_complex_joker = false
+
+                            -- Check for the presence of both jokers in the joker area
+                            for _, v in pairs(G.jokers.cards) do
+                                if v.ability.name == 'Crafty Joker' then
+                                    has_crafty_joker = true
+                                end
+                                if v.ability.name == 'Morally Complex Joker' then
+                                    has_morally_complex_joker = true
+                                end
+                            end
+
+                            -- If both jokers are present, activate Crafty Joker's chips bonus for Straights seen as Straight Flushes
+                            if has_crafty_joker and has_morally_complex_joker and self.ability.name == 'Crafty Joker' then
+                                if next(context.poker_hands[self.ability.type]) or next(context.poker_hands['Straight Flush']) then
+                                    return {
+                                        message = localize{type='variable', key='a_chips', vars={self.ability.t_chips}},
+                                        chip_mod = self.ability.t_chips
+                                    }
+                                end
+                            elseif next(context.poker_hands[self.ability.type]) then
+                                -- Default behavior for other cases
+                                return {
+                                    message = localize{type='variable', key='a_chips', vars={self.ability.t_chips}},
+                                    chip_mod = self.ability.t_chips
+                                }
+                            end
                         end
                         if self.ability.name == 'Autistic Joker' then
-                            if self.ability.t_chips > 0 and self.ability.t_mult > 0 and next(context.poker_hands["Straight Flush"]) then
+                            if self.ability.t_chips > 0 and self.ability.t_mult > 0 and next(context.poker_hands['Straight Flush']) then
                                 return {
                                     message = localize{type = 'variable', key = 'a_chips_mult', vars = {self.ability.t_chips, self.ability.t_mult}, colour = G.C.PURPLE},
                                     chip_mod = self.ability.t_chips,
                                     mult_mod = self.ability.t_mult
                                 }
-                            elseif self.ability.t_chips > 0 and next(context.poker_hands["Straight"]) then
+                            elseif self.ability.t_chips > 0 and next(context.poker_hands['Straight']) then
                                 return {
                                     message = localize{type = 'variable', key = 'a_chips', vars = {self.ability.t_chips}},
                                     chip_mod = self.ability.t_chips
                                 }
-                            elseif self.ability.t_mult > 0 and next(context.poker_hands["Flush"]) then
+                            elseif self.ability.t_mult > 0 and next(context.poker_hands['Flush']) then
                                 return {
                                     message = localize{type = 'variable', key = 'a_mult', vars = {self.ability.t_mult}},
                                     mult_mod = self.ability.t_mult
@@ -5240,6 +5321,13 @@ function Card:calculate_joker(context)
                             return {
                                 message = localize{type='variable',key='a_mult',vars={self.ability.extra*(G.GAME.starting_deck_size - #G.playing_cards)}},
                                 mult_mod = self.ability.extra*(G.GAME.starting_deck_size - #G.playing_cards), 
+                                colour = G.C.MULT
+                            }
+                        end
+                        if self.ability.name == 'Concentration' and (self.ability.mult > 0) then
+                            return {
+                                message = localize{type='variable',key='a_mult',vars={self.ability.mult}},
+                                mult_mod = self.ability.mult,
                                 colour = G.C.MULT
                             }
                         end
@@ -5940,10 +6028,8 @@ function Card:draw(layer)
                 end
                 if self.edition and self.edition.shaded then
                     if self.edition and self.edition.negative then
-                        print("Changed to 1")
                         G.SHADERS["smoke" or 'dissolve']:send("is_negative", 1)
                     else
-                        print("Changed to 0")
                         G.SHADERS["smoke" or 'dissolve']:send("is_negative", 0)
                     end
                     self.children.center:draw_shader('smoke', nil, self.ARGS.send_to_shader)
