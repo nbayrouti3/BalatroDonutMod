@@ -273,6 +273,7 @@ function end_round()
                         reset_mail_rank()
                         reset_ancient_card()
                         reset_castle_card()
+                        reset_concentration_rank()
                         for k, v in ipairs(G.playing_cards) do
                             v.ability.discarded = nil
                             v.ability.forced_selection = nil

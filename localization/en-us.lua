@@ -1607,7 +1607,7 @@
                 name = "Linear Aljoka",
                 text = {
                     "When you play {C:attention}exactly 4 cards{},",
-                    "gives {C:mult}+mult{} equal to the",
+                    "gives {C:mult}+Mult{} equal to the",
                     "determinant of the 4 cards"
                 }
             },
@@ -1625,6 +1625,15 @@
                     "{C:chips}+#2#{} Chips per hand played",
                     "{C:chips}-#3#{} Chips per discard",
                     "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips)"
+                }
+            },
+            j_concentration = {
+                name = "Concentration",
+                text = {
+                    "This Joker gains {C:mult}+#1#{} Mult",
+                    "for each played {C:attention}#2#{}, rank",
+                    "changes every round",
+                    "{C:inactive}(Currently {C:mult}+#3#{C:inactive} Mult)"
                 }
             }
         },

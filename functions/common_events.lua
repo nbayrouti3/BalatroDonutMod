@@ -2374,6 +2374,21 @@ function reset_mail_rank()
     end
 end
 
+function reset_concentration_rank()
+    G.GAME.current_round.concentration_card.rank = 'Ace'
+    local valid_concen_cards = {}
+    for k, v in ipairs(G.playing_cards) do
+        if v.ability.effect ~= 'Stone Card' then
+            valid_concen_cards[#valid_concen_cards+1] = v
+        end
+    end
+    if valid_concen_cards[1] then
+        local concen_card = pseudorandom_element(valid_concen_cards, pseudoseed('concen'..G.GAME.round_resets.ante))
+        G.GAME.current_round.concentration_card.rank = concen_card.base.value
+        G.GAME.current_round.concentration_card.id = concen_card.base.id
+    end
+end
+
 function reset_ancient_card()
     local ancient_suits = {}
     for k, v in ipairs({'Spades','Hearts','Clubs','Diamonds'}) do
@@ -2601,11 +2616,12 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
         localize{type = 'other', key = 'debuffed_'..(specific_vars.playing_card and 'playing_card' or 'default'), nodes = desc_nodes}
     elseif _c.set == 'Joker' then
         if _c.name == 'Stone Joker' or _c.name == 'Marble Joker' then info_queue[#info_queue+1] = G.P_CENTERS.m_stone
-        elseif _c.name == 'Steel Joker' then info_queue[#info_queue+1] = G.P_CENTERS.m_steel 
+        elseif _c.name == 'Steel Joker' or _c.name == 'Lion Joker' then info_queue[#info_queue+1] = G.P_CENTERS.m_steel 
         elseif _c.name == 'Glass Joker' then info_queue[#info_queue+1] = G.P_CENTERS.m_glass 
         elseif _c.name == 'Golden Ticket' then info_queue[#info_queue+1] = G.P_CENTERS.m_gold 
         elseif _c.name == 'Lucky Cat' then info_queue[#info_queue+1] = G.P_CENTERS.m_lucky 
         elseif _c.name == 'Midas Mask' then info_queue[#info_queue+1] = G.P_CENTERS.m_gold
+        elseif _c.name == 'Freaky Joker' then info_queue[#info_queue+1] = G.P_CENTERS.m_wild
         elseif _c.name == 'Invisible Joker' then 
             if G.jokers and G.jokers.cards then
                 for k, v in ipairs(G.jokers.cards) do
