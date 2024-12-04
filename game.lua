@@ -544,7 +544,7 @@ function Game:init_item_prototypes()
         j_stonks=           {order = 153,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 3, name = "Stonks", pos = {x=1, y=18}, set = 'Joker', effect = "", cost_mult = 1.0, config = {extra = 3, friendly = true}},
         j_sopping_wett=     {order = 154,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 3, name = "Sopping Wett", pos = {x=5, y=18}, set = 'Joker', effect = "", cost_mult = 1.0, config = {extra = {odds = 1000, chips = 175}}, yes_pool_flag = 'freeze_dried_broke', friendly = true},
         j_autistic=         {order = 155,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 4, name = "Autistic Joker", pos = {x=2, y=18}, set = 'Joker', effect = "", cost_mult = 1.0, config = {t_chips = 100, t_mult = 10,}, friendly = true},
-        j_cool_duncan=      {order = 156,  unlocked = true,  discovered = false, blueprint_compat = false,perishable_compat = true, eternal_compat = true, rarity = 1, cost = 3, name = "Cool Duncan", pos = {x=9, y=16}, set = 'Joker', effect = "", cost_mult = 1.0, config = {extra = {chips_total = 0, chips_add = 10, chips_sub = 5}}, friendly = true},
+        j_cool_duncan=      {order = 156,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 3, name = "Cool Duncan", pos = {x=9, y=16}, set = 'Joker', effect = "", cost_mult = 1.0, config = {extra = {chips_total = 0, chips_add = 10, chips_sub = 5}}, duncan = true, friendly = true},
         j_concentration=    {order = 157,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 1, cost = 4, name = "Concentration", pos = {x=6, y=18}, set = 'Joker', effect = "", cost_mult = 1.0, config = {extra = 1, mult = 0}, friendly = true},
 
         -- Uncommon
@@ -552,8 +552,8 @@ function Game:init_item_prototypes()
         j_monojoker=        {order = 159,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 6, name = "Monochromatic Joker", pos = {x=1, y=16}, set = "Joker", effect = 'Inverted Suit Multi', cost_mult = 1.0, config = {extra = 2, friendly = true}},
         j_freaky=           {order = 160,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 6, name = "Freaky Joker", pos = {x=9, y=16}, set = "Joker", effect = "Steel Card", cost_mult = 1.0, config = {friendly = true}},
         j_dancing_dunc=     {order = 161,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 6, name = "Dancing Duncan", pos = {x=0, y=18}, soul_anim_pos = {x=0, y=0}, set = "Joker", effect = "Type Mult", cost_mult = 1.0, config = {duncan = true, friendly = true}},
-        j_morally_complex=  {order = 162,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 5, name = "Morally Complex Joker", pos = {x=3, y=18}, set = 'Joker', effect = "", cost_mult = 1.0, config = {friendly = true}},
-        j_sacrificial=      {order = 163,  unlocked = true,  discovered = false, blueprint_compat = false, perishable_compat = true, eternal_compat = false, rarity = 2, cost = 20, name = 'Sacrificial Joker', pos = {x=2, y=16}, set = 'Joker', effect = "", cost_mult = 1.0, config = {friendly = true}},        
+        j_morally_complex=  {order = 162,  unlocked = true,  discovered = false, blueprint_compat = false,perishable_compat = true, eternal_compat = true, rarity = 2, cost = 5, name = "Morally Complex Joker", pos = {x=3, y=18}, set = 'Joker', effect = "", cost_mult = 1.0, config = {friendly = true}},
+        j_sacrificial=      {order = 163,  unlocked = true,  discovered = false, blueprint_compat = false,perishable_compat = true, eternal_compat = false, rarity = 2, cost = 20, name = 'Sacrificial Joker', pos = {x=2, y=16}, set = 'Joker', effect = "", cost_mult = 1.0, config = {friendly = true}},        
         j_captured_joker=   {order = 164,  unlocked = true,  discovered = false, blurprint_compat = false,perishable_compat = true, eternal_compat = true, rarity = 2, cost = 7, name = "Captured Joker", pos = {x=2, y=17}, set = 'Joker', effect = "", cost_mult = 1.0, config = {friendly = true}},
         j_habibi_duncan=    {order = 165,  unlocked = true,  discovered = false, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = 2, cost = 6, name = "Habibi Duncan", pos ={x=3, y=17}, set = "Joker", effect = '', cost_mult = 1.0, config = {duncan = true, friendly = true}},
 
@@ -580,7 +580,7 @@ function Game:init_item_prototypes()
         c_empress=          {order = 4,     discovered = false, cost = 3, consumeable = true, name = "The Empress", pos = {x=3,y=0}, set = "Tarot", effect = "Enhance", cost_mult = 1.0, config = {mod_conv = 'm_mult', max_highlighted = 2}},
         c_emperor=          {order = 5,     discovered = false, cost = 3, consumeable = true, name = "The Emperor", pos = {x=4,y=0}, set = "Tarot", effect = "Round Bonus", cost_mult = 1.0, config = {tarots = 2}},
         c_heirophant=       {order = 6,     discovered = false, cost = 3, consumeable = true, name = "The Hierophant", pos = {x=5,y=0}, set = "Tarot", effect = "Enhance", cost_mult = 1.0, config = {mod_conv = 'm_bonus', max_highlighted = 2}},
-        c_lovers=           {order = 7,     discovered = false, cost = 3, consumeable = true, name = "The Lovers", pos = {x=6,y=0}, set = "Tarot", effect = "Enhance", cost_mult = 1.0, config = {mod_conv = 'm_wild', max_highlighted = 1, habibi_bonus = 2}},
+        c_lovers=           {order = 7,     discovered = false, cost = 3, consumeable = true, name = "The Lovers", pos = {x=6,y=0}, set = "Tarot", effect = "Enhance", cost_mult = 1.0, config = {mod_conv = 'm_wild', max_highlighted = 1, habibi_bonus = 1}},
         c_chariot=          {order = 8,     discovered = false, cost = 3, consumeable = true, name = "The Chariot", pos = {x=7,y=0}, set = "Tarot", effect = "Enhance", cost_mult = 1.0, config = {mod_conv = 'm_steel', max_highlighted = 1}},
         c_justice=          {order = 9,     discovered = false, cost = 3, consumeable = true, name = "Justice", pos = {x=8,y=0}, set = "Tarot", effect = "Enhance", cost_mult = 1.0, config = {mod_conv = 'm_glass', max_highlighted = 1}},
         c_hermit=           {order = 10,    discovered = false, cost = 3, consumeable = true, name = "The Hermit", pos = {x=9,y=0}, set = "Tarot", effect = "Dollar Doubler", cost_mult = 1.0, config = {extra = 20}},
@@ -1956,6 +1956,7 @@ function Game:init_game_object()
         spectral_rate = 0,
         polygon_rate = 1,
         polygon_voucher_bonus = 0,
+        haunted_triggered = false,
         playing_card_rate = 0,
         consumeable_buffer = 0,
         joker_buffer = 0,

@@ -2635,6 +2635,7 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
             end 
         elseif _c.name == 'Diet Cola' then info_queue[#info_queue+1] = {key = 'tag_double', set = 'Tag'}
         elseif _c.name == 'Perkeo' then info_queue[#info_queue+1] = {key = 'e_negative_consumable', set = 'Edition', config = {extra = 1}}
+        elseif _c.name == 'Habibi Duncan' then info_queue[#info_queue+1] = G.P_CENTERS.c_lovers
         end
         if specific_vars and specific_vars.pinned then info_queue[#info_queue+1] = {key = 'pinned_left', set = 'Other'} end
         if specific_vars and specific_vars.sticker then info_queue[#info_queue+1] = {key = string.lower(specific_vars.sticker)..'_sticker', set = 'Other'} end
