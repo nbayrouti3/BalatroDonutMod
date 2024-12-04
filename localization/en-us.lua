@@ -1443,9 +1443,9 @@
             j_hauntedjoker = {
                 name = "Haunted Joker",
                 text = {
-                    "When hand is played, has a {C:green}#1# in #2#{}",
-                    "chance to replace a random",
-                    "{C:attention}consumable{} with a {C:spectral}Spectral{} card",
+                    "When card is scored, has a {C:green}#1# in #2#{}",
+                    "chance to replace a random {C:attention}consumable{}",
+                    "with a {C:spectral}Spectral{} card once per hand",
                     "{C:inactive}(Must have consumables)"
                 }
             },
@@ -1563,9 +1563,9 @@
             j_stonks = {
                 name = "Stonks",
                 text = {
-                    "Whenever you gain money, gain more.",
-                    "Whenever you lose money, lose more.", 
-                    "Up to {X:mult,C:white}x#1#{} the original amount!"
+                    "Randomizes the amount of {C:money}Money{} you",
+                    "{C:blue}Gain{} or {C:red}Lose{} from any source between",
+                    "{X:mult,C:white}x0{} and {X:mult,C:white}x#1#{} the original amount"
                 }
             },
             j_perfect_loaf = {
@@ -1592,8 +1592,8 @@
             j_captured_joker = {
                 name = "Captured Joker",
                 text = {
-                    "Sell this card to get one item",
-                    "in the shop for {C:attention}free{}"
+                    "Sell this card to get {C:attention}One",
+                    "{C:attention}item{} in the shop for {C:money}0${}"
                 }
             },
             j_habibi_duncan = {

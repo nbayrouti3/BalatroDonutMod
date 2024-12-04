@@ -760,6 +760,7 @@ function Blind:drawn_to_hand()
                 delay(0.6)
             end
             G.GAME.current_round.hand_played = 0
+            G.GAME.haunted_triggered = false
         end
     end
     self.prepped = nil
