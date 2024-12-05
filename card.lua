@@ -471,6 +471,9 @@ function Card:set_edition(edition, immediate, silent)
             blockable = not immediate,
             func = function()
                 self:juice_up(1, 0.5)
+                if not self.edition then 
+                    return false
+                end
                 -- Check for individual edition properties only if self.edition exists
                 if self.edition.foil then play_sound('foil1', 1.2, 0.4) end
                 if self.edition.holo then play_sound('holo1', 1.2 * 1.58, 0.4) end
