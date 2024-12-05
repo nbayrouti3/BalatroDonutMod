@@ -325,8 +325,7 @@ function Card:set_ability(center, initial, delay_sprites)
     end
     if self.ability.set == "Polygon" then
         if G.GAME.modifiers.cheaper_polygons then
-            G.GAME.polygon_voucher_bonus = 4
-            self.ability.polygon_rounds = 0 + G.GAME.polygon_voucher_bonus
+            self.ability.polygon_rounds = 0 + G.GAME.polygon_voucher_bonus + 4
             self.ability.polygon_shader_flag = false
         else
             self.ability.polygon_rounds = 0 + G.GAME.polygon_voucher_bonus
