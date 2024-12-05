@@ -20,6 +20,8 @@ function Card:init(X, Y, W, H, card, center, params)
     self.states.drag.can = true
     self.states.click.can = true
 
+    self.poly_loaf_applied = false
+
     self.playing_card = self.params.playing_card
     G.sort_id = (G.sort_id or 0) + 1
     self.sort_id = G.sort_id
@@ -469,22 +471,23 @@ function Card:set_edition(edition, immediate, silent)
             blockable = not immediate,
             func = function()
                 self:juice_up(1, 0.5)
+                -- Check for individual edition properties only if self.edition exists
                 if self.edition.foil then play_sound('foil1', 1.2, 0.4) end
-                if self.edition.holo then play_sound('holo1', 1.2*1.58, 0.4) end
+                if self.edition.holo then play_sound('holo1', 1.2 * 1.58, 0.4) end
                 if self.edition.polychrome then play_sound('polychrome1', 1.2, 0.7) end
                 if self.edition.shaded then play_sound('shady', 1.2, 0.7) end
                 if self.edition.negative then play_sound('negative', 1.5, 0.4) end
-               return true
+                return true
             end
-          }))
-          G.E_MANAGER:add_event(Event({
+        }))
+        G.E_MANAGER:add_event(Event({
             trigger = 'after',
             delay = 0.1,
             func = function()
                 G.CONTROLLER.locks.edition = false
-               return true
+                return true
             end
-          }))
+        }))
     end
 
     if G.jokers and self.area == G.jokers then 
@@ -5816,41 +5819,60 @@ function Card:update(dt)
             end
             self.ability.mult = sell_cost
         end
-        if self.ability.name == "The Perfect Loaf" and ( not self.area or not self.area.config.collection ) then
-            local left_joker = nil
-            local right_joker = nil
+        if self.ability.name == "The Perfect Loaf" and self.area == G.jokers then
+            local left_joker, right_joker = nil, nil
+
+            -- Dynamically determine the left and right jokers
             for i = 1, #G.jokers.cards do
-                if G.jokers.cards[i] == self then 
-                    left_joker = G.jokers.cards[i-1]
-                    right_joker = G.jokers.cards[i+1] 
+                if G.jokers.cards[i] == self then
+                    left_joker = G.jokers.cards[i - 1]
+                    right_joker = G.jokers.cards[i + 1]
                 end
             end
-            
-            local activated = self.config.center.config.activated
-            --clean up polychrome from previous Duncan Jokers that were moved
-            for i = 1, #activated do
-                local curr_joker = activated[i]
-                local still_active = false
-                if left_joker and curr_joker == left_joker then
-                    still_active = true
-                elseif right_joker and curr_joker == right_joker then
-                    still_active = true
-                end
-    
-                if still_active == false then 
-                    curr_joker:set_edition(nil) 
-                    table.remove(activated, i)
+
+            if left_joker and left_joker.ability.name == 'The Perfect Loaf' then
+                for i = 1, #G.jokers.cards do
+                    if G.jokers.cards[i] == self then
+                        left_joker =  G.jokers.cards[i - 2]
+                    end
                 end
             end
-    
-            if left_joker and left_joker.config.center.config.duncan and (not left_joker.edition or not left_joker.edition.polychrome)then
-                left_joker:set_edition({polychrome = true}, true)
-                activated[#activated+1] = left_joker
+
+            if right_joker and right_joker.ability.name == 'The Perfect Loaf' then
+                for i = 1, #G.jokers.cards do
+                    if G.jokers.cards[i] == self then
+                        right_joker =  G.jokers.cards[i + 2]
+                    end
+                end
             end
-    
-            if right_joker and right_joker.config.center.config.duncan and (not right_joker.edition or not right_joker.edition.polychrome) then
-                right_joker:set_edition({polychrome = true}, true)
-                activated[#activated+1] = right_joker
+
+
+            -- Handle edition removal for non-adjacent jokers
+            for _, joker in ipairs(G.jokers.cards) do
+                if joker ~= self and joker ~= left_joker and joker ~= right_joker then
+                    if joker.edition and joker.edition.polychrome then
+                        joker:set_edition(nil, true) -- Remove polychrome
+                        joker.poly_loaf_applied = false
+                    end
+                end
+            end
+
+            -- Apply polychrome edition to left joker if not already applied
+            if left_joker 
+                and left_joker.config.center.config.friendly 
+                and (not left_joker.edition) and left_joker.ability.name ~= 'The Perfect Loaf' 
+                and not left_joker.poly_loaf_applied then
+                left_joker:set_edition({ polychrome = true }, true)
+                left_joker.poly_loaf_applied = true
+            end
+
+            -- Apply polychrome edition to right joker if not already applied
+            if right_joker 
+                and right_joker.config.center.config.friendly 
+                and (not right_joker.edition) and right_joker.ability.name ~= 'The Perfect Loaf' 
+                and not right_joker.poly_loaf_applied then
+                right_joker:set_edition({ polychrome = true }, true)
+                right_joker.poly_loaf_applied = true
             end
         end
     else
