@@ -627,6 +627,12 @@ G.FUNCS.evaluate_play = function(e)
         highlight_card(scoring_hand[i],(i-0.999)/5,'up')
     end
 
+    for k, v in ipairs(G.hand.cards) do
+        if v.config.center == G.P_CENTERS.m_steel or v.config.center == G.P_CENTERS.m_gold then
+            v.retrigger_from_penta = 0
+        end
+    end
+
     local percent = 0.3
     local percent_delta = 0.08
 
@@ -704,35 +710,22 @@ G.FUNCS.evaluate_play = function(e)
                     end
                 end
 
-                -- Penta Hand: Apply globally to all cards if flag is active
-                local penta_bonus_applied = false
-                if G.GAME.next_hand_penta_bonus == 1 then
-                    for i = 1, #scoring_hand do
-                        local eval = eval_card(scoring_hand[i], {
-                            repetition_only = true,
-                            cardarea = G.play,
-                            full_hand = G.play.cards,
-                            scoring_hand = scoring_hand,
-                            scoring_name = text,
-                            poker_hands = poker_hands,
-                            repetition = true
-                        })
-
-                        -- Apply the pentahand bonus to all repetitions of this card
-                        if eval.pentahand and eval.pentahand.repetitions then
-                            for h = 1, eval.pentahand.repetitions do
-                                reps[#reps + 1] = eval
-                            end
-
-                            penta_bonus_applied = true
-                        end
+                -- From Penta Hand
+                local eval = eval_card(scoring_hand[i], {
+                    repetition_only = true,
+                    cardarea = G.play,
+                    full_hand = G.play.cards,
+                    scoring_hand = scoring_hand,
+                    scoring_name = text,
+                    poker_hands = poker_hands,
+                    repetition = true
+                })
+                if eval.pentahand and eval.pentahand.repetitions then
+                    for h = 1, eval.pentahand.repetitions do
+                        reps[#reps+1] = eval
                     end
                 end
 
-                -- Reset the flag after application
-                if penta_bonus_applied then
-                    G.GAME.next_hand_penta_bonus = 0
-                end
                 --From jokers
                 for j=1, #G.jokers.cards do
                     --calculate the joker effects

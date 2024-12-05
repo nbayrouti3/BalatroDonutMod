@@ -1974,8 +1974,6 @@ function Game:init_game_object()
         voucher_text = '',
         dollars = 0,
         max_jokers = 0,
-        next_hand_penta_bonus = 0,
-        penta_last_hand = 0,
         bankrupt_at = 0,
         current_boss_streak = 0,
         base_reroll_cost = 5,

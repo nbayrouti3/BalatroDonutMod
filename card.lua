@@ -124,6 +124,7 @@ function Card:set_base(card, initial)
     -- Initialize permanent_debuff and temporary_debuff flag to false
     self.permanent_debuff = false -- This flag is for debuffs that last the entire run
     self.temporary_debuff = false -- This flag is for debuffs that last 1 round (For instance: Shaded cards.)
+    self.retrigger_from_penta = 0
 
     if self.base.value == '2' then self.base.nominal = 2; self.base.id = 2
     elseif self.base.value == '3' then self.base.nominal = 3; self.base.id = 3
@@ -1897,10 +1898,24 @@ function Card:use_consumeable(area, copier)
             self:juice_up(0.3, 0.5)
         return true end }))
 
-        G.GAME.next_hand_penta_bonus = 1 -- Set global flag for Penta Hand Bonus
+        for k, v in ipairs(G.playing_cards) do
+            if G.GAME.current_round.hands_left > 1 then
+                v.retrigger_from_penta = v.retrigger_from_penta + G.P_CENTERS.c_pentagon.config.extra.penta_retrigger -- increase amount of retriggers on every card in deck by 1. This makes it so it doesn't matter what card you play, it will retrigger.
+                print("Current retrigger amount:", v.retrigger_from_penta, "ID:", v.base.value)
+            else
+                v.retrigger_from_penta = v.retrigger_from_penta + G.P_CENTERS.c_pentagon.config.extra.penta_retrigger_secret -- increase amount of retriggers on every card in deck by 2. This makes it so it doesn't matter what card you play, it will retrigger.
+                print("Current retrigger amount:", v.retrigger_from_penta, "ID:", v.base.value)
+            end
+        end
 
-        card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_pentagon'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.7})
-        delay(0.5)
+        if G.GAME.current_round.hands_left > 1 then
+            card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_pentagon'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.7})
+        else
+            card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_super'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.7})
+            card_eval_status_text(self, 'above_consumeable', nil, nil, nil, {message = localize('k_pentagon'), colour = G.C.SECONDARY_SET.Polygon, delay = 0.7})
+        end
+
+        delay(0.2)
     end
 
     if self.ability.name == 'Hexwing Angel' then
@@ -2532,7 +2547,7 @@ function Card:can_use_consumeable(any_state, skip_check)
             and (#G.hand.highlighted > 0) and (#G.hand.highlighted <= self.ability.consumeable.max_highlighted) then
                 return true
 
-            elseif self.ability.name == 'Penta Hand' and G.GAME.next_hand_penta_bonus == 0 then
+            elseif self.ability.name == 'Penta Hand' then
                 return true
 
             elseif self.ability.name == 'Hexwing Angel' and #G.jokers.cards > 0 then
@@ -3293,27 +3308,17 @@ end
 function Card:calculate_penta(context)
     if self.debuff then return nil end
     if context.repetition then
-        if context.cardarea == G.play then
-            if G.GAME.next_hand_penta_bonus == 1 then
-                if G.GAME.current_round.hands_left ~= 0 then
-                    return {
-                        message = localize('k_pentagon'),
-                        colour = G.C.SECONDARY_SET.Polygon,
-                        repetitions = G.P_CENTERS.c_pentagon.config.extra.penta_retrigger,
-                        card = self
-                    }
-                else
-                    return {
-                        message = localize('k_super'),
-                        colour = G.C.SECONDARY_SET.Polygon,
-                        repetitions = G.P_CENTERS.c_pentagon.config.extra.penta_retrigger_secret,
-                        card = self
-                    }
-                end
-            end
+        if self.retrigger_from_penta > 0 then
+            return {
+                message = localize('k_pentagon'),
+                colour = G.C.SECONDARY_SET.Polygon,
+                repetitions = self.retrigger_from_penta,
+                card = self
+            }
         end
     end
 end
+
 
 function Card:calculate_seal(context)
     if self.debuff then return nil end
@@ -5886,7 +5891,6 @@ function Card:update(dt)
                 right_joker:set_edition({ polychrome = true }, true)
                 right_joker.poly_loaf_applied = true
             end
-            print(self.edition)
         end
     else
         if self.ability.name == 'Temperance' then
