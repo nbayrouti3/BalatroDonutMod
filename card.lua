@@ -5821,8 +5821,9 @@ function Card:update(dt)
         end
         if self.ability.name == "The Perfect Loaf" and self.area == G.jokers then
             local left_joker, right_joker = nil, nil
+            local other_cards_other_loaf = {}
 
-            -- Dynamically determine the left and right jokers
+            -- Dynamically determine the left and right jokers for self
             for i = 1, #G.jokers.cards do
                 if G.jokers.cards[i] == self then
                     left_joker = G.jokers.cards[i - 1]
@@ -5830,26 +5831,32 @@ function Card:update(dt)
                 end
             end
 
-            if left_joker and left_joker.ability.name == 'The Perfect Loaf' then
-                for i = 1, #G.jokers.cards do
-                    if G.jokers.cards[i] == self then
-                        left_joker =  G.jokers.cards[i - 2]
-                    end
+            -- Collect the left and right jokers for other Perfect Loaf cards
+            for i, joker in ipairs(G.jokers.cards) do
+                if joker.ability.name == "The Perfect Loaf" and joker ~= self then
+                    local other_left = G.jokers.cards[i - 1]
+                    local other_right = G.jokers.cards[i + 1]
+
+                    -- Add them to the list if they exist
+                    if other_left then table.insert(other_cards_other_loaf, other_left) end
+                    if other_right then table.insert(other_cards_other_loaf, other_right) end
                 end
             end
-
-            if right_joker and right_joker.ability.name == 'The Perfect Loaf' then
-                for i = 1, #G.jokers.cards do
-                    if G.jokers.cards[i] == self then
-                        right_joker =  G.jokers.cards[i + 2]
-                    end
-                end
-            end
-
 
             -- Handle edition removal for non-adjacent jokers
             for _, joker in ipairs(G.jokers.cards) do
-                if joker ~= self and joker ~= left_joker and joker ~= right_joker then
+                local is_other_loaf_adjacent = false
+
+                -- Check if the joker is one of the other loaf's adjacent cards
+                for _, excluded_card in ipairs(other_cards_other_loaf) do
+                    if joker == excluded_card then
+                        is_other_loaf_adjacent = true
+                        break
+                    end
+                end
+
+                -- Remove polychrome if the joker is not self, left, right, or adjacent to other loafs
+                if joker ~= self and joker ~= left_joker and joker ~= right_joker and not is_other_loaf_adjacent then
                     if joker.edition and joker.edition.polychrome then
                         joker:set_edition(nil, true) -- Remove polychrome
                         joker.poly_loaf_applied = false
@@ -5858,22 +5865,25 @@ function Card:update(dt)
             end
 
             -- Apply polychrome edition to left joker if not already applied
-            if left_joker 
-                and left_joker.config.center.config.friendly 
-                and (not left_joker.edition) and left_joker.ability.name ~= 'The Perfect Loaf' 
+            if left_joker
+                and left_joker.config.center.config.friendly
+                and (not left_joker.edition) 
+                and left_joker.ability.name ~= "The Perfect Loaf" 
                 and not left_joker.poly_loaf_applied then
                 left_joker:set_edition({ polychrome = true }, true)
                 left_joker.poly_loaf_applied = true
             end
 
             -- Apply polychrome edition to right joker if not already applied
-            if right_joker 
-                and right_joker.config.center.config.friendly 
-                and (not right_joker.edition) and right_joker.ability.name ~= 'The Perfect Loaf' 
+            if right_joker
+                and right_joker.config.center.config.friendly
+                and (not right_joker.edition) 
+                and right_joker.ability.name ~= "The Perfect Loaf" 
                 and not right_joker.poly_loaf_applied then
                 right_joker:set_edition({ polychrome = true }, true)
                 right_joker.poly_loaf_applied = true
             end
+            print(self.edition)
         end
     else
         if self.ability.name == 'Temperance' then
