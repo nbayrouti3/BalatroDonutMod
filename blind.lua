@@ -352,6 +352,11 @@ function Blind:defeat(silent)
     if self.name == 'Smothering Tithe' and not self.disabled then
         G.GAME.modifiers.discard_cost = nil
     end
+    for k, v in ipairs(G.playing_cards) do
+        if v.retrigger_from_penta > 0 then
+            v.retrigger_from_penta = 0
+        end
+    end
 end
 
 function Blind:get_type()
@@ -758,6 +763,11 @@ function Blind:drawn_to_hand()
                     return true
                 end}))
                 delay(0.6)
+            end
+            for k, v in ipairs(G.playing_cards) do
+                if v.retrigger_from_penta > 0 then
+                    v.retrigger_from_penta = 0
+                end
             end
             G.GAME.current_round.hand_played = 0
             G.GAME.haunted_triggered = false
