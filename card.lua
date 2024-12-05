@@ -1009,6 +1009,7 @@ function Card:generate_UIBox_ability_table()
         elseif self.ability.name == 'Morally Complex Joker' then
         elseif self.ability.name == 'Captured Joker' then
         elseif self.ability.name == 'Habibi Duncan' then
+        elseif self.ability.name == 'Concentration' then loc_vars = {self.ability.extra, localize(G.GAME.current_round.concentration_card.rank, 'ranks'), self.ability.mult}
         end
     end
 
@@ -2438,16 +2439,71 @@ function Card:can_use_consumeable(any_state, skip_check)
         if G.STATE == G.STATES.SELECTING_HAND or G.STATE == G.STATES.TAROT_PACK or G.STATE == G.STATES.SPECTRAL_PACK or G.STATE == G.STATES.PLANET_PACK or G.STATE == G.STATES.POLYGON_PACK then
             if self.ability.consumeable.max_highlighted then
                 if self.ability.name == "The Lovers" then
-                    local not_found = true
-                    for k, v in pairs(G.jokers.cards) do
-                        if v.ability.name == "Habibi Duncan" then 
-                            self.ability.consumeable.max_highlighted = self.ability.consumeable.habibi_bonus
-                            not_found = false
+                    local habibi_count = 0
+
+                    -- Iterate over the jokers to count Habibi Duncan and check Blueprint contributions
+                    for i, v in ipairs(G.jokers.cards) do
+                        if v.ability.name == "Habibi Duncan" then
+                            habibi_count = habibi_count + 1
+                        end
+
+                        -- Check if the current joker is Blueprint and if it copies a Habibi Duncan to its right
+                        if (v.ability.name == "Blueprint" or v.ability.name == "Camou")  and i < #G.jokers.cards then
+                            local right_joker = G.jokers.cards[i + 1]
+                            local first_joker = G.jokers.cards[1]
+                            local second_joker = G.jokers.cards[2]
+                            if right_joker.ability.name == "Habibi Duncan" then
+                                habibi_count = habibi_count + 1
+                            end
+                            if right_joker.ability.name == "Brainstorm" and first_joker.ability.name == "Habibi Duncan" then
+                                habibi_count = habibi_count + 1
+                            end
+                            if right_joker.ability.name == "Brainstorm" and (first_joker.ability.name == "Blueprint" or first_joker.ability.name == "Camou") and second_joker.ability.name == "Habibi Duncan" then
+                                habibi_count = habibi_count + 1
+                            end
+                        end
+
+                        if v.ability.name == "Camou" and i > 1 then
+                            local left_joker = G.jokers.cards[i - 1]
+                            local first_joker = G.jokers.cards[1]
+                            local second_joker = G.jokers.cards[2]
+                            if left_joker.ability.name == "Habibi Duncan" then
+                                habibi_count = habibi_count + 1
+                            end
+                            if left_joker.ability.name == "Brainstorm" and first_joker.ability.name == "Habibi Duncan" then
+                                habibi_count = habibi_count + 1
+                            end
+                            if left_joker.ability.name == "Brainstorm" and (first_joker.ability.name == "Blueprint" or first_joker.ability.name == "Camou") and second_joker.ability.name == "Habibi Duncan" then
+                                habibi_count = habibi_count + 1
+                            end
+                        end 
+
+                        if v.ability.name == "Brainstorm" then
+                            local first_joker = G.jokers.cards[1]
+                            local second_joker = G.jokers.cards[2]
+                            if first_joker.ability.name == "Habibi Duncan" then
+                                habibi_count = habibi_count + 1
+                            elseif (first_joker.ability.name == "Blueprint" or first_joker.ability.name == "Camou") and second_joker.ability.name == "Habibi Duncan" then
+                                habibi_count = habibi_count + 1
+                            end
                         end
                     end
-                    if not_found then self.ability.consumeable.max_highlighted = 1 end
+
+                    -- Apply the stacked Habibi Duncan bonus
+                    if habibi_count > 0 then
+                        habibi_count = math.min(habibi_count, 5)
+                        self.ability.consumeable.max_highlighted = math.min(
+                            self.ability.consumeable.max_highlighted, 
+                            self.ability.consumeable.habibi_bonus
+                        ) + (self.ability.consumeable.habibi_bonus * habibi_count)
+                    else
+                        -- Default behavior if no Habibi Duncan or Blueprint is found
+                        self.ability.consumeable.max_highlighted = 1
+                    end
                 end
-                if self.ability.consumeable.mod_num >= #G.hand.highlighted and #G.hand.highlighted >= (self.ability.consumeable.min_highlighted or 1) then
+
+                if self.ability.consumeable.mod_num >= #G.hand.highlighted and 
+                   #G.hand.highlighted >= (self.ability.consumeable.min_highlighted or 1) then
                     return true
                 end
             end
@@ -4317,40 +4373,44 @@ function Card:calculate_joker(context)
                         }
                     end
                 end
-                if self.ability.name == 'Haunted Joker' and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit + 1 then
+                if self.ability.name == 'Haunted Joker' and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit + 1 and not G.GAME.haunted_triggered then
                     if context.scoring_hand[1]
                         and #G.consumeables.cards > 0
                         and (pseudorandom('Haunted') < G.GAME.probabilities.normal/self.ability.extra) then
-                        local destroyed_cards = {}
-                        destroyed_cards[#destroyed_cards+1] = pseudorandom_element(G.consumeables.cards, pseudoseed('Haunted'))
-                        G.E_MANAGER:add_event(Event({
-                            trigger = 'immediate',
-                            delay = 0,
-                            func = function() 
-                                for i=#destroyed_cards, 1, -1 do
-                                    local card = destroyed_cards[i]
-                                    if card:start_dissolve(nil, i ~= #destroyed_cards) then
+                            local destroyed_cards = {}
+                            destroyed_cards[#destroyed_cards+1] = pseudorandom_element(G.consumeables.cards, pseudoseed('Haunted'))
+                            G.E_MANAGER:add_event(Event({
+                                trigger = 'immediate',
+                                delay = 0,
+                                func = function() 
+                                    for i=#destroyed_cards, 1, -1 do
+                                        local card = destroyed_cards[i]
+                                        if card:start_dissolve(nil, i ~= #destroyed_cards) then
+                                        end
                                     end
-                                end
-                                return true end }))
-                        G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
-                        return {
-                            extra = {focus = self, message = localize('k_plus_spectral'), func = function()
-                                G.E_MANAGER:add_event(Event({
-                                    trigger = 'after',
-                                    delay = 3.0,
-                                    func = (function()
-                                            local card = create_card('Spectral',G.consumeables, nil, nil, nil, nil, nil, 'sixth')
-                                            card:add_to_deck()
-                                            G.consumeables:emplace(card)
-                                            G.GAME.consumeable_buffer = 0
-                                            play_sound('negative', 1, 0.4)
-                                        return true
-                                    end)}))
-                            end},
-                            colour = G.C.SECONDARY_SET.Spectral,
-                            card = self
-                        }
+                                return true
+                            end }))
+
+                            G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+                            G.GAME.haunted_triggered = true
+                            
+                            return {
+                                extra = {focus = self, message = localize('k_plus_spectral'), func = function()
+                                    G.E_MANAGER:add_event(Event({
+                                        trigger = 'after',
+                                        delay = 3.0,
+                                        func = (function()
+                                                local card = create_card('Spectral',G.consumeables, nil, nil, nil, nil, nil, 'sixth')
+                                                card:add_to_deck()
+                                                G.consumeables:emplace(card)
+                                                G.GAME.consumeable_buffer = 0
+                                                play_sound('negative', 1, 0.4)
+                                            return true
+                                        end)}))
+                                end},
+                                colour = G.C.SECONDARY_SET.Spectral,
+                                card = self
+                            }
                     end
                 end
                 if self.ability.name == 'The Idol' and
@@ -4458,7 +4518,7 @@ function Card:calculate_joker(context)
                         card = self
                     }
                 end
-                if self.ability.name == "Gambler's Phallussy" and not context.blueprint then
+                if self.ability.name == "Gambler's Phallussy" then
                     local x_mult = 2
                     local range_mod = 0
                     local x_mult_chance = math.random(0,#context.scoring_hand * 2)
@@ -4518,6 +4578,10 @@ function Card:calculate_joker(context)
                         x_mult = self.ability.extra,
                         card = self
                     }
+                end
+                if self.ability.name == 'Concentration' and
+                context.other_card:get_id() == G.GAME.current_round.concentration_card.id and not context.blueprint then
+                    self.ability.mult = self.ability.mult + self.ability.extra
                 end
                 if self.ability.name == 'Triboulet' and
                     (context.other_card:get_id() == 12 or context.other_card:get_id() == 13) then
@@ -4837,7 +4901,7 @@ function Card:calculate_joker(context)
                             self.ability.mult = self.ability.mult + self.ability.extra
                         end
                     end
-                    if self.ability.name == 'Dancing Duncan' then
+                    if self.ability.name == 'Dancing Duncan' and not context.blueprint then
                         if context.scoring_name == 'Pair' then
                             self.ability.mult = self.ability.mult + 2
                         elseif context.scoring_name == 'Two Pair' then
@@ -4964,38 +5028,116 @@ function Card:calculate_joker(context)
                                 end
                             end
                         end
-                        if self.ability.name ~= 'Seeing Double' and self.ability.x_mult > 1 and (self.ability.type == '' or next(context.poker_hands[self.ability.type])) then
-                            return {
-                                message = localize{type='variable',key='a_xmult',vars={self.ability.x_mult}},
-                                colour = G.C.RED,
-                                Xmult_mod = self.ability.x_mult
-                            }
+                        
+                        if self.ability.name ~= 'Seeing Double' and self.ability.x_mult > 1 then
+                            if self.ability.name ~= "Gambler's Phallussy" then
+                                local has_the_tribe = false
+                                local has_morally_complex_joker = false
+
+                                -- Check for the presence of both jokers in the joker area
+                                for _, v in pairs(G.jokers.cards) do
+                                    if v.ability.name == 'The Tribe' then
+                                        has_the_tribe = true
+                                    end
+                                    if v.ability.name == 'Morally Complex Joker' then
+                                        has_morally_complex_joker = true
+                                    end
+                                end
+
+                                -- If both jokers are present, activate The Tribe's multiplier for Straights seen as Straight Flushes
+                                if has_the_tribe and has_morally_complex_joker and self.ability.name == 'The Tribe' then
+                                    if next(context.poker_hands[self.ability.type]) or next(context.poker_hands['Straight Flush']) then
+                                        return {
+                                            message = localize{type='variable', key='a_xmult', vars={self.ability.x_mult}},
+                                            colour = G.C.RED,
+                                            Xmult_mod = self.ability.x_mult
+                                        }
+                                    end
+                                elseif self.ability.type == '' or next(context.poker_hands[self.ability.type]) then
+                                    -- Default behavior for other cases
+                                    return {
+                                        message = localize{type='variable', key='a_xmult', vars={self.ability.x_mult}},
+                                        colour = G.C.RED,
+                                        Xmult_mod = self.ability.x_mult
+                                    }
+                                end
+                            end
                         end
-                        if self.ability.t_mult > 0 and self.ability.name ~= 'Autistic Joker' and next(context.poker_hands[self.ability.type]) then
-                            return {
-                                message = localize{type='variable',key='a_mult',vars={self.ability.t_mult}},
-                                mult_mod = self.ability.t_mult
-                            }
+
+                        if self.ability.t_mult > 0 and self.ability.name ~= 'Autistic Joker' then
+                            local has_droll_joker = false
+                            local has_morally_complex_joker = false
+
+                            -- Check for the presence of both jokers in the joker area
+                            for k, v in pairs(G.jokers.cards) do
+                                if v.ability.name == 'Droll Joker' then
+                                    has_droll_joker = true
+                                end
+                                if v.ability.name == 'Morally Complex Joker' then
+                                    has_morally_complex_joker = true
+                                end
+                            end
+
+                            -- If both jokers are present, activate Droll Joker's multiplier for Straights seen as Straight Flushes
+                            if has_droll_joker and has_morally_complex_joker and self.ability.name == 'Droll Joker' then
+                                if next(context.poker_hands[self.ability.type]) or next(context.poker_hands['Straight Flush']) then
+                                    return {
+                                        message = localize{type='variable', key='a_mult', vars={self.ability.t_mult}},
+                                        mult_mod = self.ability.t_mult
+                                    }
+                                end
+                            elseif next(context.poker_hands[self.ability.type]) then
+                                -- Default behavior for other cases
+                                return {
+                                    message = localize{type='variable', key='a_mult', vars={self.ability.t_mult}},
+                                    mult_mod = self.ability.t_mult
+                                }
+                            end
                         end
-                        if self.ability.t_chips > 0 and self.ability.name ~= 'Autistic Joker' and next(context.poker_hands[self.ability.type]) then
-                            return {
-                                message = localize{type='variable',key='a_chips',vars={self.ability.t_chips}},
-                                chip_mod = self.ability.t_chips
-                            }
+
+                        if self.ability.t_chips > 0 and self.ability.name ~= 'Autistic Joker' then
+                            local has_crafty_joker = false
+                            local has_morally_complex_joker = false
+
+                            -- Check for the presence of both jokers in the joker area
+                            for _, v in pairs(G.jokers.cards) do
+                                if v.ability.name == 'Crafty Joker' then
+                                    has_crafty_joker = true
+                                end
+                                if v.ability.name == 'Morally Complex Joker' then
+                                    has_morally_complex_joker = true
+                                end
+                            end
+
+                            -- If both jokers are present, activate Crafty Joker's chips bonus for Straights seen as Straight Flushes
+                            if has_crafty_joker and has_morally_complex_joker and self.ability.name == 'Crafty Joker' then
+                                if next(context.poker_hands[self.ability.type]) or next(context.poker_hands['Straight Flush']) then
+                                    return {
+                                        message = localize{type='variable', key='a_chips', vars={self.ability.t_chips}},
+                                        chip_mod = self.ability.t_chips
+                                    }
+                                end
+                            elseif next(context.poker_hands[self.ability.type]) then
+                                -- Default behavior for other cases
+                                return {
+                                    message = localize{type='variable', key='a_chips', vars={self.ability.t_chips}},
+                                    chip_mod = self.ability.t_chips
+                                }
+                            end
                         end
                         if self.ability.name == 'Autistic Joker' then
-                            if self.ability.t_chips > 0 and self.ability.t_mult > 0 and next(context.poker_hands["Straight Flush"]) then
+                            if self.ability.t_chips > 0 and self.ability.t_mult > 0 and next(context.poker_hands['Straight Flush']) then
                                 return {
                                     message = localize{type = 'variable', key = 'a_chips_mult', vars = {self.ability.t_chips, self.ability.t_mult}, colour = G.C.PURPLE},
                                     chip_mod = self.ability.t_chips,
                                     mult_mod = self.ability.t_mult
                                 }
-                            elseif self.ability.t_chips > 0 and next(context.poker_hands["Straight"]) then
+                            elseif self.ability.t_chips > 0 and next(context.poker_hands['Straight']) then
                                 return {
                                     message = localize{type = 'variable', key = 'a_chips', vars = {self.ability.t_chips}},
                                     chip_mod = self.ability.t_chips
                                 }
-                            elseif self.ability.t_mult > 0 and next(context.poker_hands["Flush"]) then
+                            elseif self.ability.t_mult > 0 and next(context.poker_hands['Flush']) then
                                 return {
                                     message = localize{type = 'variable', key = 'a_mult', vars = {self.ability.t_mult}},
                                     mult_mod = self.ability.t_mult
@@ -5240,6 +5382,13 @@ function Card:calculate_joker(context)
                             return {
                                 message = localize{type='variable',key='a_mult',vars={self.ability.extra*(G.GAME.starting_deck_size - #G.playing_cards)}},
                                 mult_mod = self.ability.extra*(G.GAME.starting_deck_size - #G.playing_cards), 
+                                colour = G.C.MULT
+                            }
+                        end
+                        if self.ability.name == 'Concentration' and (self.ability.mult > 0) then
+                            return {
+                                message = localize{type='variable',key='a_mult',vars={self.ability.mult}},
+                                mult_mod = self.ability.mult,
                                 colour = G.C.MULT
                             }
                         end
@@ -5940,10 +6089,8 @@ function Card:draw(layer)
                 end
                 if self.edition and self.edition.shaded then
                     if self.edition and self.edition.negative then
-                        print("Changed to 1")
                         G.SHADERS["smoke" or 'dissolve']:send("is_negative", 1)
                     else
-                        print("Changed to 0")
                         G.SHADERS["smoke" or 'dissolve']:send("is_negative", 0)
                     end
                     self.children.center:draw_shader('smoke', nil, self.ARGS.send_to_shader)
