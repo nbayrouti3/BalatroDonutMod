@@ -1967,15 +1967,29 @@ return {
             v_bestiary = {
                 name = "Bestiary",
                 text = {
-                    "{C:attention}-2{} needed hands",
+                    "{C:attention}-#1#{} needed hands",
                     "for {C:polygon}Polygon Cards"
                 }
             },
             v_grimoire = {
                 name = "Grimoire",
                 text = {
-                    "{C:attention}-2{} needed hands",
+                    "{C:attention}-#1#{} needed hands",
                     "for {C:polygon}Polygon Cards"
+                }
+            },
+            v_shaved_coin = {
+                name = "Shaved Coin",
+                text = {
+                    "{C:green}Uncommon{} and {C:red}Rare{} Jokers",
+                    "appear {C:attention}#1#%{} more frequently"
+                }
+            },
+            v_yoyo = {
+                name = "Yoyo",
+                text = {
+                    "{C:green}Uncommon{} and {C:red}Rare{} Jokers",
+                    "appear {C:attention}#1#%{} more frequently"
                 }
             }
         },
