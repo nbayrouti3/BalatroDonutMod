@@ -667,7 +667,8 @@ function Game:init_item_prototypes()
         v_hieroglyph=       {order = 27,    discovered = false, unlocked = true , available = true, cost = 10, name = "Hieroglyph", pos = {x=5,y=2}, set = "Voucher", config = {extra = 1}},
         v_directors_cut=    {order = 29,    discovered = false, unlocked = true , available = true, cost = 10, name = "Director's Cut", pos = {x=6,y=2}, set = "Voucher", config = {extra = 10}},
         v_paint_brush=      {order = 31,    discovered = false, unlocked = true , available = true, cost = 10, name = "Paint Brush", pos = {x=7,y=2}, set = "Voucher", config = {extra = 1}},
-        v_bestiary=         {order = 33,    discovered = false, unlocked = true , available = true, cost = 10, name = "Bestiary", pos = {x=0,y=4}, set = "Voucher", config = {}},
+        v_bestiary=         {order = 33,    discovered = false, unlocked = true , available = true, cost = 10, name = "Bestiary", pos = {x=0,y=4}, set = "Voucher", config = {extra = 2}},
+        v_shaved_coin=      {order = 35,    discovered = false, unlocked = true , available = true, cost = 10, name = "Shaved Coin", pos = {x=1,y=4}, set = "Voucher", config = {extra = 1}},
   
         v_overstock_plus=   {order = 2,     discovered = false, unlocked = false, available = true, cost = 10, name = "Overstock Plus", pos = {x=0,y=1}, set = "Voucher", config = {}, requires = {'v_overstock_norm'},unlock_condition = {type = 'c_shop_dollars_spent', extra = 2500}},
         v_liquidation=      {order = 4,     discovered = false, unlocked = false, available = true, cost = 10, name = "Liquidation", pos = {x=3,y=1}, set = "Voucher", config = {extra = 50}, requires = {'v_clearance_sale'},unlock_condition = {type = 'run_redeem', extra = 10}},
@@ -685,7 +686,8 @@ function Game:init_item_prototypes()
         v_petroglyph=       {order = 28,    discovered = false, unlocked = false, available = true, cost = 10, name = "Petroglyph", pos = {x=5,y=3}, set = "Voucher", config = {extra = 1}, requires = {'v_hieroglyph'},unlock_condition = {type = 'ante_up', ante = 12, extra = 12}},
         v_retcon=           {order = 30,    discovered = false, unlocked = false, available = true, cost = 10, name = "Retcon", pos = {x=6,y=3}, set = "Voucher", config = {extra = 10}, requires = {'v_directors_cut'},unlock_condition = {type = 'blind_discoveries', extra = 25}},
         v_palette=          {order = 32,    discovered = false, unlocked = false, available = true, cost = 10, name = "Palette", pos = {x=7,y=3}, set = "Voucher", config = {extra = 1}, requires = {'v_paint_brush'},unlock_condition = {type = 'min_hand_size', extra = 5}},
-        v_grimoire=         {order = 34,    discovered = false, unlocked = true,  available = true, cost = 10, name = "Grimoire", pos = {x=0,y=5}, set = "Voucher", config = {}, requires = {'v_bestiary'}},
+        v_grimoire=         {order = 34,    discovered = false, unlocked = true,  available = true, cost = 10, name = "Grimoire", pos = {x=0,y=5}, set = "Voucher", config = {extra = 2}, requires = {'v_bestiary'}},
+        v_yoyo=             {order = 36,    discovered = false, unlocked = true , available = true, cost = 10, name = "Yoyo", pos = {x=1,y=5}, set = "Voucher", config = {extra = 3}, requires = {'v_shaved_coin'}},
 
         --Backs
 
@@ -1956,6 +1958,7 @@ function Game:init_game_object()
         spectral_rate = 0,
         polygon_rate = 1,
         polygon_voucher_bonus = 0,
+        increased_luck_jokers = 0,
         haunted_triggered = false,
         playing_card_rate = 0,
         consumeable_buffer = 0,

@@ -3030,7 +3030,10 @@ function Card:apply_to_run(center)
         end
     end
     if center_table.name == 'Bestiary' or center_table.name == 'Grimoire' then
-        G.GAME.polygon_voucher_bonus = G.GAME.polygon_voucher_bonus + 2
+        G.GAME.polygon_voucher_bonus = G.GAME.polygon_voucher_bonus + center_table.extra
+    end
+    if center_table.name == 'Shaved Coin' or center_table.name == 'Yoyo' then
+        G.GAME.increased_luck_jokers = center_table.extra
     end
 end
 

@@ -2018,7 +2018,7 @@ function get_current_pool(_type, _rarity, _legendary, _append)
     
         if _type == 'Joker' then 
             local rarity = _rarity or pseudorandom('rarity'..G.GAME.round_resets.ante..(_append or '')) 
-            rarity = (_legendary and 4) or (rarity > 0.95 and 3) or (rarity > 0.7 and 2) or 1
+            rarity = (_legendary and 4) or (rarity > 0.95-(0.10*G.GAME.increased_luck_jokers) and 3) or (rarity > 0.7-(0.10*G.GAME.increased_luck_jokers) and 2) or 1
             if _append == 'frb' then
                 _starting_pool, _pool_key = G.P_FRIENDLY_JOKER_RARITY_POOLS[rarity], 'Friendly Joker'..rarity..((not _legendary and _append) or '')
             else
@@ -2670,6 +2670,8 @@ function generate_card_ui(_c, full_UI_table, specific_vars, card_type, badges, h
         elseif _c.name == "Paint Brush" or _c.name == "Palette" then loc_vars = {_c.config.extra}
         elseif _c.name == "Telescope" or _c.name == "Observatory" then loc_vars = {_c.config.extra}
         elseif _c.name == "Clearance Sale" or _c.name == "Liquidation" then loc_vars = {_c.config.extra}
+        elseif _c.name == "Bestiary" or _c.name == "Grimoire" then loc_vars = {_c.config.extra}
+        elseif _c.name == "Shaved Coin" or _c.name == "Yoyo" then loc_vars = {_c.config.extra*10}
         end
         localize{type = 'descriptions', key = _c.key, set = _c.set, nodes = desc_nodes, vars = loc_vars}
     elseif _c.set == 'Edition' then
