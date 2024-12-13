@@ -1,4 +1,4 @@
-VERSION = '1.0.1g'
+VERSION = '1.0.1n'
 VERSION = VERSION..'-FULL'
 --check_version
 
@@ -200,25 +200,33 @@ function Game:set_globals()
             Spades = {
                 'default',
                 'collab_TW',
-                'collab_CYP'
-            },
+                'collab_CYP',
+                'collab_SK',
+                'collab_DS'
+           },
             Hearts = {
               'default',
               'collab_AU',
-              'collab_TBoI'
+              'collab_TBoI',
+              'collab_CL',
+              'collab_D2'
             },
             Clubs = {
               'default',
               'collab_VS',
-              'collab_STS'
+              'collab_STS',
+              'collab_PC',
+              'collab_WF'
             },
             Diamonds = {
               'default',
               'collab_DTD',
-              'collab_SV'
+              'collab_SV',
+              'collab_EG',
+              'collab_XR'
             }
-        },
-    }
+          },
+      }
 
     self.METRICS = {
         cards = {
