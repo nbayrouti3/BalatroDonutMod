@@ -1,5 +1,5 @@
 if arg[2] == "debug" then
-	require("lldebugger").start()
+    require("lldebugger").start()
 end
 if (love.system.getOS() == 'OS X' ) and (jit.arch == 'arm64' or jit.arch == 'arm') then jit.off() end
 require "engine/object"
@@ -390,12 +390,12 @@ function love.resize(w, h)
 	G.CANVAS:setFilter('linear', 'linear')
 end
 
-local love_errorhandler = love.errorhandler(msg)
+local love_errorhandler = love.errorhandler
 
 function love.errorhandler(msg)
-	if lldebugger then
-		error(msg, 2)
-	else
-		return love_errorhandler(msg)
-	end
+    if lldebugger then
+        error(msg, 2)
+    else
+        return love_errorhandler(msg)
+    end
 end
